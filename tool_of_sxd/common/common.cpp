@@ -4,11 +4,7 @@
 #include <sstream>
 #include <regex>
 #include "iconv.h"
-
 #include <windows.h>
-
-
-
 #include "common.h"
 
 common::common(void) {
@@ -282,7 +278,12 @@ void common::write_string(std::ostream& os, const std::string& str) {
 
 std::string common::to_string(const std::time_t t, const char* format) {
 	char time_buf[100];
-	std::strftime(time_buf, sizeof time_buf, format, std::localtime(&t));
+	//std::strftime(time_buf, sizeof time_buf, format, std::localtime(&t));
+
+	struct tm now_time;
+	localtime_s(&now_time, &t);
+
+	std::strftime(time_buf, sizeof time_buf, format, &now_time);
 	std::string str(time_buf);
 	return str;
 }

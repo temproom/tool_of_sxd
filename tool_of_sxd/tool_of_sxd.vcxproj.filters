@@ -45,6 +45,12 @@
     <ClInclude Include="database\database.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="libiconv\localcharset.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="libiconv\iconv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -285,6 +291,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="database\database.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="libiconv\iconv.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="libiconv\localcharset.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="jsoncpp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol\protocol.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
