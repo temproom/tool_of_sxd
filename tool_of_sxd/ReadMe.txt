@@ -28,3 +28,19 @@ StdAfx.h, StdAfx.cpp
 应用程序向导使用“TODO:”注释来指示应添加或自定义的源代码部分。
 
 /////////////////////////////////////////////////////////////////////////////
+
+jsoncpp
+运行源码根目录下有个Python文件叫amalgamate.py，生成dist文件夹，复制到项目目录
+复制源码的include下json到项目include目录
+VC++目录 包含目录 添加项目include文件和项目自身文件
+
+Boost库
+1、双击bootstrap.bat文件，生成b2.exe；
+2、在cmd中输入以下命令（未尝试）或者双击b2.exe运行。bjam --toolset=msvc --build-type=complete stage ，回车
+这里面--build-type=complete时link，runtime-link3种组合下debug， release的多线程版本都生成出来了除此之外还生成了link=static，runtime-link=static的debug， release的单线程版本。
+得到stage下的dll和lib文件
+
+1、配置属性->VC++目录：
+（1）、"包含目录": boost的根目录，例:D:\my_workspace\C_program\C_boost\boost_1_79_0
+（2）、"库目录": stage下的链接库目录，例:D:\my_workspace\C_program\C_boost\boost_1_79_0\stage\lib
+2、配置属性->链接器->常规:"附加库目录":同上面的"库目录"，例:D:\my_workspace\C_program\C_boost\boost_1_79_0\stage\lib

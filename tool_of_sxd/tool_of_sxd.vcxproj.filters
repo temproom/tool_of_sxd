@@ -24,6 +24,27 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="sqlite3\sqlite3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sqlite3\sqlite3ext.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sxd_clent\sxd_client.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sxd_web\sxd_web.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sxd\sxd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="common\common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="database\database.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -32,5 +53,244 @@
     <ClCompile Include="tool_of_sxd.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="sqlite3\shell.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite3\sqlite3.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_assistant.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_awake.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_bai_lian_qian_kun.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_beelzebub_trials.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_bug.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_chaos_equipment.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_chat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_coin_mission.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_courtyard_pet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_dance.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_dice_messenger.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_dragonball.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_dunhuang_treasure.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_email.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_equipment.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_faction.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_farm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_fate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_find_immortal.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_find_treasure.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_fish.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_five_elements_laba.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_get_peach.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_gift.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_hero_mission.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_hide_treasure_map.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_hunt_demon.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_item.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_library.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_link_fate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_lucky_shop.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_lucky_super_number.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_marry.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_marry_home.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_memoirs.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_nine_regions.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_partner_link.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_pet_animal.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_pot_world.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_quest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_regression.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_release_welfare.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_research.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_rob_money.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_roll_cake.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_rune.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_sa_super_sport.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_sa_take_bible.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_saint_area.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_send_flower.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_server_chat_room.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_spring_carnival.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_st_altar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_st_arena.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_st_big_turntable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_st_daoyuan_shop.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_st_mine.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_st_practice_room.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_st_super_sport.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_st_take_bible.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_st_union.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_sunday_fruit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_super_sport.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_super_town.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_three_anniversary_signIn.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_town.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_training.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_travel_event.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_wager_shop.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_wish_pool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_wish_tower.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_web\sxd_web.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd\sxd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="common\common.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="database\database.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="tool_of_sxd.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

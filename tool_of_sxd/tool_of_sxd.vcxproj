@@ -74,12 +74,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\boost_1_78_0\boost_1_78_0;D:\随心\tool_of_sxd\tool_of_sxd\include;D:\随心\tool_of_sxd\tool_of_sxd;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\boost_1_78_0\boost_1_78_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\boost_1_78_0\boost_1_78_0;D:\随心\tool_of_sxd\tool_of_sxd\include;D:\随心\tool_of_sxd\tool_of_sxd;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\boost_1_78_0\boost_1_78_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,10 +105,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\随心\tool_of_sxd\tool_of_sxd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\随心\tool_of_sxd\tool_of_sxd\include;D:\boost_1_78_0\boost_1_78_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -133,29 +139,119 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\随心\tool_of_sxd\tool_of_sxd\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>D:\boost_1_78_0\boost_1_78_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="common\common.h" />
+    <ClInclude Include="database\database.h" />
+    <ClInclude Include="sqlite3\sqlite3.h" />
+    <ClInclude Include="sqlite3\sqlite3ext.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="sxd\sxd.h" />
+    <ClInclude Include="sxd_clent\sxd_client.h" />
+    <ClInclude Include="sxd_web\sxd_web.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="common\common.cpp" />
+    <ClCompile Include="database\database.cpp" />
+    <ClCompile Include="sqlite3\shell.c" />
+    <ClCompile Include="sqlite3\sqlite3.c" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="sxd\sxd.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_assistant.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_awake.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_bai_lian_qian_kun.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_beelzebub_trials.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_bug.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_chaos_equipment.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_chat.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_coin_mission.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_courtyard_pet.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_dance.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_dice_messenger.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_dragonball.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_dunhuang_treasure.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_email.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_equipment.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_faction.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_farm.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_fate.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_find_immortal.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_find_treasure.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_fish.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_five_elements_laba.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_get_peach.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_gift.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_hero_mission.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_hide_treasure_map.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_hunt_demon.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_item.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_library.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_link_fate.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_lucky_shop.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_lucky_super_number.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_marry.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_marry_home.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_memoirs.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_nine_regions.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_partner_link.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_pet_animal.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_pot_world.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_quest.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_regression.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_release_welfare.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_research.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_rob_money.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_roll_cake.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_rune.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_saint_area.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_sa_super_sport.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_sa_take_bible.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_send_flower.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_server_chat_room.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_spring_carnival.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_st_altar.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_st_arena.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_st_big_turntable.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_st_daoyuan_shop.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_st_mine.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_st_practice_room.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_st_super_sport.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_st_take_bible.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_st_union.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_sunday_fruit.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_super_sport.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_super_town.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_three_anniversary_signIn.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_town.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_training.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_travel_event.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_wager_shop.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_wish_pool.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_wish_tower.cpp" />
+    <ClCompile Include="sxd_web\sxd_web.cpp" />
     <ClCompile Include="tool_of_sxd.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="tool_of_sxd.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
