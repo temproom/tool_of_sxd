@@ -3,45 +3,50 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_StDaoyuanShop_Base {
+class Mod_StDaoyuanShop_Base
+{
 public:
-    static const int SUCCESS = 0;
-    static const int NOT_ENOUGH_DAOYUAN = 2;
+	static const int SUCCESS = 0;
+	static const int NOT_ENOUGH_DAOYUAN = 2;
 };
 
 //============================================================================
 // R172 仙界商店
 //============================================================================
-void sxd_client::st_daoyuan_shop() {
+void sxd_client::st_daoyuan_shop()
+{
 
-    // item list
-    Json::Value data = this->Mod_StDaoyuanShop_Base_daoyuan_shop_item_list();
-    Json::Value items = data[0];
+	// item list
+	Json::Value data = this->Mod_StDaoyuanShop_Base_daoyuan_shop_item_list();
+	Json::Value items = data[0];
 
-    // buy
-    int ids[] = { 21, 15, 13, 16, 19, 5, 4, 7, 10, 11, 3 };
-    std::string names[] = { "普通进阶丹", "真元", "灵珠", "驯养令", "融合精华", "血脉精华", "器魂", "内丹", "琴瑟之声", "高级灵石", "喇叭" };
-    for (int i = 0; i < 11; i++) {
-        int id = ids[i];
-        std::string name = names[i];
-        auto item_select = std::find_if(items.begin(), items.end(), [id](const Json::Value& x) {return x[0].asInt()==id;});
-        if (item_select == items.end())
-            continue;
-        int count = (*item_select)[1].asInt();
-        if (count == 0)
-            continue;
+	// buy
+	int ids[] = { 21, 15, 13, 16, 19, 5, 4, 7, 10, 11, 3 };
+	std::string names[] = { "普通进阶丹", "真元", "灵珠", "驯养令", "融合精华", "血脉精华", "器魂", "内丹", "琴瑟之声", "高级灵石", "喇叭" };
+	for (int i = 0; i < 11; i++)
+	{
+		int id = ids[i];
+		std::string name = names[i];
+		auto item_select = std::find_if(items.begin(), items.end(), [id](const Json::Value& x) { return x[0].asInt() == id; });
+		if (item_select == items.end())
+			continue;
+		int count = (*item_select)[1].asInt();
+		if (count == 0)
+			continue;
 
-        data = this->Mod_StDaoyuanShop_Base_buy_daoyuan_shop_item(id, (*item_select)[1].asInt());
-        if (data[0].asInt() == Mod_StDaoyuanShop_Base::NOT_ENOUGH_DAOYUAN) {
-            common::log(boost::str(boost::format("【仙界商店】购买 [%1%] 失败，道缘不足") % name), 0);
-            break;
-        }
-        if (data[0].asInt() != Mod_StDaoyuanShop_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【仙界商店】购买 [%1%] 失败，result[%2%]") % name % data[0]), 0);
-            continue;
-        }
-        common::log(boost::str(boost::format("【仙界商店】购买 [%1%×%2%]") % name % count), iEdit);
-    }
+		data = this->Mod_StDaoyuanShop_Base_buy_daoyuan_shop_item(id, (*item_select)[1].asInt());
+		if (data[0].asInt() == Mod_StDaoyuanShop_Base::NOT_ENOUGH_DAOYUAN)
+		{
+			common::log(boost::str(boost::format("【仙界商店】购买 [%1%] 失败，道缘不足") % name), 0);
+			break;
+		}
+		if (data[0].asInt() != Mod_StDaoyuanShop_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【仙界商店】购买 [%1%] 失败，result[%2%]") % name % data[0]), 0);
+			continue;
+		}
+		common::log(boost::str(boost::format("【仙界商店】购买 [%1%×%2%]") % name % count), iEdit);
+	}
 }
 
 //============================================================================
@@ -52,9 +57,10 @@ void sxd_client::st_daoyuan_shop() {
 //     for each (_loc_4 in _loc_3)
 //         oObject.list(_loc_4, _loc_7, ["item_id", "item_num", "item_discount"]);
 //============================================================================
-Json::Value sxd_client::Mod_StDaoyuanShop_Base_daoyuan_shop_item_list() {
-    Json::Value data;
-    return this->send_and_receive(data, 132, 0);
+Json::Value sxd_client::Mod_StDaoyuanShop_Base_daoyuan_shop_item_list()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 132, 0);
 }
 
 //============================================================================
@@ -68,10 +74,11 @@ Json::Value sxd_client::Mod_StDaoyuanShop_Base_daoyuan_shop_item_list() {
 //     this.result = param1[0];
 //     this.reduce_num = param1[1];
 //============================================================================
-Json::Value sxd_client::Mod_StDaoyuanShop_Base_buy_daoyuan_shop_item(int id, int count) {
-    Json::Value data;
-    data.append(id);
-    data.append(count);
-    return this->send_and_receive(data, 132, 1);
+Json::Value sxd_client::Mod_StDaoyuanShop_Base_buy_daoyuan_shop_item(int id, int count)
+{
+	Json::Value data;
+	data.append(id);
+	data.append(count);
+	return this->send_and_receive(data, 132, 1);
 }
 

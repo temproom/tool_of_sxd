@@ -4,21 +4,24 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_BeelzebubTrials_Base {
+class Mod_BeelzebubTrials_Base
+{
 public:
-    static const int SUCCESS = 5;
+	static const int SUCCESS = 5;
 };
 
-void sxd_client::beelzebub_trials() {
-    Json::Value data = this->Mod_BeelzebubTrials_Base_get_moral_award();
-    if (data[0] != Mod_BeelzebubTrials_Base::SUCCESS)
-        return;
+void sxd_client::beelzebub_trials()
+{
+	Json::Value data = this->Mod_BeelzebubTrials_Base_get_moral_award();
+	if (data[0] != Mod_BeelzebubTrials_Base::SUCCESS)
+		return;
 
-    std::vector<std::string> items;
-    std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x) {
-        return boost::str(boost::format("[%1%×%2%]") % db.get_code(version, "Item", x[0].asInt())["text"] % x[1]);
-    });
-    common::log(boost::str(boost::format("【魔王试炼】领取道行奖励：%1%") % boost::algorithm::join(items, "，")), iEdit);
+	std::vector<std::string> items;
+	std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x)
+	{
+		return boost::str(boost::format("[%1%×%2%]") % db.get_code(version, "Item", x[0].asInt())["text"] % x[1]);
+	});
+	common::log(boost::str(boost::format("【魔王试炼】领取道行奖励：%1%") % boost::algorithm::join(items, "，")), iEdit);
 }
 
 //============================================================================
@@ -35,9 +38,10 @@ void sxd_client::beelzebub_trials() {
 // Example
 //     [5,[[1739,4500],[1748,16000],[1747,2000000]]]
 //============================================================================
-Json::Value sxd_client::Mod_BeelzebubTrials_Base_get_moral_award() {
-    Json::Value data;
-    data.append(0);
-    return this->send_and_receive(data, 57, 24);
+Json::Value sxd_client::Mod_BeelzebubTrials_Base_get_moral_award()
+{
+	Json::Value data;
+	data.append(0);
+	return this->send_and_receive(data, 57, 24);
 }
 

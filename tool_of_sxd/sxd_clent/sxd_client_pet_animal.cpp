@@ -3,45 +3,53 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_PetAnimal_Base {
+class Mod_PetAnimal_Base
+{
 public:
-    static const int SUCCESS = 0;
-    static const int TOO_MUCH_EXP = 2;
+	static const int SUCCESS = 0;
+	static const int TOO_MUCH_EXP = 2;
 };
 
-void sxd_client::pet_animal() {
+void sxd_client::pet_animal()
+{
 
-    // pet animal info
-    Json::Value data = this->Mod_PetAnimal_Base_pet_animal_info();
-    int lv = data[1].asInt();
-    int star = data[2].asInt();
-    int feed_num = data[4].asInt();
-    if (lv >= 10 && star >= 10)     // 龙王已升级至最高等级
-        return;
+	// pet animal info
+	Json::Value data = this->Mod_PetAnimal_Base_pet_animal_info();
+	int lv = data[1].asInt();
+	int star = data[2].asInt();
+	int feed_num = data[4].asInt();
+	if (lv >= 10 && star >= 10)     // 龙王已升级至最高等级
+		return;
 
-    while (feed_num) {
-        // feed
-        data = this->Mod_PetAnimal_Base_feed_pet_animal();
-        int result = data[0].asInt();
+	while (feed_num)
+	{
+		// feed
+		data = this->Mod_PetAnimal_Base_feed_pet_animal();
+		int result = data[0].asInt();
 
-        if (result == Mod_PetAnimal_Base::SUCCESS) {
-            feed_num = data[6].asInt();
-            int hit = data[7].asInt();
-            if (hit)
-                common::log(boost::str(boost::format("【叶公好龙】普通培养，暴击！获得 [经验值×%1%]") % data[4]), iEdit);
-            else
-                common::log(boost::str(boost::format("【叶公好龙】普通培养，获得 [经验值×%1%]") % data[4]), iEdit);
+		if (result == Mod_PetAnimal_Base::SUCCESS)
+		{
+			feed_num = data[6].asInt();
+			int hit = data[7].asInt();
+			if (hit)
+				common::log(boost::str(boost::format("【叶公好龙】普通培养，暴击！获得 [经验值×%1%]") % data[4]), iEdit);
+			else
+				common::log(boost::str(boost::format("【叶公好龙】普通培养，获得 [经验值×%1%]") % data[4]), iEdit);
 
-        } else if (result == Mod_PetAnimal_Base::TOO_MUCH_EXP) {
-            // up
-            this->Mod_PetAnimal_Base_up_pet_animal();
-            common::log("【叶公好龙】进化", iEdit);
+		}
+		else if (result == Mod_PetAnimal_Base::TOO_MUCH_EXP)
+		{
+			// up
+			this->Mod_PetAnimal_Base_up_pet_animal();
+			common::log("【叶公好龙】进化", iEdit);
 
-        } else {
-            common::log(boost::str(boost::format("【叶公好龙】培养失败，result[%1%]") % data[0]), iEdit);
-            return;
-        }
-    }
+		}
+		else
+		{
+			common::log(boost::str(boost::format("【叶公好龙】培养失败，result[%1%]") % data[0]), iEdit);
+			return;
+		}
+	}
 }
 
 //============================================================================
@@ -58,10 +66,11 @@ void sxd_client::pet_animal() {
 //     this.exp = param3;
 //     this.feedNum = param4;
 //============================================================================
-Json::Value sxd_client::Mod_PetAnimal_Base_pet_animal_info() {
-    Json::Value data;
-    data.append(player_id);
-    return this->send_and_receive(data, 48, 0);
+Json::Value sxd_client::Mod_PetAnimal_Base_pet_animal_info()
+{
+	Json::Value data;
+	data.append(player_id);
+	return this->send_and_receive(data, 48, 0);
 }
 
 //============================================================================
@@ -89,10 +98,11 @@ Json::Value sxd_client::Mod_PetAnimal_Base_pet_animal_info() {
 //     [0,9,10,9039707,52500,0,13,**1**]    暴击
 //     [**2**,0,0,0,0,0,0,0]                待进化
 //============================================================================
-Json::Value sxd_client::Mod_PetAnimal_Base_feed_pet_animal() {
-    Json::Value data;
-    data.append(0);
-    return this->send_and_receive(data, 48, 2);
+Json::Value sxd_client::Mod_PetAnimal_Base_feed_pet_animal()
+{
+	Json::Value data;
+	data.append(0);
+	return this->send_and_receive(data, 48, 2);
 }
 
 //============================================================================
@@ -112,8 +122,9 @@ Json::Value sxd_client::Mod_PetAnimal_Base_feed_pet_animal() {
 //     [ 10, 1, 39707 ]
 //     [ 10, 1, 6517049 ]
 //============================================================================
-Json::Value sxd_client::Mod_PetAnimal_Base_up_pet_animal() {
-    Json::Value data;
-    return this->send_and_receive(data, 48, 3);
+Json::Value sxd_client::Mod_PetAnimal_Base_up_pet_animal()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 48, 3);
 }
 

@@ -4,61 +4,65 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_ServerChatRoom_Base {
+class Mod_ServerChatRoom_Base
+{
 public:
-    static const int UNDO = 4;
-    static const int DONE = 5;
-    static const int SUCCESS = 9;
-    static const int CAN_FEED = 34;
-    static const int CAN_ESCORT = 35;
-    static const int ESCORTING = 36;
-    static const int INGOT_ESCORTING = 37;
-    static const int ESCORT_DONE = 38;
-    static const int NORMAL = 41;           // 喂养，派遣
-    static const int INGOT = 42;            // 一键喂养，高级派遣
+	static const int UNDO = 4;
+	static const int DONE = 5;
+	static const int SUCCESS = 9;
+	static const int CAN_FEED = 34;
+	static const int CAN_ESCORT = 35;
+	static const int ESCORTING = 36;
+	static const int INGOT_ESCORTING = 37;
+	static const int ESCORT_DONE = 38;
+	static const int NORMAL = 41;           // 喂养，派遣
+	static const int INGOT = 42;            // 一键喂养，高级派遣
 };
 
-int sxd_client::login_server_chat(sxd_client* sxd_client_town) {
+int sxd_client::login_server_chat(sxd_client* sxd_client_town)
+{
 
-    // get status
-    Json::Value data = sxd_client_town->Mod_ServerChatRoom_Base_get_chat_room_status();
-    if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS) {
-        common::log(boost::str(boost::format("【全网聊天】入口未开启，status[%1%]") % data[0]), iEdit);
-        return 1;
-    }
-    this->user_id = sxd_client_town->user_id;
+	// get status
+	Json::Value data = sxd_client_town->Mod_ServerChatRoom_Base_get_chat_room_status();
+	if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
+	{
+		common::log(boost::str(boost::format("【全网聊天】入口未开启，status[%1%]") % data[0]), iEdit);
+		return 1;
+	}
+	this->user_id = sxd_client_town->user_id;
 
-    // get login information: node, servername, stagename, timestamp, login_code, host, port
-    data = sxd_client_town->Mod_ServerChatRoom_Base_get_chat_room_logincode(data[1][0][0].asInt());
-    std::string node = data[1].asString();
-    std::string servername = data[2].asString();
-    std::string stagename = data[3].asString();
-    int timestamp = data[4].asInt();
-    std::string login_code = data[5].asString();
-    std::string host = data[6].asString();
-    std::string port = data[7].asString();
+	// get login information: node, servername, stagename, timestamp, login_code, host, port
+	data = sxd_client_town->Mod_ServerChatRoom_Base_get_chat_room_logincode(data[1][0][0].asInt());
+	std::string node = data[1].asString();
+	std::string servername = data[2].asString();
+	std::string stagename = data[3].asString();
+	int timestamp = data[4].asInt();
+	std::string login_code = data[5].asString();
+	std::string host = data[6].asString();
+	std::string port = data[7].asString();
 
-    // connect
-    this->connect(host, port);
-    common::log(boost::str(boost::format("【全网聊天】连接服务器 [%1%:%2%] 成功") % host % port), iEdit);
+	// connect
+	this->connect(host, port);
+	common::log(boost::str(boost::format("【全网聊天】连接服务器 [%1%:%2%] 成功") % host % port), iEdit);
 
-    // login
-    data = this->Mod_ServerChatRoom_Base_login_chat_room(node, sxd_client_town->player_id, servername, stagename, timestamp, login_code);
-    if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS) {
-        common::log(boost::str(boost::format("【全网聊天】登录失败，result[%1%]") % data[0]), iEdit);
-        return 2;
-    }
-    player_id = data[1].asInt();
-    common::log(boost::str(boost::format("【全网聊天】登录成功，player_id[%1%]") % player_id), iEdit);
+	// login
+	data = this->Mod_ServerChatRoom_Base_login_chat_room(node, sxd_client_town->player_id, servername, stagename, timestamp, login_code);
+	if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
+	{
+		common::log(boost::str(boost::format("【全网聊天】登录失败，result[%1%]") % data[0]), iEdit);
+		return 2;
+	}
+	player_id = data[1].asInt();
+	common::log(boost::str(boost::format("【全网聊天】登录成功，player_id[%1%]") % player_id), iEdit);
 
-    // chat
-    Json::Value config;
-    std::istringstream(db.get_config(user_id.c_str(), "ServerChat")) >> config;
-    std::string message = config[rand() % config.size()].asString();
-    this->Mod_ServerChatRoom_Base_chat_with_players(common::gbk2utf(message));
+	// chat
+	Json::Value config;
+	std::istringstream(db.get_config(user_id.c_str(), "ServerChat")) >> config;
+	std::string message = config[rand() % config.size()].asString();
+	this->Mod_ServerChatRoom_Base_chat_with_players(common::gbk2utf(message));
 
-    bLogin = 1;
-    return 0;
+	bLogin = 1;
+	return 0;
 }
 
 //============================================================================
@@ -75,9 +79,10 @@ int sxd_client::login_server_chat(sxd_client* sxd_client_town) {
 //     [ 9, null ]
 //     [ 9, [ [ 1 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_ServerChatRoom_Base_get_recent_room_list() {
-    Json::Value data;
-    return this->send_and_receive(data, 336, 0);
+Json::Value sxd_client::Mod_ServerChatRoom_Base_get_recent_room_list()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 336, 0);
 }
 
 //============================================================================
@@ -97,9 +102,10 @@ Json::Value sxd_client::Mod_ServerChatRoom_Base_get_recent_room_list() {
 // Example
 //     [ 9, [ [ 1, 228, 11 ], [ 2, 42, 11 ], [ 8, 31, 11 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_ServerChatRoom_Base_get_chat_room_status() {
-    Json::Value data;
-    return this->send_and_receive(data, 336, 1);
+Json::Value sxd_client::Mod_ServerChatRoom_Base_get_chat_room_status()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 336, 1);
 }
 
 //============================================================================
@@ -121,10 +127,11 @@ Json::Value sxd_client::Mod_ServerChatRoom_Base_get_chat_room_status() {
 //     [ 2, "s04@8x096.xd.com", "s04", "verycd", 1519388840, "5998cdcfc3e26cbaf3320ad7a51bd2ad", "8x162.xd.com", 8531 ]
 //     [ 8, "s04@8x096.xd.com", "s04", "verycd", 1519388840, "12b4bafe1fb789b73c2a1cbdbcb40b4e", "8x141.xd.com", 8340 ]
 //============================================================================
-Json::Value sxd_client::Mod_ServerChatRoom_Base_get_chat_room_logincode(int id) {
-    Json::Value data;
-    data.append(id);
-    return this->send_and_receive(data, 336, 11);
+Json::Value sxd_client::Mod_ServerChatRoom_Base_get_chat_room_logincode(int id)
+{
+	Json::Value data;
+	data.append(id);
+	return this->send_and_receive(data, 336, 11);
 }
 
 //============================================================================
@@ -144,84 +151,96 @@ Json::Value sxd_client::Mod_ServerChatRoom_Base_get_chat_room_logincode(int id) 
 // Example
 //     [ 9, 74784 ]
 //============================================================================
-Json::Value sxd_client::Mod_ServerChatRoom_Base_login_chat_room(const std::string& node, int player_id, const std::string& servername, const std::string& stagename, int timestamp, const std::string& login_code) {
-    Json::Value data;
-    data.append(node);
-    data.append(player_id);
-    data.append(servername);
-    data.append(stagename);
-    data.append(timestamp);
-    data.append(login_code);
-    return this->send_and_receive(data, 336, 12);
+Json::Value sxd_client::Mod_ServerChatRoom_Base_login_chat_room(const std::string& node, int player_id, const std::string& servername, const std::string& stagename, int timestamp, const std::string& login_code)
+{
+	Json::Value data;
+	data.append(node);
+	data.append(player_id);
+	data.append(servername);
+	data.append(stagename);
+	data.append(timestamp);
+	data.append(login_code);
+	return this->send_and_receive(data, 336, 12);
 }
 
-void sxd_client::pet_escort(sxd_client* sxd_client_town) {
+void sxd_client::pet_escort(sxd_client* sxd_client_town)
+{
 
-    // get nickname
-    Json::Value data = sxd_client_town->Mod_Player_Base_get_player_info();
-    std::string nickname = data[0].asString();
-    // get servername
-    data = sxd_client_town->Mod_ServerChatRoom_Base_get_chat_room_status();
-    data = sxd_client_town->Mod_ServerChatRoom_Base_get_chat_room_logincode(data[1][0][0].asInt());
-    std::string servername = data[2].asString();
+	// get nickname
+	Json::Value data = sxd_client_town->Mod_Player_Base_get_player_info();
+	std::string nickname = data[0].asString();
+	// get servername
+	data = sxd_client_town->Mod_ServerChatRoom_Base_get_chat_room_status();
+	data = sxd_client_town->Mod_ServerChatRoom_Base_get_chat_room_logincode(data[1][0][0].asInt());
+	std::string servername = data[2].asString();
 
-    // try 10 times
-    for (int i = 0; i < 10; i++) {
-        data = this->Mod_ServerChatRoom_Base_get_player_pet_escort_info();
-        Json::Value pet_escort_info = data;
-        switch (pet_escort_info[2].asInt()) {
+	// try 10 times
+	for (int i = 0; i < 10; i++)
+	{
+		data = this->Mod_ServerChatRoom_Base_get_player_pet_escort_info();
+		Json::Value pet_escort_info = data;
+		switch (pet_escort_info[2].asInt())
+		{
 
-        case Mod_ServerChatRoom_Base::CAN_FEED:
-            if (pet_escort_info[6].asInt() == Mod_ServerChatRoom_Base::UNDO) {
-                data = sxd_client_town->Mod_ServerChatRoom_Base_feed_pet(Mod_ServerChatRoom_Base::NORMAL);
-                if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS) {
-                    common::log(boost::str(boost::format("【宠物派遣】喂养失败，result[%1%]") % data[0]), iEdit);
-                    return;
-                }
-                common::log("【宠物派遣】喂养一次", iEdit);
-            }
-            std::this_thread::sleep_for(std::chrono::seconds(10));
-            data = this->Mod_ServerChatRoom_Base_chat_with_players(boost::str(boost::format("MSG7_%1%_%2%_%3%") % player_id % nickname % servername));
-            if (data[1].asInt() != Mod_ServerChatRoom_Base::SUCCESS) {
-                common::log(boost::str(boost::format("【宠物派遣】邀请失败，result[%1%]") % data[1]), iEdit);
-                return;
-            }
-            common::log(boost::str(boost::format("【宠物派遣】邀请 [%1%/10]") % (i + 1)), iEdit);
-            std::this_thread::sleep_for(std::chrono::seconds(10));
-            break;
+		case Mod_ServerChatRoom_Base::CAN_FEED:
+			if (pet_escort_info[6].asInt() == Mod_ServerChatRoom_Base::UNDO)
+			{
+				data = sxd_client_town->Mod_ServerChatRoom_Base_feed_pet(Mod_ServerChatRoom_Base::NORMAL);
+				if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
+				{
+					common::log(boost::str(boost::format("【宠物派遣】喂养失败，result[%1%]") % data[0]), iEdit);
+					return;
+				}
+				common::log("【宠物派遣】喂养一次", iEdit);
+			}
+			std::this_thread::sleep_for(std::chrono::seconds(10));
+			data = this->Mod_ServerChatRoom_Base_chat_with_players(boost::str(boost::format("MSG7_%1%_%2%_%3%") % player_id % nickname % servername));
+			if (data[1].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
+			{
+				common::log(boost::str(boost::format("【宠物派遣】邀请失败，result[%1%]") % data[1]), iEdit);
+				return;
+			}
+			common::log(boost::str(boost::format("【宠物派遣】邀请 [%1%/10]") % (i + 1)), iEdit);
+			std::this_thread::sleep_for(std::chrono::seconds(10));
+			break;
 
-        case Mod_ServerChatRoom_Base::CAN_ESCORT:
-            data = sxd_client_town->Mod_ServerChatRoom_Base_escort_pet(Mod_ServerChatRoom_Base::NORMAL);
-            if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS) {
-                common::log(boost::str(boost::format("【宠物派遣】派遣失败，result[%1%]") % data[0]), iEdit);
-                return;
-            }
-            common::log("【宠物派遣】派遣", iEdit);
-            return;
+		case Mod_ServerChatRoom_Base::CAN_ESCORT:
+			data = sxd_client_town->Mod_ServerChatRoom_Base_escort_pet(Mod_ServerChatRoom_Base::NORMAL);
+			if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
+			{
+				common::log(boost::str(boost::format("【宠物派遣】派遣失败，result[%1%]") % data[0]), iEdit);
+				return;
+			}
+			common::log("【宠物派遣】派遣", iEdit);
+			return;
 
-        case Mod_ServerChatRoom_Base::ESCORTING:
-        case Mod_ServerChatRoom_Base::INGOT_ESCORTING:
-            common::log("【宠物派遣】派遣中...", 0);
-            return;
+		case Mod_ServerChatRoom_Base::ESCORTING:
+		case Mod_ServerChatRoom_Base::INGOT_ESCORTING:
+			common::log("【宠物派遣】派遣中...", 0);
+			return;
 
-        case Mod_ServerChatRoom_Base::ESCORT_DONE:
-            if (pet_escort_info[8].asInt() == Mod_ServerChatRoom_Base::UNDO) {
-                data = sxd_client_town->Mod_ServerChatRoom_Base_get_pet_escort_award();
-                if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS) {
-                    common::log(boost::str(boost::format("【宠物派遣】领取失败，result[%1%]") % data[0]), iEdit);
-                    return;
-                }
-                common::log("【宠物派遣】领取", iEdit);
-            } else {
-                common::log("【宠物派遣】今日派遣任务已完成", 0);
-            }
-            return;
+		case Mod_ServerChatRoom_Base::ESCORT_DONE:
+			if (pet_escort_info[8].asInt() == Mod_ServerChatRoom_Base::UNDO)
+			{
+				data = sxd_client_town->Mod_ServerChatRoom_Base_get_pet_escort_award();
+				if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
+				{
+					common::log(boost::str(boost::format("【宠物派遣】领取失败，result[%1%]") % data[0]), iEdit);
+					return;
+				}
+				common::log("【宠物派遣】领取", iEdit);
+			}
+			else
+			{
+				common::log("【宠物派遣】今日派遣任务已完成", 0);
+			}
+			return;
 
-        default:
-            common::log(boost::str(boost::format("【宠物派遣】未知状态，status[%1%]") % pet_escort_info[2]), iEdit);
-            return;
-        }
-    }
+		default:
+			common::log(boost::str(boost::format("【宠物派遣】未知状态，status[%1%]") % pet_escort_info[2]), iEdit);
+			return;
+		}
+	}
 }
 
 //============================================================================
@@ -247,9 +266,10 @@ void sxd_client::pet_escort(sxd_client* sxd_client_town) {
 // 今日派遣任务已完成(status[2]=38, award_flag[8]=5)
 //    [ 40, 62, 38, 2, 2, [ [ 2452, 12 ], [ 5359, 1 ], [ 5362, 3 ], [ 4063, 1 ] ], 4, 4, 5, 0 ]
 //============================================================================
-Json::Value sxd_client::Mod_ServerChatRoom_Base_get_player_pet_escort_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 336, 40);
+Json::Value sxd_client::Mod_ServerChatRoom_Base_get_player_pet_escort_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 336, 40);
 }
 
 //============================================================================
@@ -268,10 +288,11 @@ Json::Value sxd_client::Mod_ServerChatRoom_Base_get_player_pet_escort_info() {
 // Example
 //     [ 9, 34, 1, 2 ]
 //============================================================================
-Json::Value sxd_client::Mod_ServerChatRoom_Base_feed_pet(int type) {
-    Json::Value data;
-    data.append(type);
-    return this->send_and_receive(data, 336, 42);
+Json::Value sxd_client::Mod_ServerChatRoom_Base_feed_pet(int type)
+{
+	Json::Value data;
+	data.append(type);
+	return this->send_and_receive(data, 336, 42);
 }
 
 //============================================================================
@@ -291,10 +312,11 @@ Json::Value sxd_client::Mod_ServerChatRoom_Base_feed_pet(int type) {
 // Example
 //     [ 9, 36, 7200, [ [ 5277, 12 ], [ 5359, 1 ], [ 5362, 3 ], [ 4063, 1 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_ServerChatRoom_Base_escort_pet(int type) {
-    Json::Value data;
-    data.append(type);
-    return this->send_and_receive(data, 336, 43);
+Json::Value sxd_client::Mod_ServerChatRoom_Base_escort_pet(int type)
+{
+	Json::Value data;
+	data.append(type);
+	return this->send_and_receive(data, 336, 43);
 }
 
 //============================================================================
@@ -312,12 +334,13 @@ Json::Value sxd_client::Mod_ServerChatRoom_Base_escort_pet(int type) {
 // Example
 //     [ 0, 9 ]
 //============================================================================
-Json::Value sxd_client::Mod_ServerChatRoom_Base_chat_with_players(const std::string& message, const std::string& eip_num, const std::string& eip_index) {
-    Json::Value data;
-    data.append(message);
-    data.append(eip_num);
-    data.append(eip_index);
-    return this->send_and_receive(data, 336, 20);
+Json::Value sxd_client::Mod_ServerChatRoom_Base_chat_with_players(const std::string& message, const std::string& eip_num, const std::string& eip_index)
+{
+	Json::Value data;
+	data.append(message);
+	data.append(eip_num);
+	data.append(eip_index);
+	return this->send_and_receive(data, 336, 20);
 }
 
 //============================================================================
@@ -329,7 +352,8 @@ Json::Value sxd_client::Mod_ServerChatRoom_Base_chat_with_players(const std::str
 // Example
 //     [ 9, 20, [ [ 2452, 12 ], [ 5359, 1 ], [ 5362, 3 ], [ 4063, 1 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_ServerChatRoom_Base_get_pet_escort_award() {
-    Json::Value data;
-    return this->send_and_receive(data, 336, 44);
+Json::Value sxd_client::Mod_ServerChatRoom_Base_get_pet_escort_award()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 336, 44);
 }

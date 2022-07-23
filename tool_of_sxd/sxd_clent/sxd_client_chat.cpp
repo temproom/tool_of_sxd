@@ -14,7 +14,8 @@
 // Example
 //     no response
 //============================================================================
-void sxd_client::Mod_Chat_Base_chat_with_players(int type, const std::string& message) {
+void sxd_client::Mod_Chat_Base_chat_with_players(int type, const std::string& message)
+{
 	Json::Value data;
 	data.append(type);
 	data.append(message);

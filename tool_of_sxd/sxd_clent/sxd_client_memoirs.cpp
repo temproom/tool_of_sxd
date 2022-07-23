@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "sxd_client.h"
 
-class Mod_Memoirs_Base {
+class Mod_Memoirs_Base
+{
 public:
-    //static const int TONG = 6;
+	//static const int TONG = 6;
 };
 
 //============================================================================
@@ -36,7 +37,8 @@ public:
 //         [ null, 156 ], [ null, 163 ], [ null, 158 ], [ null, 167 ], [ null, 149 ], [ null, 165 ]
 //     ] ]
 //============================================================================
-Json::Value sxd_client::Mod_Memoirs_Base_is_activity_open() {
-    Json::Value data;
-    return this->send_and_receive(data, 225, 94);
+Json::Value sxd_client::Mod_Memoirs_Base_is_activity_open()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 225, 94);
 }

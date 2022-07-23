@@ -3,77 +3,88 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_StPracticeRoom_Base {
+class Mod_StPracticeRoom_Base
+{
 public:
-    static const int TURE = 0;
-    static const int YES = 2;
-    static const int NO = 3;
-    static const int SUCCESS = 4;
-    static const int NOBODY = 11;
+	static const int TURE = 0;
+	static const int YES = 2;
+	static const int NO = 3;
+	static const int SUCCESS = 4;
+	static const int NOBODY = 11;
 };
 
 //============================================================================
 // R180 仙界练功房
 //============================================================================
-void sxd_client::st_practice_room() {
+void sxd_client::st_practice_room()
+{
 	int room_capcity[6] = { 0, 6, 7, 8, 10, 12 };
 
-    // get_rooms
-    auto data = this->Mod_StPracticeRoom_Base_get_rooms();
-    std::vector<Json::Value> valid_rooms;
-    std::copy_if(data[0].begin(), data[0].end(), std::back_inserter(valid_rooms), [&room_capcity](const Json::Value& x){return x[0].asInt() <= 5 && x[1].asInt() < room_capcity[x[0].asInt()];});
-    std::sort(valid_rooms.begin(), valid_rooms.end(), [](const Json::Value& x, const Json::Value& y) {return x[0].asInt() > y[0].asInt();});
-    int in_practice_flag = data[1].asInt();
-    int my_quality = data[2].asInt();
+	// get_rooms
+	auto data = this->Mod_StPracticeRoom_Base_get_rooms();
+	std::vector<Json::Value> valid_rooms;
+	std::copy_if(data[0].begin(), data[0].end(), std::back_inserter(valid_rooms), [&room_capcity](const Json::Value& x) { return x[0].asInt() <= 5 && x[1].asInt() < room_capcity[x[0].asInt()]; });
+	std::sort(valid_rooms.begin(), valid_rooms.end(), [](const Json::Value& x, const Json::Value& y) { return x[0].asInt() > y[0].asInt(); });
+	int in_practice_flag = data[1].asInt();
+	int my_quality = data[2].asInt();
 
-    // enter_room
-    data = this->Mod_StPracticeRoom_Base_enter_room();
-    if (data[0].asInt() != Mod_StPracticeRoom_Base::SUCCESS) {
-        common::log(boost::str(boost::format("【仙界练功房】进入练功房失败，result[%1%]") % data[0]), iEdit);
-        return;
-    }
-    data = this->Mod_StPracticeRoom_Base_get_room_practice_exp();
-    if (data[0].asInt() == Mod_StPracticeRoom_Base::SUCCESS)
-        common::log(boost::str(boost::format("【仙界练功房】领取 [经验值×%1%]") % data[1]), iEdit);
+	// enter_room
+	data = this->Mod_StPracticeRoom_Base_enter_room();
+	if (data[0].asInt() != Mod_StPracticeRoom_Base::SUCCESS)
+	{
+		common::log(boost::str(boost::format("【仙界练功房】进入练功房失败，result[%1%]") % data[0]), iEdit);
+		return;
+	}
+	data = this->Mod_StPracticeRoom_Base_get_room_practice_exp();
+	if (data[0].asInt() == Mod_StPracticeRoom_Base::SUCCESS)
+		common::log(boost::str(boost::format("【仙界练功房】领取 [经验值×%1%]") % data[1]), iEdit);
 
-    if (!valid_rooms.size()) {
-        // no valid rooms
-        if (in_practice_flag == Mod_StPracticeRoom_Base::YES)
-            return;
-        // sit down free room
-        data = this->Mod_StPracticeRoom_Base_sit_down(100, 0);
-        if (data[0].asInt() != Mod_StPracticeRoom_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【仙界练功房】进入 [普通练功房] 练功失败，result[%1%]") % data[0]), iEdit);
-            return;
-        }
-        common::log("【仙界练功房】进入 [普通练功房] 练功", iEdit);
-    } else {
-        // have valid rooms
-        for (const auto& valid_room : valid_rooms) {
-            int room_id = valid_room[0].asInt();
-            if (in_practice_flag == Mod_StPracticeRoom_Base::YES && my_quality <= 5 && room_id <= my_quality)
-                return;
-            // sit down
-            data = this->Mod_StPracticeRoom_Base_get_room_info(room_id);
-            auto seat_list = data[0];
-            if ((int) seat_list.size() == room_capcity[room_id]) {
-                common::log(boost::str(boost::format("【仙界练功房】[%1%星练功房] 已满") % room_id), iEdit);
-                continue;
-            }
-            for (int seat_id = 0; seat_id < room_capcity[room_id]; seat_id++) {
-                if (std::find_if(seat_list.begin(), seat_list.end(), [seat_id](const Json::Value& x) {return x[0].asInt() == seat_id;}) != seat_list.end())
-                    continue;
-                this->Mod_StPracticeRoom_Base_player_leave_seat();
-                data = this->Mod_StPracticeRoom_Base_sit_down(room_id, seat_id);
-                if (data[0].asInt() != Mod_StPracticeRoom_Base::SUCCESS) {
-                    common::log(boost::str(boost::format("【仙界练功房】进入 [%1%星练功房] 练功失败，result[%2%]") % room_id % data[0]), iEdit);
-                    return;
-                }
-                common::log(boost::str(boost::format("【仙界练功房】进入 [%1%星练功房] 练功") % room_id), iEdit);
-                return;
-            }
-        }
-    }
+	if (!valid_rooms.size())
+	{
+		// no valid rooms
+		if (in_practice_flag == Mod_StPracticeRoom_Base::YES)
+			return;
+		// sit down free room
+		data = this->Mod_StPracticeRoom_Base_sit_down(100, 0);
+		if (data[0].asInt() != Mod_StPracticeRoom_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【仙界练功房】进入 [普通练功房] 练功失败，result[%1%]") % data[0]), iEdit);
+			return;
+		}
+		common::log("【仙界练功房】进入 [普通练功房] 练功", iEdit);
+	}
+	else
+	{
+		// have valid rooms
+		for (const auto& valid_room : valid_rooms)
+		{
+			int room_id = valid_room[0].asInt();
+			if (in_practice_flag == Mod_StPracticeRoom_Base::YES && my_quality <= 5 && room_id <= my_quality)
+				return;
+			// sit down
+			data = this->Mod_StPracticeRoom_Base_get_room_info(room_id);
+			auto seat_list = data[0];
+			if ((int)seat_list.size() == room_capcity[room_id])
+			{
+				common::log(boost::str(boost::format("【仙界练功房】[%1%星练功房] 已满") % room_id), iEdit);
+				continue;
+			}
+			for (int seat_id = 0; seat_id < room_capcity[room_id]; seat_id++)
+			{
+				if (std::find_if(seat_list.begin(), seat_list.end(), [seat_id](const Json::Value& x) { return x[0].asInt() == seat_id; }) != seat_list.end())
+					continue;
+				this->Mod_StPracticeRoom_Base_player_leave_seat();
+				data = this->Mod_StPracticeRoom_Base_sit_down(room_id, seat_id);
+				if (data[0].asInt() != Mod_StPracticeRoom_Base::SUCCESS)
+				{
+					common::log(boost::str(boost::format("【仙界练功房】进入 [%1%星练功房] 练功失败，result[%2%]") % room_id % data[0]), iEdit);
+					return;
+				}
+				common::log(boost::str(boost::format("【仙界练功房】进入 [%1%星练功房] 练功") % room_id), iEdit);
+				return;
+			}
+		}
+	}
 }
 
 //============================================================================
@@ -86,9 +97,10 @@ void sxd_client::st_practice_room() {
 // Example
 //     [ [ [ 4, 9 ], [ 100, 28 ], [ 5, 10 ], [ 2, 1 ], [ 1, 2 ], [ 3, 3 ] ], 3, 2 ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_get_rooms() {
-    Json::Value data;
-    return this->send_and_receive(data, 117, 0);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_get_rooms()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 117, 0);
 }
 
 //============================================================================
@@ -99,9 +111,10 @@ Json::Value sxd_client::Mod_StPracticeRoom_Base_get_rooms() {
 // Example
 //     [ 4 ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_enter_room() {
-    Json::Value data;
-    return this->send_and_receive(data, 117, 8);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_enter_room()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 117, 8);
 }
 
 //============================================================================
@@ -112,9 +125,10 @@ Json::Value sxd_client::Mod_StPracticeRoom_Base_enter_room() {
 // Example
 //     [ 2, 28, 0, 0, 10, 0, 0, 2, 20 ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_get_free_room_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 117, 16);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_get_free_room_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 117, 16);
 }
 
 //============================================================================
@@ -126,10 +140,11 @@ Json::Value sxd_client::Mod_StPracticeRoom_Base_get_free_room_info() {
 // Example
 //     [ [ [ 0, 2204, 6, 3787, "\u68a8\u82b1\u6d77\u68e0.s154", "\u591a\u73a9", "duowan_s0152", 3773939, 217, 1 ], [ 1, 3893, 102, 5064, "\u5fd8\u54f2\u5929\u590f.s175", "37wan", "37wan_s0520", 4997820, 245, 1 ], [ 2, 3060, 6, 1801, "\u8f69\u8f95\u7389\u864e.s170", "37wan", "37wan_s0520", 5565436, 259, 1 ], [ 3, 3974, 104, 1877, "\u8f69\u8f95\u7389\u9f99.s170", "37wan", "37wan_s0520", 6030836, 259, 1 ], [ 4, 3814, 201, 4561, "\u534a\u4ed9.s169", "37wan", "37wan_s0520", 5433267, 258, 1 ], [ 5, 2061, 5, 4094, "\u59ec\u8f69\u8f95.s158", "\u591a\u73a9", "duowan_s0152", 4534025, 223, 1 ], [ 6, 3957, 6, 4561, "\u51b0\u6676\u6c34.s16", "\u745e\u661f", "rising_s033", 7593089, 259, 1 ], [ 7, 4203, 5, 4328, "\u7389\u79c0\u99a8.s151", "\u5fc3\u52a8", "s077", 4203332, 255, 1 ], [ 8, 8363, 6, 1872, "\u9646\u4eea\u4fdd.s299", "\u5fc3\u52a8", "s0151", 892615, 144, 1 ], [ 9, 7852, 5, 1872, "\u6613\u5f97\u8fd0.s299", "\u5fc3\u52a8", "s0151", 3161217, 189, 1 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_get_free_room_info_by_page(int page) {
-    Json::Value data;
-    data.append(page);
-    return this->send_and_receive(data, 117, 17);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_get_free_room_info_by_page(int page)
+{
+	Json::Value data;
+	data.append(page);
+	return this->send_and_receive(data, 117, 17);
 }
 
 //============================================================================
@@ -143,10 +158,11 @@ Json::Value sxd_client::Mod_StPracticeRoom_Base_get_free_room_info_by_page(int p
 //     [ 1 ] --> [ [ [ 0, 3350, 2, 2241, "\u503e@\u60c5.s11", "\u745e\u661f", "rising_s033", 3132208, 216, 1 ], [ 3, 3110, 108, 4328, "kkkkkk.s11", "\u745e\u661f", "rising_s033", 4509769, 245, 1 ] ],
 //                 43189, 0, 10, 100, 2, 20 ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_get_room_info(int id) {
-    Json::Value data;
-    data.append(id);
-    return this->send_and_receive(data, 117, 1);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_get_room_info(int id)
+{
+	Json::Value data;
+	data.append(id);
+	return this->send_and_receive(data, 117, 1);
 }
 
 //============================================================================
@@ -157,11 +173,12 @@ Json::Value sxd_client::Mod_StPracticeRoom_Base_get_room_info(int id) {
 // Example
 //     [ 1, 4 ] --> [ 11 ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_get_seat_info(int room_id, int seat_id) {
-    Json::Value data;
-    data.append(room_id);
-    data.append(seat_id);
-    return this->send_and_receive(data, 117, 3);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_get_seat_info(int room_id, int seat_id)
+{
+	Json::Value data;
+	data.append(room_id);
+	data.append(seat_id);
+	return this->send_and_receive(data, 117, 3);
 }
 
 //============================================================================
@@ -172,9 +189,10 @@ Json::Value sxd_client::Mod_StPracticeRoom_Base_get_seat_info(int room_id, int s
 // Example
 //     [ 2 ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_get_exp_flag() {
-    Json::Value data;
-    return this->send_and_receive(data, 117, 7);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_get_exp_flag()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 117, 7);
 }
 
 //============================================================================
@@ -185,9 +203,10 @@ Json::Value sxd_client::Mod_StPracticeRoom_Base_get_exp_flag() {
 // Example
 //     [ 4 ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_player_leave_seat() {
-    Json::Value data;
-    return this->send_and_receive(data, 117, 13);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_player_leave_seat()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 117, 13);
 }
 
 //============================================================================
@@ -199,9 +218,10 @@ Json::Value sxd_client::Mod_StPracticeRoom_Base_player_leave_seat() {
 // Example
 //     [ 4, 5339 ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_get_room_practice_exp() {
-    Json::Value data;
-    return this->send_and_receive(data, 117, 6);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_get_room_practice_exp()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 117, 6);
 }
 
 //============================================================================
@@ -212,9 +232,10 @@ Json::Value sxd_client::Mod_StPracticeRoom_Base_get_room_practice_exp() {
 // Example
 //     [ 1, 4 ] --> [ 4 ]
 //============================================================================
-Json::Value sxd_client::Mod_StPracticeRoom_Base_sit_down(int room_id, int seat_id) {
-    Json::Value data;
-    data.append(room_id);
-    data.append(seat_id);
-    return this->send_and_receive(data, 117, 2);
+Json::Value sxd_client::Mod_StPracticeRoom_Base_sit_down(int room_id, int seat_id)
+{
+	Json::Value data;
+	data.append(room_id);
+	data.append(seat_id);
+	return this->send_and_receive(data, 117, 2);
 }

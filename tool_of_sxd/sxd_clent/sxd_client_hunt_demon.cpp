@@ -4,55 +4,63 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_HuntDemon_Base {
+class Mod_HuntDemon_Base
+{
 public:
-    static const int SUCCESS = 5;
+	static const int SUCCESS = 5;
 };
 
-void sxd_client::hunt_demon() {
-    Json::Value data = this->Mod_HuntDemon_Base_open_hunt_demon();
-    int free_times = data[0].asInt();
-    int coin_times = data[1].asInt();
-    while (free_times) {
-        data = this->Mod_HuntDemon_Base_hunt_demon(0);
-        free_times = data[3].asInt();
-        if (data[0].asInt() != Mod_HuntDemon_Base::SUCCESS) {
-            common::log(boost::str(boost::format("¡¾ÁÔÑý¡¿Ãâ·ÑÁÔÑýÊ§°Ü£¬result[%1%]") % data[0]), iEdit);
-            return;
-        }
-        std::vector<std::string> items;
-        std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x) {
-            if (x[0].asInt()==1)
-                return boost::str(boost::format("[%1%¡Á%2%]") % db.get_code(version, "Item", x[1].asInt())["text"] % x[2]);
-            else if (x[0].asInt()==2)
-                return boost::str(boost::format("[ÔÄÀú¡Á%1%]") % x[2]);
-            else if (x[0].asInt()==0)
-                return boost::str(boost::format("[Í­Ç®¡Á%1%]") % x[2]);
-            else
-                return boost::str(boost::format("[Î´ÖªÎïÆ·¡Á%1%]") % x[2]);
-        });
-        common::log(boost::str(boost::format("¡¾ÁÔÑý¡¿Ãâ·ÑÁÔÑý£¬»ñµÃ£º%1%") % boost::algorithm::join(items, "£¬")), iEdit);
-    }
-    while (coin_times) {
-        data = this->Mod_HuntDemon_Base_hunt_demon(1);
-        coin_times = data[4].asInt();
-        if (data[0].asInt() != Mod_HuntDemon_Base::SUCCESS) {
-            common::log(boost::str(boost::format("¡¾ÁÔÑý¡¿Í­Ç®ÁÔÑýÊ§°Ü£¬result[%1%]") % data[0]), iEdit);
-            return;
-        }
-        std::vector<std::string> items;
-        std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x) {
-            if (x[0].asInt()==1)
-                return boost::str(boost::format("[%1%¡Á%2%]") % db.get_code(version, "Item", x[1].asInt())["text"] % x[2]);
-            else if (x[0].asInt()==2)
-                return boost::str(boost::format("[ÔÄÀú¡Á%1%]") % x[2]);
-            else if (x[0].asInt()==0)
-                return boost::str(boost::format("[Í­Ç®¡Á%1%]") % x[2]);
-            else
-                return boost::str(boost::format("[Î´ÖªÎïÆ·¡Á%1%]") % x[2]);
-        });
-        common::log(boost::str(boost::format("¡¾ÁÔÑý¡¿Í­Ç®ÁÔÑý£¬»ñµÃ£º%1%") % boost::algorithm::join(items, "£¬")), iEdit);
-    }
+void sxd_client::hunt_demon()
+{
+	Json::Value data = this->Mod_HuntDemon_Base_open_hunt_demon();
+	int free_times = data[0].asInt();
+	int coin_times = data[1].asInt();
+	while (free_times)
+	{
+		data = this->Mod_HuntDemon_Base_hunt_demon(0);
+		free_times = data[3].asInt();
+		if (data[0].asInt() != Mod_HuntDemon_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("¡¾ÁÔÑý¡¿Ãâ·ÑÁÔÑýÊ§°Ü£¬result[%1%]") % data[0]), iEdit);
+			return;
+		}
+		std::vector<std::string> items;
+		std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x)
+		{
+			if (x[0].asInt() == 1)
+				return boost::str(boost::format("[%1%¡Á%2%]") % db.get_code(version, "Item", x[1].asInt())["text"] % x[2]);
+			else if (x[0].asInt() == 2)
+				return boost::str(boost::format("[ÔÄÀú¡Á%1%]") % x[2]);
+			else if (x[0].asInt() == 0)
+				return boost::str(boost::format("[Í­Ç®¡Á%1%]") % x[2]);
+			else
+				return boost::str(boost::format("[Î´ÖªÎïÆ·¡Á%1%]") % x[2]);
+		});
+		common::log(boost::str(boost::format("¡¾ÁÔÑý¡¿Ãâ·ÑÁÔÑý£¬»ñµÃ£º%1%") % boost::algorithm::join(items, "£¬")), iEdit);
+	}
+	while (coin_times)
+	{
+		data = this->Mod_HuntDemon_Base_hunt_demon(1);
+		coin_times = data[4].asInt();
+		if (data[0].asInt() != Mod_HuntDemon_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("¡¾ÁÔÑý¡¿Í­Ç®ÁÔÑýÊ§°Ü£¬result[%1%]") % data[0]), iEdit);
+			return;
+		}
+		std::vector<std::string> items;
+		std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x)
+		{
+			if (x[0].asInt() == 1)
+				return boost::str(boost::format("[%1%¡Á%2%]") % db.get_code(version, "Item", x[1].asInt())["text"] % x[2]);
+			else if (x[0].asInt() == 2)
+				return boost::str(boost::format("[ÔÄÀú¡Á%1%]") % x[2]);
+			else if (x[0].asInt() == 0)
+				return boost::str(boost::format("[Í­Ç®¡Á%1%]") % x[2]);
+			else
+				return boost::str(boost::format("[Î´ÖªÎïÆ·¡Á%1%]") % x[2]);
+		});
+		common::log(boost::str(boost::format("¡¾ÁÔÑý¡¿Í­Ç®ÁÔÑý£¬»ñµÃ£º%1%") % boost::algorithm::join(items, "£¬")), iEdit);
+	}
 }
 
 //============================================================================
@@ -67,10 +75,11 @@ void sxd_client::hunt_demon() {
 // Example
 //     [ 3, 10, 5, 50, null ]
 //============================================================================
-Json::Value sxd_client::Mod_HuntDemon_Base_open_hunt_demon() {
-    Json::Value data;
-    data.append(1);
-    return this->send_and_receive(data, 105, 1);
+Json::Value sxd_client::Mod_HuntDemon_Base_open_hunt_demon()
+{
+	Json::Value data;
+	data.append(1);
+	return this->send_and_receive(data, 105, 1);
 }
 
 //============================================================================
@@ -90,10 +99,11 @@ Json::Value sxd_client::Mod_HuntDemon_Base_open_hunt_demon() {
 // Example
 //
 //============================================================================
-Json::Value sxd_client::Mod_HuntDemon_Base_hunt_demon(int type) {
-    Json::Value data;
-    data.append(type);
-    data.append(0);
-    return this->send_and_receive(data, 105, 2);
+Json::Value sxd_client::Mod_HuntDemon_Base_hunt_demon(int type)
+{
+	Json::Value data;
+	data.append(type);
+	data.append(0);
+	return this->send_and_receive(data, 105, 2);
 }
 

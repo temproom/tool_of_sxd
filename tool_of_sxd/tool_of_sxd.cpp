@@ -8,7 +8,8 @@
 #include <windows.h>
 using namespace std;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	std::srand((unsigned)std::time(NULL));
 	argc = 1;
 	if (argc >= 2)

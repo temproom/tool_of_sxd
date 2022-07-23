@@ -3,49 +3,54 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_StMine_Base {
+class Mod_StMine_Base
+{
 public:
-    static const int SUCCESS = 9;
+	static const int SUCCESS = 9;
 };
 
 //============================================================================
 // R180 矿山系统
 //============================================================================
-void sxd_client::st_mine() {
-    auto data = this->Mod_StMine_Base_get_mine_mountain_info();
-    if (data[0].asInt() != Mod_StMine_Base::SUCCESS) {
-        common::log(boost::str(boost::format("【矿山系统】打开矿山系统失败，result[%1%]") % data[0]), iEdit);
-        return;
-    }
-    int cur_mountain = data[3].asInt();
+void sxd_client::st_mine()
+{
+	auto data = this->Mod_StMine_Base_get_mine_mountain_info();
+	if (data[0].asInt() != Mod_StMine_Base::SUCCESS)
+	{
+		common::log(boost::str(boost::format("【矿山系统】打开矿山系统失败，result[%1%]") % data[0]), iEdit);
+		return;
+	}
+	int cur_mountain = data[3].asInt();
 
-    // mountain
-    std::vector<Json::Value> mountains;
-    std::copy_if(data[4].begin(), data[4].end(), std::back_inserter(mountains), [](const Json::Value& x) {return x[1].asInt() < x[2].asInt();});
-    if (!mountains.size())
-        return;
-    std::sort(mountains.begin(), mountains.end(), [](const Json::Value& x, const Json::Value& y) {return x[2].asInt() < y[2].asInt();});
-    if (mountains[0][0].asInt() <= cur_mountain)
-        return;
-    data = this->Mod_StMine_Base_enter_mine_mountain(mountains[0][0].asInt());
-    if (data[0].asInt() != Mod_StMine_Base::SUCCESS) {
-        common::log(boost::str(boost::format("【矿山系统】进入 [%1%] 星矿山失败，result[%2%]") % mountains[0][0] % data[0]), iEdit);
-        return;
-    }
+	// mountain
+	std::vector<Json::Value> mountains;
+	std::copy_if(data[4].begin(), data[4].end(), std::back_inserter(mountains), [](const Json::Value& x) { return x[1].asInt() < x[2].asInt(); });
+	if (!mountains.size())
+		return;
+	std::sort(mountains.begin(), mountains.end(), [](const Json::Value& x, const Json::Value& y) { return x[2].asInt() < y[2].asInt(); });
+	if (mountains[0][0].asInt() <= cur_mountain)
+		return;
+	data = this->Mod_StMine_Base_enter_mine_mountain(mountains[0][0].asInt());
+	if (data[0].asInt() != Mod_StMine_Base::SUCCESS)
+	{
+		common::log(boost::str(boost::format("【矿山系统】进入 [%1%] 星矿山失败，result[%2%]") % mountains[0][0] % data[0]), iEdit);
+		return;
+	}
 
-    // hole with nobody
-    std::vector<Json::Value> holes;
-    std::copy_if(data[22].begin(), data[22].end(), std::back_inserter(holes), [](const Json::Value& x) {return !x[4].asInt();});
+	// hole with nobody
+	std::vector<Json::Value> holes;
+	std::copy_if(data[22].begin(), data[22].end(), std::back_inserter(holes), [](const Json::Value& x) { return !x[4].asInt(); });
 
-    // rob
-    this->Mod_StMine_Base_leave_mine_hole();
-    this->Mod_StMine_Base_receive_award();
-    data = this->Mod_StMine_Base_rob_mine_hole(holes[0][0].asInt(), holes[0][4].asInt());
-    if (data[0].asInt() != Mod_StMine_Base::SUCCESS) {
-        common::log(boost::str(boost::format("【矿山系统】占领 [%1%] 星矿山失败，result[%2%]") % mountains[0][0] % data[0]), iEdit);
-        return;
-    }
-    common::log(boost::str(boost::format("【矿山系统】占领 [%1%] 星矿山") % mountains[0][0]), iEdit);
+	// rob
+	this->Mod_StMine_Base_leave_mine_hole();
+	this->Mod_StMine_Base_receive_award();
+	data = this->Mod_StMine_Base_rob_mine_hole(holes[0][0].asInt(), holes[0][4].asInt());
+	if (data[0].asInt() != Mod_StMine_Base::SUCCESS)
+	{
+		common::log(boost::str(boost::format("【矿山系统】占领 [%1%] 星矿山失败，result[%2%]") % mountains[0][0] % data[0]), iEdit);
+		return;
+	}
+	common::log(boost::str(boost::format("【矿山系统】占领 [%1%] 星矿山") % mountains[0][0]), iEdit);
 }
 
 //============================================================================
@@ -68,9 +73,10 @@ void sxd_client::st_mine() {
 //     已开始
 //     [ 9, 5, 103668081, **3**, [ [ 1, 29, 30 ], [ 2, 20, 20 ], [ 5, 4, 5 ], [ 3, 15, 15 ], [ 4, 10, 10 ] ], 14, 0 ]
 //============================================================================
-Json::Value sxd_client::Mod_StMine_Base_get_mine_mountain_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 264, 0);
+Json::Value sxd_client::Mod_StMine_Base_get_mine_mountain_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 264, 0);
 }
 
 //============================================================================
@@ -108,10 +114,11 @@ Json::Value sxd_client::Mod_StMine_Base_get_mine_mountain_info() {
 //     [ 9, 4, 23304, **3**, 20, 0,      **0, 0, 0, 0, 0, 2403, 0, 0, 70, 0, 0, 0, 0, 0, "", "",**        [ [ 29, 0, 23, 1, 2977, "\u98d8\u98d8\u8f7b\u4e91.s176", 260, "37wan_s0520", 1529935663, 1530014863, 6 ], [ 61, 0, 8, 1, 2269, "\u60c5\u7fa9\u4e4b\u5dd4\u00b0\u27aa.s156", 258, "duowan_s0152", 1529991967, 1530071167, 60 ], [ 36, 0, 11, 1, 1512, "\u9ad8\u4e39\u67ab", 259, "wodota_s1", 1529935228, 1530014428, 94 ], [ 56, 0, 6, 1, 3821, "\u5341\u4e09.s15", 230, "rising_s033", 1529938262, 1530017462, 90 ],
 //        **[ 59, 0, 4, 0, 0, "", 0, "", 0, 0, 0 ]**, [ 12, 0, 11, 1, 3275, "\u8def\u8fc7.s177", 260, "37wan_s0520", 1529935835, 1530015035, 92 ], [ 48, 0, 3, 1, 2925, "\u6b27\u9633\u9038\u5929.s151", 259, "s077", 1529984106, 1530063306, 8 ], [ 67, 0, 21, 1, 3504, "\u4e91\u98de\u4e0d\u7406.s168", 258, "37wan_s0520", 1529939304, 1530012744, 12 ], [ 73, 0, 17, 1, 3360, "\u57cb\u846c*\u79cb.s177", 260, "37wan_s0520", 1529935795, 1530014995, 30 ], [ 14, 0, 2, 1, 7455, "\u590f\u4faf\u4e18\u4e7e.s299", 192, "s0151", 1529937759, 1530016239, 2600000 ], [ 34, 0, 8, 1, 2962, "\u5dc5\u5cf0~\\\u7687\u5c0f.s165", 258, "37wan_s0520", 1529944809, 1530024009, 164 ], [ 63, 0, 13, 1, 3266, "\u7a0b\u666e\u68ee.s151", 258, "s077", 1529936989, 1530016189, 920 ], [ 28, 0, 6, 1, 994, "\u5415\u53cc\u971c", 250, "youxilan_s1", 1529937783, 1530016983, 90 ], [ 7, 0, 11, 1, 3277, "\u9001\u82b1\u75371.s177", 260, "37wan_s0520", 1529936183, 1530015383, 92 ], [ 13, 0, 16, 1, 3329, "\u6211\u662fV5.s175", 260, "37wan_s0520", 1529935654, 1530014854, 30 ] ], 2 ]
 //============================================================================
-Json::Value sxd_client::Mod_StMine_Base_enter_mine_mountain(int id) {
-    Json::Value data;
-    data.append(id);
-    return this->send_and_receive(data, 264, 1);
+Json::Value sxd_client::Mod_StMine_Base_enter_mine_mountain(int id)
+{
+	Json::Value data;
+	data.append(id);
+	return this->send_and_receive(data, 264, 1);
 }
 
 //============================================================================
@@ -124,9 +131,10 @@ Json::Value sxd_client::Mod_StMine_Base_enter_mine_mountain(int id) {
 // Example
 //     [ 9, 4, 25644 ]
 //============================================================================
-Json::Value sxd_client::Mod_StMine_Base_leave_mine_hole(){
-    Json::Value data;
-    return this->send_and_receive(data, 264, 4);
+Json::Value sxd_client::Mod_StMine_Base_leave_mine_hole()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 264, 4);
 }
 
 //============================================================================
@@ -137,9 +145,10 @@ Json::Value sxd_client::Mod_StMine_Base_leave_mine_hole(){
 // Example
 //     [ 9 ]
 //============================================================================
-Json::Value sxd_client::Mod_StMine_Base_receive_award() {
-    Json::Value data;
-    return this->send_and_receive(data, 264, 7);
+Json::Value sxd_client::Mod_StMine_Base_receive_award()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 264, 7);
 }
 
 //============================================================================
@@ -154,9 +163,10 @@ Json::Value sxd_client::Mod_StMine_Base_receive_award() {
 // Example
 //     [ 59, 0 ] --> [ 9, null, 3, 1529229219, 1, 59, 1530099114, 1530021354, 1530019914, 1740, 2, 144, 0, 1, 1, 0, 0, 0, "", "" ]
 //============================================================================
-Json::Value sxd_client::Mod_StMine_Base_rob_mine_hole(int hole_id, int robbed_player_id) {
-    Json::Value data;
-    data.append(hole_id);
-    data.append(robbed_player_id);
-    return this->send_and_receive(data, 264, 3);
+Json::Value sxd_client::Mod_StMine_Base_rob_mine_hole(int hole_id, int robbed_player_id)
+{
+	Json::Value data;
+	data.append(hole_id);
+	data.append(robbed_player_id);
+	return this->send_and_receive(data, 264, 3);
 }

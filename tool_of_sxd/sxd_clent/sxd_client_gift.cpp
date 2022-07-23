@@ -3,45 +3,51 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_Player_Base {
+class Mod_Player_Base
+{
 public:
-    static const int SUCCEED = 0;
-    static const int ACTION_SUCCESS = 93;
+	static const int SUCCEED = 0;
+	static const int ACTION_SUCCESS = 93;
 };
 
-class Mod_Farm_Base {
+class Mod_Farm_Base
+{
 public:
-    static const int SUCCESS = 8;
+	static const int SUCCESS = 8;
 };
 
-void sxd_client::gift3() {
-    Json::Value data = this->Mod_Player_Base_get_game_assistant_info();
-    Json::Value game_assistant_info = data;
-    // 灵石 is_can_get_stone(30)
-    if (game_assistant_info[30].asInt() == Mod_Player_Base::SUCCEED) {
-        data = this->Mod_SealSoul_Base_get_day_stone();
-        if (data[0].asInt() == 1)
-            common::log(boost::str(boost::format("【礼包】领取 [灵石×%1%]") % data[1]), iEdit);
-        else
-            common::log(boost::str(boost::format("【礼包】领取灵石失败，result[%1%]") % data[0]), iEdit);
-    }
-    // 俸禄 is_get_camp_salary[13]
-    if (game_assistant_info[13].asInt() == Mod_Player_Base::SUCCEED) {
-        data = this->Mod_Player_Base_get_player_camp_salary();
-        if (data[0].asInt() == Mod_Player_Base::ACTION_SUCCESS)
-            common::log(boost::str(boost::format("【礼包】领取俸禄 [铜钱×%1%]") % data[1]), iEdit);
-        else
-            common::log(boost::str(boost::format("【礼包】领取俸禄失败，result[%1%]") % data[0]), iEdit);
-    }
-    // 仙令
-    data = this->Mod_Farm_Base_player_is_player_get_xian_ling_gift();
-    if (data[0].asInt()) {
-        data = this->Mod_Farm_Base_player_get_xian_ling_gift();
-        if (data[0].asInt() == Mod_Farm_Base::SUCCESS)
-            common::log(boost::str(boost::format("【礼包】领取 [仙令×%1%]") % data[1]), iEdit);
-        else
-            common::log(boost::str(boost::format("【礼包】领取仙令失败，[%1%]") % data[0]), iEdit);
-    }
+void sxd_client::gift3()
+{
+	Json::Value data = this->Mod_Player_Base_get_game_assistant_info();
+	Json::Value game_assistant_info = data;
+	// 灵石 is_can_get_stone(30)
+	if (game_assistant_info[30].asInt() == Mod_Player_Base::SUCCEED)
+	{
+		data = this->Mod_SealSoul_Base_get_day_stone();
+		if (data[0].asInt() == 1)
+			common::log(boost::str(boost::format("【礼包】领取 [灵石×%1%]") % data[1]), iEdit);
+		else
+			common::log(boost::str(boost::format("【礼包】领取灵石失败，result[%1%]") % data[0]), iEdit);
+	}
+	// 俸禄 is_get_camp_salary[13]
+	if (game_assistant_info[13].asInt() == Mod_Player_Base::SUCCEED)
+	{
+		data = this->Mod_Player_Base_get_player_camp_salary();
+		if (data[0].asInt() == Mod_Player_Base::ACTION_SUCCESS)
+			common::log(boost::str(boost::format("【礼包】领取俸禄 [铜钱×%1%]") % data[1]), iEdit);
+		else
+			common::log(boost::str(boost::format("【礼包】领取俸禄失败，result[%1%]") % data[0]), iEdit);
+	}
+	// 仙令
+	data = this->Mod_Farm_Base_player_is_player_get_xian_ling_gift();
+	if (data[0].asInt())
+	{
+		data = this->Mod_Farm_Base_player_get_xian_ling_gift();
+		if (data[0].asInt() == Mod_Farm_Base::SUCCESS)
+			common::log(boost::str(boost::format("【礼包】领取 [仙令×%1%]") % data[1]), iEdit);
+		else
+			common::log(boost::str(boost::format("【礼包】领取仙令失败，[%1%]") % data[0]), iEdit);
+	}
 }
 
 //============================================================================
@@ -60,10 +66,11 @@ void sxd_client::gift3() {
 // Example
 //     [ 1, 70 ]
 //============================================================================
-Json::Value sxd_client::Mod_SealSoul_Base_get_day_stone() {
-    Json::Value data;
-    data.append(0);
-    return this->send_and_receive(data, 34, 18);
+Json::Value sxd_client::Mod_SealSoul_Base_get_day_stone()
+{
+	Json::Value data;
+	data.append(0);
+	return this->send_and_receive(data, 34, 18);
 }
 
 //============================================================================
@@ -75,9 +82,10 @@ Json::Value sxd_client::Mod_SealSoul_Base_get_day_stone() {
 // Example
 //     [ 87, 326000 ]
 //============================================================================
-Json::Value sxd_client::Mod_Player_Base_get_player_camp_salary() {
-    Json::Value data;
-    return this->send_and_receive(data, 0, 20);
+Json::Value sxd_client::Mod_Player_Base_get_player_camp_salary()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 0, 20);
 }
 
 //============================================================================
@@ -89,9 +97,10 @@ Json::Value sxd_client::Mod_Player_Base_get_player_camp_salary() {
 //     [ 8 ]
 //     [ 0 ]
 //============================================================================
-Json::Value sxd_client::Mod_Farm_Base_player_is_player_get_xian_ling_gift() {
-    Json::Value data;
-    return this->send_and_receive(data, 13, 19);
+Json::Value sxd_client::Mod_Farm_Base_player_is_player_get_xian_ling_gift()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 13, 19);
 }
 
 //============================================================================
@@ -102,29 +111,33 @@ Json::Value sxd_client::Mod_Farm_Base_player_is_player_get_xian_ling_gift() {
 // Example
 //     [ 8, 8 ]
 //============================================================================
-Json::Value sxd_client::Mod_Farm_Base_player_get_xian_ling_gift() {
-    Json::Value data;
-    return this->send_and_receive(data, 13, 20);
+Json::Value sxd_client::Mod_Farm_Base_player_get_xian_ling_gift()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 13, 20);
 }
 
-class Mod_FunctionEnd_Base {
+class Mod_FunctionEnd_Base
+{
 public:
-    static const int SUCCESS = 0;
+	static const int SUCCESS = 0;
 };
 
-void sxd_client::function_end() {
-    Json::Value data = this->Mod_FunctionEnd_Base_game_function_end_gift();
-    Json::Value gifts = data[0];
-    for (const auto& gift : gifts) {
-        int id = gift[0].asInt();
-        if (gift[8].asInt() == 0)
-            this->Mod_FunctionEnd_Base_random_award(id);
-        data = this->Mod_FunctionEnd_Base_get_game_function_end_gift(id);
-        if (data[0].asInt() != Mod_FunctionEnd_Base::SUCCESS)
-            common::log(boost::str(boost::format("【礼包】领取失败，result[%1%]") % data[0]), iEdit);
-        else
-            common::log(boost::str(boost::format("【礼包】领取 [%1%]") % db.get_code(version, "EndFunctionGift", id)["text"]), iEdit);
-    }
+void sxd_client::function_end()
+{
+	Json::Value data = this->Mod_FunctionEnd_Base_game_function_end_gift();
+	Json::Value gifts = data[0];
+	for (const auto& gift : gifts)
+	{
+		int id = gift[0].asInt();
+		if (gift[8].asInt() == 0)
+			this->Mod_FunctionEnd_Base_random_award(id);
+		data = this->Mod_FunctionEnd_Base_get_game_function_end_gift(id);
+		if (data[0].asInt() != Mod_FunctionEnd_Base::SUCCESS)
+			common::log(boost::str(boost::format("【礼包】领取失败，result[%1%]") % data[0]), iEdit);
+		else
+			common::log(boost::str(boost::format("【礼包】领取 [%1%]") % db.get_code(version, "EndFunctionGift", id)["text"]), iEdit);
+	}
 }
 
 //============================================================================
@@ -152,9 +165,10 @@ void sxd_client::function_end() {
 // Example
 //     [ [ [ 13, 0, 0, 0, 0, 0, 0, 0, 0, 10 ], [ 7, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 16, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], [ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_FunctionEnd_Base_game_function_end_gift() {
-    Json::Value data;
-    return this->send_and_receive(data, 127, 1);
+Json::Value sxd_client::Mod_FunctionEnd_Base_game_function_end_gift()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 127, 1);
 }
 
 //============================================================================
@@ -171,10 +185,11 @@ Json::Value sxd_client::Mod_FunctionEnd_Base_game_function_end_gift() {
 //     _loc_3.exp_buff = param1[5];
 //     this.randomIngot = param1[6];
 //============================================================================
-Json::Value sxd_client::Mod_FunctionEnd_Base_random_award(int id) {
-    Json::Value data;
-    data.append(id);
-    return this->send_and_receive(data, 127, 3);
+Json::Value sxd_client::Mod_FunctionEnd_Base_random_award(int id)
+{
+	Json::Value data;
+	data.append(id);
+	return this->send_and_receive(data, 127, 3);
 }
 
 //============================================================================
@@ -186,29 +201,33 @@ Json::Value sxd_client::Mod_FunctionEnd_Base_random_award(int id) {
 //     this.result = param1[0];
 //     this.isHaveNext = param1[8] == 1;
 //============================================================================
-Json::Value sxd_client::Mod_FunctionEnd_Base_get_game_function_end_gift(int id) {
-    Json::Value data;
-    data.append(id);
-    return this->send_and_receive(data, 127, 2);
+Json::Value sxd_client::Mod_FunctionEnd_Base_get_game_function_end_gift(int id)
+{
+	Json::Value data;
+	data.append(id);
+	return this->send_and_receive(data, 127, 2);
 }
 
-class Mod_Item_Base {
+class Mod_Item_Base
+{
 public:
-    static const int ACTION_SUCCESS = 20;
+	static const int ACTION_SUCCESS = 20;
 };
 
-void sxd_client::gift() {
-    Json::Value data = this->Mod_Item_Base_get_player_gift_all_info();
-    Json::Value gifts = data[0];
-    for (const auto& gift : gifts) {
-        int id = gift[0].asInt();
-        std::string message = gift[2].asString();
-        data = this->Mod_Item_Base_player_get_super_gift(id);
-        if (data[0].asInt() != Mod_Item_Base::ACTION_SUCCESS)
-            common::log(boost::str(boost::format("【礼包】领取失败，result[%1%]") % data[0]), iEdit);
-        else
-            common::log(boost::str(boost::format("【礼包】%1%") % common::utf2gbk(message)), iEdit);
-    }
+void sxd_client::gift()
+{
+	Json::Value data = this->Mod_Item_Base_get_player_gift_all_info();
+	Json::Value gifts = data[0];
+	for (const auto& gift : gifts)
+	{
+		int id = gift[0].asInt();
+		std::string message = gift[2].asString();
+		data = this->Mod_Item_Base_player_get_super_gift(id);
+		if (data[0].asInt() != Mod_Item_Base::ACTION_SUCCESS)
+			common::log(boost::str(boost::format("【礼包】领取失败，result[%1%]") % data[0]), iEdit);
+		else
+			common::log(boost::str(boost::format("【礼包】%1%") % common::utf2gbk(message)), iEdit);
+	}
 }
 
 //============================================================================
@@ -226,9 +245,10 @@ void sxd_client::gift() {
 // Example
 //     [ [ [ 6265143, 136, "\u83b7\u5f97\u5e2e\u6d3e\u5165\u4fb5\u7ec8\u7ed3\u5956\u52b1\u9752\u9f99\u4ee4x12\uff01", "", [ [ 19, 12, 1007 ] ] ], [ 6265168, 70, "", "", [ [ 12, 2450, 0 ] ] ], [ 6265026, 90, "\u60a8\u5728\u4ed9\u754c\u7ade\u6280\u573a\u4e2d[\u79ef\u52061320],\u5956\u52b1[\u8363\u8a8962].", "", [ [ 17, 62, 0 ] ] ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_Item_Base_get_player_gift_all_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 2, 6);
+Json::Value sxd_client::Mod_Item_Base_get_player_gift_all_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 2, 6);
 }
 
 //============================================================================
@@ -243,10 +263,11 @@ Json::Value sxd_client::Mod_Item_Base_get_player_gift_all_info() {
 // Example
 //     [ 20, null ]
 //============================================================================
-Json::Value sxd_client::Mod_Item_Base_player_get_super_gift(int id) {
-    Json::Value data;
-    data.append(id);
-    return this->send_and_receive(data, 2, 29);
+Json::Value sxd_client::Mod_Item_Base_player_get_super_gift(int id)
+{
+	Json::Value data;
+	data.append(id);
+	return this->send_and_receive(data, 2, 29);
 }
 
 //============================================================================
@@ -259,9 +280,10 @@ Json::Value sxd_client::Mod_Item_Base_player_get_super_gift(int id) {
 //    [ 27, 1760, 880000 ]
 //    [ 28, 0, 0 ]
 //============================================================================
-void sxd_client::Mod_HeroesWar_Base_get_end_gift() {
-    Json::Value data;
-    this->send_frame(data, 42, 18);
+void sxd_client::Mod_HeroesWar_Base_get_end_gift()
+{
+	Json::Value data;
+	this->send_frame(data, 42, 18);
 }
 
 //============================================================================
@@ -271,9 +293,10 @@ void sxd_client::Mod_HeroesWar_Base_get_end_gift() {
 //     [ 10, 0, 0, 0 ]
 //     [ 13, 0, 0, 0 ]
 //============================================================================
-void sxd_client::Mod_StChallenge_Base_get_end_li_bao() {
-    Json::Value data;
-    this->send_frame(data, 136, 20);
+void sxd_client::Mod_StChallenge_Base_get_end_li_bao()
+{
+	Json::Value data;
+	this->send_frame(data, 136, 20);
 }
 
 //============================================================================
@@ -284,8 +307,9 @@ void sxd_client::Mod_StChallenge_Base_get_end_li_bao() {
 //     [ 6 ]
 //     no response
 //============================================================================
-void sxd_client::Mod_UnlimitChallenge_Base_get_end_award() {
-    Json::Value data;
-    this->send_frame(data, 169, 5);
+void sxd_client::Mod_UnlimitChallenge_Base_get_end_award()
+{
+	Json::Value data;
+	this->send_frame(data, 169, 5);
 }
 

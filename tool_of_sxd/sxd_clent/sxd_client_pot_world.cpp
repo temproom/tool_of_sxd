@@ -3,109 +3,121 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_PotWorld_Base {
+class Mod_PotWorld_Base
+{
 public:
-    static const int UNLOCK = 1;
-    static const int YES = 3;
-    static const int NO = 4;
-    static const int SUCCESS = 5;
+	static const int UNLOCK = 1;
+	static const int YES = 3;
+	static const int NO = 4;
+	static const int SUCCESS = 5;
 };
 
 //============================================================================
 // 壶中界
 //============================================================================
-void sxd_client::pot_world() {
-    // 面板
-    auto data = this->Mod_PotWorld_Base_get_info();
-    auto building_list = data[4];
-    // 仓库
-    data = this->Mod_PotWorld_Base_get_pack_info();
-    auto pack_list = data[1];
-    // 仓库物品统计
-    std::map<int, int> items_my;
-    for (const auto& item : pack_list) {
-        int item_id = item[0].asInt();
-        int item_count = item[2].asInt();
-        if (items_my.find(item_id) != items_my.end())
-            items_my[item_id] += item_count;
-        else
-            items_my[item_id] = item_count;
-    }
-    // show
-    //for (const auto& item : items_my)
-    //    common::log(boost::str(boost::format("【壶中界】[%1%×%2%]") % db.get_code(version, "Item", item.first)["text"] % item.second), iEdit);
+void sxd_client::pot_world()
+{
+	// 面板
+	auto data = this->Mod_PotWorld_Base_get_info();
+	auto building_list = data[4];
+	// 仓库
+	data = this->Mod_PotWorld_Base_get_pack_info();
+	auto pack_list = data[1];
+	// 仓库物品统计
+	std::map<int, int> items_my;
+	for (const auto& item : pack_list)
+	{
+		int item_id = item[0].asInt();
+		int item_count = item[2].asInt();
+		if (items_my.find(item_id) != items_my.end())
+			items_my[item_id] += item_count;
+		else
+			items_my[item_id] = item_count;
+	}
+	// show
+	//for (const auto& item : items_my)
+	//    common::log(boost::str(boost::format("【壶中界】[%1%×%2%]") % db.get_code(version, "Item", item.first)["text"] % item.second), iEdit);
 
-    // 1:草药商店, 2:精魄商店
-    for (int building_id = 1; building_id <= 2; building_id++) {
-        if (building_list[building_id][4].asInt() == Mod_PotWorld_Base::UNLOCK) {
-            data = this->Mod_PotWorld_Base_get_store_info(building_id);
-            int building_level = data[1].asInt();
-            auto goods_list = data[3];
-            for (const auto& good : goods_list) {
-                int item_id = good[0].asInt();
-                int buy_num = good[1].asInt();
-                int cd_time = good[4].asInt();
-                int is_lock = good[5].asInt();
-                // lock
-                if (is_lock != Mod_PotWorld_Base::UNLOCK)
-                    continue;
-                // count_my
-                int count_my = 0;
-                if (items_my.find(item_id) != items_my.end())
-                    count_my = items_my[item_id];
-                // buy conditions
-                while (buy_num < building_level && count_my < 60) {
-                    // server_time
-                    data = this->Mod_Player_Base_server_time();
-                    int server_time = data[0].asInt();
-                    if (server_time < cd_time)
-                        break;
-                    // buy
-                    data = this->Mod_PotWorld_Base_buy_item(item_id);
-                    if (data[0].asInt() != Mod_PotWorld_Base::SUCCESS) {
-                        common::log(boost::str(boost::format("【壶中界】购买 [%1%] 失败，result[%2%]") % db.get_code(version, "Item", item_id)["text"] % data[0]), iEdit);
-                        return;
-                    }
-                    common::log(boost::str(boost::format("【壶中界】购买 [%1%]") % db.get_code(version, "Item", item_id)["text"]), iEdit);
-                    buy_num++;
-                    count_my++;
-                }
-            }
-        }
-    }
+	// 1:草药商店, 2:精魄商店
+	for (int building_id = 1; building_id <= 2; building_id++)
+	{
+		if (building_list[building_id][4].asInt() == Mod_PotWorld_Base::UNLOCK)
+		{
+			data = this->Mod_PotWorld_Base_get_store_info(building_id);
+			int building_level = data[1].asInt();
+			auto goods_list = data[3];
+			for (const auto& good : goods_list)
+			{
+				int item_id = good[0].asInt();
+				int buy_num = good[1].asInt();
+				int cd_time = good[4].asInt();
+				int is_lock = good[5].asInt();
+				// lock
+				if (is_lock != Mod_PotWorld_Base::UNLOCK)
+					continue;
+				// count_my
+				int count_my = 0;
+				if (items_my.find(item_id) != items_my.end())
+					count_my = items_my[item_id];
+				// buy conditions
+				while (buy_num < building_level && count_my < 60)
+				{
+					// server_time
+					data = this->Mod_Player_Base_server_time();
+					int server_time = data[0].asInt();
+					if (server_time < cd_time)
+						break;
+					// buy
+					data = this->Mod_PotWorld_Base_buy_item(item_id);
+					if (data[0].asInt() != Mod_PotWorld_Base::SUCCESS)
+					{
+						common::log(boost::str(boost::format("【壶中界】购买 [%1%] 失败，result[%2%]") % db.get_code(version, "Item", item_id)["text"] % data[0]), iEdit);
+						return;
+					}
+					common::log(boost::str(boost::format("【壶中界】购买 [%1%]") % db.get_code(version, "Item", item_id)["text"]), iEdit);
+					buy_num++;
+					count_my++;
+				}
+			}
+		}
+	}
 
-    // 祝福炼化
-    for (;;) {
-        // server_time
-        data = this->Mod_Player_Base_server_time();
-        int server_time = data[0].asInt();
-        // fu_valid
-        data = this->Mod_PotWorld_Base_get_fu_info();
-        std::vector<Json::Value> fu_valid;
-        std::copy_if(data[0].begin(), data[0].end(), std::back_inserter(fu_valid), [server_time](const Json::Value& x) {
-            int cost_time = x[2].asInt();
-            int is_lock = x[3].asInt();
-            int forever_flag = x[5].asInt();
-            if (is_lock != Mod_PotWorld_Base::UNLOCK || forever_flag == Mod_PotWorld_Base::YES || server_time < cost_time) return 0;
-            auto merge_item_list = x[4];
-            for (const auto& merge_item : merge_item_list) {
-                int awrad_num = merge_item[1].asInt();
-                int now_num = merge_item[2].asInt();
-                if (awrad_num > now_num) return 0;
-            }
-            return 1;
-        });
-        if (!fu_valid.size())
-            break;
+	// 祝福炼化
+	for (;;)
+	{
+		// server_time
+		data = this->Mod_Player_Base_server_time();
+		int server_time = data[0].asInt();
+		// fu_valid
+		data = this->Mod_PotWorld_Base_get_fu_info();
+		std::vector<Json::Value> fu_valid;
+		std::copy_if(data[0].begin(), data[0].end(), std::back_inserter(fu_valid), [server_time](const Json::Value& x)
+		{
+			int cost_time = x[2].asInt();
+			int is_lock = x[3].asInt();
+			int forever_flag = x[5].asInt();
+			if (is_lock != Mod_PotWorld_Base::UNLOCK || forever_flag == Mod_PotWorld_Base::YES || server_time < cost_time) return 0;
+			auto merge_item_list = x[4];
+			for (const auto& merge_item : merge_item_list)
+			{
+				int awrad_num = merge_item[1].asInt();
+				int now_num = merge_item[2].asInt();
+				if (awrad_num > now_num) return 0;
+			}
+			return 1;
+		});
+		if (!fu_valid.size())
+			break;
 
-        int item_id = fu_valid[rand() % fu_valid.size()][0].asInt();
-        data = this->Mod_PotWorld_Base_merge_item(item_id);
-        if (data[0].asInt() != Mod_PotWorld_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【壶中界】祝福炼化 [%1%] 失败，result[%2%]") % db.get_code(version, "Item", item_id)["text"] % data[0]), iEdit);
-            return;
-        }
-        common::log(boost::str(boost::format("【壶中界】祝福炼化 [%1%]") % db.get_code(version, "Item", item_id)["text"]), iEdit);
-    }
+		int item_id = fu_valid[rand() % fu_valid.size()][0].asInt();
+		data = this->Mod_PotWorld_Base_merge_item(item_id);
+		if (data[0].asInt() != Mod_PotWorld_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【壶中界】祝福炼化 [%1%] 失败，result[%2%]") % db.get_code(version, "Item", item_id)["text"] % data[0]), iEdit);
+			return;
+		}
+		common::log(boost::str(boost::format("【壶中界】祝福炼化 [%1%]") % db.get_code(version, "Item", item_id)["text"]), iEdit);
+	}
 }
 
 //============================================================================
@@ -123,9 +135,10 @@ void sxd_client::pot_world() {
 // 满级
 //     [ 50, 3000, 0, 591935, [ [ 3, 1, 0, 0, 1 ], [ 1, 3, 3, 500, 1 ], [ 2, 3, 0, 0, 1 ], [ 5, 1, 30, 10000, 1 ], [ 4, 3, 0, 0, 1 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_PotWorld_Base_get_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 235, 1);
+Json::Value sxd_client::Mod_PotWorld_Base_get_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 235, 1);
 }
 
 //============================================================================
@@ -145,10 +158,11 @@ Json::Value sxd_client::Mod_PotWorld_Base_get_info() {
 //     [ 2 ] --> [ 7275, 2, 1, [ [ 3979, 0, 2, 10, 36000, 0, 100, 36000 ], [ 3976, 0, 1, 10, 72000, **1**, 0, 72000 ], [ 3980, 0, 5, 30, 72000, 0, 600, 72000 ], [ 3975, 0, 1, 5, 36000, **1**, 0, 36000 ], [ 4001, 0, 10, 50, 54000, 0, 1200, 54000 ] ] ]
 //     3975 白色晶魄，3976 蓝色晶魄
 //============================================================================
-Json::Value sxd_client::Mod_PotWorld_Base_get_store_info(int building_id) {
-    Json::Value data;
-    data.append(building_id);
-    return this->send_and_receive(data, 235, 2);
+Json::Value sxd_client::Mod_PotWorld_Base_get_store_info(int building_id)
+{
+	Json::Value data;
+	data.append(building_id);
+	return this->send_and_receive(data, 235, 2);
 }
 
 //============================================================================
@@ -160,10 +174,11 @@ Json::Value sxd_client::Mod_PotWorld_Base_get_store_info(int building_id) {
 // Example
 //     [ 3975 ] --> [ 5, 591930 ]
 //============================================================================
-Json::Value sxd_client::Mod_PotWorld_Base_buy_item(int item_id) {
-    Json::Value data;
-    data.append(item_id);
-    return this->send_and_receive(data, 235, 9);
+Json::Value sxd_client::Mod_PotWorld_Base_buy_item(int item_id)
+{
+	Json::Value data;
+	data.append(item_id);
+	return this->send_and_receive(data, 235, 9);
 }
 
 //============================================================================
@@ -175,9 +190,10 @@ Json::Value sxd_client::Mod_PotWorld_Base_buy_item(int item_id) {
 // Example
 //     [ [ [ 3985, 4, 3, 500, 3 ], [ 3993, 4, 3, 8000, 3 ], [ 3987, 4, 3, 3000, 3 ], [ 3978, 4, 3, 1000, 3 ], [ 3983, 4, 3, 1500, 3 ], [ 3990, 4, 3, 8000, 3 ], [ 3994, 4, 3, 12000, 3 ], [ 3977, 4, 3, 500, 3 ], [ 3991, 4, 3, 12000, 3 ], [ 3989, 4, 3, 4000, 3 ], [ 3982, 4, 3, 1500, 3 ], [ 3992, 4, 3, 8000, 3 ], [ 3986, 4, 3, 3000, 3 ], [ 3984, 4, 3, 1000, 3 ], [ 3988, 4, 3, 8000, 3 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_PotWorld_Base_get_forever_zhu_fu_list() {
-    Json::Value data;
-    return this->send_and_receive(data, 235, 17);
+Json::Value sxd_client::Mod_PotWorld_Base_get_forever_zhu_fu_list()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 235, 17);
 }
 
 //============================================================================
@@ -205,9 +221,10 @@ Json::Value sxd_client::Mod_PotWorld_Base_get_forever_zhu_fu_list() {
 //         [ 3993, 1, 0, 0, [ [ 3980, 2, 0 ], [ 4002, 2, 0 ], [ 4001, 1, 0 ] ], 4 ],
 //         [ 3985, 1, 0, 1, [ [ 3975, 2, 0 ] ], 4 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_PotWorld_Base_get_fu_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 235, 4);
+Json::Value sxd_client::Mod_PotWorld_Base_get_fu_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 235, 4);
 }
 
 //============================================================================
@@ -218,10 +235,11 @@ Json::Value sxd_client::Mod_PotWorld_Base_get_fu_info() {
 // Example
 //     [ 3978 ] --> [ 5 ]
 //============================================================================
-Json::Value sxd_client::Mod_PotWorld_Base_merge_item(int item_id) {
-    Json::Value data;
-    data.append(item_id);
-    return this->send_and_receive(data, 235, 10);
+Json::Value sxd_client::Mod_PotWorld_Base_merge_item(int item_id)
+{
+	Json::Value data;
+	data.append(item_id);
+	return this->send_and_receive(data, 235, 10);
 }
 
 //============================================================================
@@ -240,8 +258,9 @@ Json::Value sxd_client::Mod_PotWorld_Base_merge_item(int item_id) {
 // 无需升级仓库
 //     [ 0, [ [ 4001, 95, 6 ], [ 4007, 24, 10 ], [ 4006, 42, 10 ], [ 4001, 8, 10 ], [ 4002, 80, 10 ], [ 4006, 91, 4 ], [ 4004, 62, 10 ], [ 4006, 39, 10 ], [ 4005, 56, 10 ], [ 4001, 1, 10 ], [ 4002, 78, 10 ], [ 3979, 14, 10 ], [ 3979, 93, 9 ], [ 4007, 25, 10 ], [ 3980, 9, 10 ], [ 3979, 16, 10 ], [ 3979, 11, 10 ], [ 4004, 98, 3 ], [ 4005, 58, 10 ], [ 4005, 53, 10 ], [ 4006, 45, 10 ], [ 4007, 32, 10 ], [ 3975, 88, 10 ], [ 4005, 61, 10 ], [ 4001, 6, 10 ], [ 4007, 33, 10 ], [ 4003, 70, 10 ], [ 4007, 29, 10 ], [ 3980, 92, 9 ], [ 3979, 15, 10 ], [ 4001, 5, 10 ], [ 4005, 90, 5 ], [ 4003, 73, 10 ], [ 4003, 71, 10 ], [ 4003, 68, 10 ], [ 3979, 13, 10 ], [ 4006, 44, 10 ], [ 4003, 74, 10 ], [ 3979, 18, 10 ], [ 4006, 48, 10 ], [ 4007, 31, 10 ], [ 4004, 63, 10 ], [ 4002, 82, 10 ], [ 4004, 65, 10 ], [ 4003, 75, 10 ], [ 4005, 54, 10 ], [ 4002, 87, 7 ], [ 3976, 96, 3 ], [ 4005, 60, 10 ], [ 4006, 46, 10 ], [ 4002, 81, 10 ], [ 4006, 38, 10 ], [ 4003, 72, 10 ], [ 4003, 69, 10 ], [ 4002, 77, 10 ], [ 4005, 52, 10 ], [ 4001, 7, 10 ], [ 4003, 66, 10 ], [ 4006, 37, 10 ], [ 4002, 79, 10 ], [ 3979, 10, 10 ], [ 4007, 97, 1 ], [ 4001, 4, 10 ], [ 4007, 30, 10 ], [ 3979, 22, 10 ], [ 4006, 41, 10 ], [ 4002, 84, 10 ], [ 4003, 67, 10 ], [ 4007, 34, 10 ], [ 4002, 85, 10 ], [ 3979, 21, 10 ], [ 3979, 17, 10 ], [ 4006, 43, 10 ], [ 4006, 47, 10 ], [ 4003, 99, 2 ], [ 4002, 86, 10 ], [ 4005, 55, 10 ], [ 3976, 89, 10 ], [ 3979, 12, 10 ], [ 4007, 35, 10 ], [ 4005, 59, 10 ], [ 4005, 57, 10 ], [ 4005, 51, 10 ], [ 3975, 94, 5 ], [ 4001, 2, 10 ], [ 4001, 3, 10 ], [ 4007, 36, 10 ], [ 4004, 64, 10 ], [ 4005, 50, 10 ], [ 4006, 40, 10 ], [ 4007, 26, 10 ], [ 3979, 20, 10 ], [ 4002, 76, 10 ], [ 3979, 19, 10 ], [ 4007, 27, 10 ], [ 4006, 49, 10 ], [ 4007, 28, 10 ], [ 4002, 83, 10 ], [ 3976, 23, 10 ] ], 591935, 3, 50 ]
 //============================================================================
-Json::Value sxd_client::Mod_PotWorld_Base_get_pack_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 235, 6);
+Json::Value sxd_client::Mod_PotWorld_Base_get_pack_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 235, 6);
 }
 

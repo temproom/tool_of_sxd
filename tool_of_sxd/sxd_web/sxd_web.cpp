@@ -8,15 +8,17 @@
 #include "sxd_web.h"
 
 sxd_web::sxd_web() :
-	//连接socket和io_service
-	sock(ios) {
-}
+	//连接socket和io_context
+	sock(ios)
+{}
 
-sxd_web::~sxd_web() {
+sxd_web::~sxd_web()
+{
 	sock.close();
 }
 
-void sxd_web::connect(const std::string& host, const std::string& port) {
+void sxd_web::connect(const std::string& host, const std::string& port)
+{
 	this->host = host;
 	this->port = port;
 	//解析服务器信息,创建reslover对象
@@ -29,7 +31,8 @@ void sxd_web::connect(const std::string& host, const std::string& port) {
 	boost::asio::connect(sock, resolver.resolve(query));
 } //sxd_web::connect
 
-void sxd_web::service(const std::string& method, const std::string& request_uri, const std::string& request_http_version, const std::string& request_header, const std::string& content, std::string& response_http_version, unsigned& status_code, std::string& status_message, std::string& response_header, std::string& response_body) {
+void sxd_web::service(const std::string& method, const std::string& request_uri, const std::string& request_http_version, const std::string& request_header, const std::string& content, std::string& response_http_version, unsigned& status_code, std::string& status_message, std::string& response_header, std::string& response_body)
+{
 	// -------------------------------------------------------------------------------------------
 	// 0. prepare
 	// -------------------------------------------------------------------------------------------
@@ -56,10 +59,12 @@ void sxd_web::service(const std::string& method, const std::string& request_uri,
 	request_stream << method << " " << "/" << " " << request_http_version << "\r\n";
 	request_stream << "Host: " << host << "\r\n";
 	request_stream << "User-Agent: " << "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31" << "\r\n";
-	if (method == "GET") {
+	if (method == "GET")
+	{
 		request_stream << request_header << "\r\n";
 	}
-	else if (method == "POST") {
+	else if (method == "POST")
+	{
 		request_stream << "Content-Type: " << "application/x-www-form-urlencoded" << "\r\n";
 		request_stream << "Content-Length: " << content.size() << "\r\n";
 		request_stream << request_header << "\r\n";
@@ -93,7 +98,8 @@ void sxd_web::service(const std::string& method, const std::string& request_uri,
 	boost::regex transfer_encoding_regex("Transfer-Encoding: (.*)");
 	boost::regex content_length_regex("Content-Length: (.*)");
 	std::string header;
-	while (std::getline(response_stream, header) && header != "\r") {
+	while (std::getline(response_stream, header) && header != "\r")
+	{
 		boost::algorithm::trim(header);
 		//match保存结果
 		boost::smatch match;
@@ -108,10 +114,12 @@ void sxd_web::service(const std::string& method, const std::string& request_uri,
 	// 4. read response body
 	// -------------------------------------------------------------------------------------------
 	osstream.str("");
-	if (transfer_encoding == "chunked") {
+	if (transfer_encoding == "chunked")
+	{
 		content_length = 0;
 		size_t chunk_size;
-		do {
+		do
+		{
 			boost::asio::read_until(sock, response, "\r\n");
 			std::string chunk_size_string;
 			std::getline(response_stream, chunk_size_string);
@@ -127,7 +135,8 @@ void sxd_web::service(const std::string& method, const std::string& request_uri,
 		} while (chunk_size > 0);
 		response_body = osstream.str();
 	}
-	else if (content_length >= 0) {
+	else if (content_length >= 0)
+	{
 		if ((size_t)content_length > response.size())
 			boost::asio::read(sock, response, boost::asio::transfer_exactly(content_length - response.size()));
 		std::unique_ptr<char[]> buff(new char[content_length + 1]);
@@ -147,7 +156,8 @@ void sxd_web::service(const std::string& method, const std::string& request_uri,
 
 } //sxd_web::service
 
-std::string sxd_web::get(const std::string& request_uri, const std::string& request_header) {
+std::string sxd_web::get(const std::string& request_uri, const std::string& request_header)
+{
 	std::string response_http_version;
 	unsigned int status_code;
 	std::string status_message;
@@ -158,7 +168,8 @@ std::string sxd_web::get(const std::string& request_uri, const std::string& requ
 	return response_body;
 }
 
-std::string sxd_web::post(const std::string& request_uri, const std::string& request_header, const std::string& content) {
+std::string sxd_web::post(const std::string& request_uri, const std::string& request_header, const std::string& content)
+{
 	std::string response_http_version;
 	unsigned int status_code;
 	std::string status_message;

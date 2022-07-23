@@ -3,38 +3,48 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_SuperSport_Base {
+class Mod_SuperSport_Base
+{
 public:
-    static const int SUCCESS = 0;
+	static const int SUCCESS = 0;
 };
 
-void sxd_client::super_sport() {
-    try {
-        for (;;) {
-            Json::Value data = this->Mod_SuperSport_Base_open_super_sport();
-            if (data[4].asInt() == 0) {
-                common::log("【竞技场】挑战次数已用完", 0);
-                return;
-            }
-            if (data[11].asInt()) {
-                common::log("【竞技场】CD中...", iEdit);
-                return;
-            }
-            Json::Value person = data[12][0];
-            data = this->Mod_SuperSport_Base_start_challenge(person[0].asInt());
-            if (data[0].asInt() != Mod_SuperSport_Base::SUCCESS) {
-                common::log(boost::str(boost::format("【竞技场】挑战失败，result[%1%]") % data[0]), iEdit);
-                return;
-            }
-            if (data[2].asInt()) {
-                common::log(boost::str(boost::format("【竞技场】挑战 [%1%]，战败") % common::utf2gbk(person[4].asString())), iEdit);
-                return;
-            }
-            common::log(boost::str(boost::format("【竞技场】挑战 [%1%]，战胜") % common::utf2gbk(person[4].asString())), iEdit);
-        }
-    } catch (const std::exception& ex) {
-        common::log(boost::str(boost::format("发现错误(super sport)：%1%") % ex.what()));
-    }
+void sxd_client::super_sport()
+{
+	try
+	{
+		for (;;)
+		{
+			Json::Value data = this->Mod_SuperSport_Base_open_super_sport();
+			if (data[4].asInt() == 0)
+			{
+				common::log("【竞技场】挑战次数已用完", 0);
+				return;
+			}
+			if (data[11].asInt())
+			{
+				common::log("【竞技场】CD中...", iEdit);
+				return;
+			}
+			Json::Value person = data[12][0];
+			data = this->Mod_SuperSport_Base_start_challenge(person[0].asInt());
+			if (data[0].asInt() != Mod_SuperSport_Base::SUCCESS)
+			{
+				common::log(boost::str(boost::format("【竞技场】挑战失败，result[%1%]") % data[0]), iEdit);
+				return;
+			}
+			if (data[2].asInt())
+			{
+				common::log(boost::str(boost::format("【竞技场】挑战 [%1%]，战败") % common::utf2gbk(person[4].asString())), iEdit);
+				return;
+			}
+			common::log(boost::str(boost::format("【竞技场】挑战 [%1%]，战胜") % common::utf2gbk(person[4].asString())), iEdit);
+		}
+	}
+	catch (const std::exception& ex)
+	{
+		common::log(boost::str(boost::format("发现错误(super sport)：%1%") % ex.what()));
+	}
 }
 
 //============================================================================
@@ -64,9 +74,10 @@ void sxd_client::super_sport() {
 //     [ 1292, 0, 2585578, 42, **5**, 0, 2, 70800, 0, 1519695049,
 //       1519436149, **0**, **[ [ 1267, 332878, 2, 163, "\u60dc\u8776.s1", 73300, 0 ], [ 1242, 170272, 108, 161, "\u5316\u96e8.s7", 75800, 0 ], [ 1217, 236268, 104, 159, "\u2661 \u82b7 \u67d2.s1", 78300, 0 ], [ 1192, 295629, 100, 162, "\u5584\u7f18.s1", 80800, 0 ], [ 1167, 166947, 110, 165, "\u591c\u6708.s7", 83300, 0 ] ]**, [ [ 13086621, 1, 355527, "\u5e84\u606d\u6625.s1", 332878, "\u60dc\u8776.s1", 332878, 1292, 1292, "2018021201", 1519484832 ], [ 13086618, 1, 355527, "\u5e84\u606d\u6625.s1", 332878, "\u60dc\u8776.s1", 332878, 1292, 1292, "2018021201", 1519484800 ], [ 13086616, 1, 355527, "\u5e84\u606d\u6625.s1", 332878, "\u60dc\u8776.s1", 332878, 1292, 1292, "2018021201", 1519484767 ], [ 13086615, 1, 355527, "\u5e84\u606d\u6625.s1", 332878, "\u60dc\u8776.s1", 332878, 1292, 1292, "2018021201", 1519484734 ], [ 13086614, 1, 355527, "\u5e84\u606d\u6625.s1", 332878, "\u60dc\u8776.s1", 332878, 1292, 1292, "2018021201", 1519484701 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_SuperSport_Base_open_super_sport() {
-    Json::Value data;
-    return this->send_and_receive(data, 28, 0);
+Json::Value sxd_client::Mod_SuperSport_Base_open_super_sport()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 28, 0);
 }
 
 //============================================================================
@@ -85,8 +96,9 @@ Json::Value sxd_client::Mod_SuperSport_Base_open_super_sport() {
 // Example
 //     [ 0, 4, 0, ...]
 //============================================================================
-Json::Value sxd_client::Mod_SuperSport_Base_start_challenge(int id) {
-    Json::Value data;
-    data.append(id);
-    return this->send_and_receive(data, 28, 2);
+Json::Value sxd_client::Mod_SuperSport_Base_start_challenge(int id)
+{
+	Json::Value data;
+	data.append(id);
+	return this->send_and_receive(data, 28, 2);
 }

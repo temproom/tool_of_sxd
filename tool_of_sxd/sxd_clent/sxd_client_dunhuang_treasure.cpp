@@ -3,27 +3,31 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_DunhuangTreasure_Base {
+class Mod_DunhuangTreasure_Base
+{
 public:
-    static const int TONG = 6;
-    static const int SUCCESS = 7;
+	static const int TONG = 6;
+	static const int SUCCESS = 7;
 };
 
 //============================================================================
 // 敦煌秘宝
 //============================================================================
-void sxd_client::dunhuang_treasure() {
-    auto data = this->Mod_DunhuangTreasure_Base_get_dunhuang_treasure_info();
-    auto gift_list = data[7];
-    for (const auto& gift : gift_list) {
-        int type = gift[0].asInt();
-        int open_times = gift[3].asInt();
-        if (type == Mod_DunhuangTreasure_Base::TONG && !open_times) {
-            data = this->Mod_DunhuangTreasure_Base_open_treasure(type);
-            if (data[0].asInt() == Mod_DunhuangTreasure_Base::SUCCESS)
-                common::log(boost::str(boost::format("【敦煌秘宝】开启 [玉珠机关]，获得 [积分×%1%]") % data[2]), iEdit);
-        }
-    }
+void sxd_client::dunhuang_treasure()
+{
+	auto data = this->Mod_DunhuangTreasure_Base_get_dunhuang_treasure_info();
+	auto gift_list = data[7];
+	for (const auto& gift : gift_list)
+	{
+		int type = gift[0].asInt();
+		int open_times = gift[3].asInt();
+		if (type == Mod_DunhuangTreasure_Base::TONG && !open_times)
+		{
+			data = this->Mod_DunhuangTreasure_Base_open_treasure(type);
+			if (data[0].asInt() == Mod_DunhuangTreasure_Base::SUCCESS)
+				common::log(boost::str(boost::format("【敦煌秘宝】开启 [玉珠机关]，获得 [积分×%1%]") % data[2]), iEdit);
+		}
+	}
 }
 
 //============================================================================
@@ -41,9 +45,10 @@ void sxd_client::dunhuang_treasure() {
 //     [ [ [ 36, 2263, 8 ], [ 25, 5104, 1 ], [ 32, 5156, 5 ], [ 6, 1740, 20 ], [ 9, 347, 50 ], [ 22, 3050, 25 ], [ 23, 4519, 25 ], [ 37, 5520, 1 ] ], 3, 3, 5000000, 30, 1, 50,
 //       [ [ 4, 4982, 3, 0 ], [ 5, 4982, 2, 0 ], [ ****6, 5104, 2, **1** ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_DunhuangTreasure_Base_get_dunhuang_treasure_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 356, 0);
+Json::Value sxd_client::Mod_DunhuangTreasure_Base_get_dunhuang_treasure_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 356, 0);
 }
 
 //============================================================================
@@ -56,8 +61,9 @@ Json::Value sxd_client::Mod_DunhuangTreasure_Base_get_dunhuang_treasure_info() {
 // Example
 //     [ 6 ] --> [ 7, [ [ 31, 2395, 5 ], [ 11, 5398, 1 ], [ 25, 5104, 1 ] ], 30 ]
 //============================================================================
-Json::Value sxd_client::Mod_DunhuangTreasure_Base_open_treasure(int type) {
-    Json::Value data;
-    data.append(type);
-    return this->send_and_receive(data, 356, 1);
+Json::Value sxd_client::Mod_DunhuangTreasure_Base_open_treasure(int type)
+{
+	Json::Value data;
+	data.append(type);
+	return this->send_and_receive(data, 356, 1);
 }

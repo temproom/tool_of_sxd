@@ -24,31 +24,37 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="sqlite3\sqlite3.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sqlite3\sqlite3ext.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sxd_clent\sxd_client.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sxd_web\sxd_web.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sxd\sxd.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="common\common.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="database\database.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="libiconv\localcharset.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="libiconv\iconv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\database.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\iconv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\protocol.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sqlite3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sqlite3ext.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sxd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sxd_client.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sxd_web.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

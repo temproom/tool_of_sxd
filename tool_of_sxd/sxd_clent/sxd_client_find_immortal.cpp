@@ -3,37 +3,43 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_FindImmortal_Base {
+class Mod_FindImmortal_Base
+{
 public:
-    static const int SUCCESS = 0;
-    static const int YES = 12;
+	static const int SUCCESS = 0;
+	static const int YES = 12;
 };
 
 //============================================================================
 // R179 喜从天降
 //============================================================================
-void sxd_client::find_immortal() {
-    for (;;) {
-        auto data = this->Mod_FindImmortal_Base_open_find_immortal();
-        int remain_number = data[0].asInt();
-        int state = data[6].asInt();
-        if (state) {
-            data = this->Mod_FindImmortal_Base_pickup_award();
-            if (data[0].asInt() != Mod_FindImmortal_Base::SUCCESS) {
-                common::log(boost::str(boost::format("【喜从天降】见好就收失败，result[%1%]") % data[0]), iEdit);
-                return;
-            }
-            common::log(boost::str(boost::format("【喜从天降】见好就收，获得 [声望×%1%]，[阅历×%2%]，[仙令×%3%]") % data[1] % data[2] % data[3]), iEdit);
-        }
-        if (!remain_number)
-            return;
-        data = this->Mod_FindImmortal_Base_start_find_immortal();
-        if (data[0].asInt() != Mod_FindImmortal_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【喜从天降】画龙鱼失败，result[%1%]") % data[0]), iEdit);
-            return;
-        }
-        common::log("【喜从天降】画龙鱼", iEdit);
-    }
+void sxd_client::find_immortal()
+{
+	for (;;)
+	{
+		auto data = this->Mod_FindImmortal_Base_open_find_immortal();
+		int remain_number = data[0].asInt();
+		int state = data[6].asInt();
+		if (state)
+		{
+			data = this->Mod_FindImmortal_Base_pickup_award();
+			if (data[0].asInt() != Mod_FindImmortal_Base::SUCCESS)
+			{
+				common::log(boost::str(boost::format("【喜从天降】见好就收失败，result[%1%]") % data[0]), iEdit);
+				return;
+			}
+			common::log(boost::str(boost::format("【喜从天降】见好就收，获得 [声望×%1%]，[阅历×%2%]，[仙令×%3%]") % data[1] % data[2] % data[3]), iEdit);
+		}
+		if (!remain_number)
+			return;
+		data = this->Mod_FindImmortal_Base_start_find_immortal();
+		if (data[0].asInt() != Mod_FindImmortal_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【喜从天降】画龙鱼失败，result[%1%]") % data[0]), iEdit);
+			return;
+		}
+		common::log("【喜从天降】画龙鱼", iEdit);
+	}
 }
 
 //============================================================================
@@ -57,9 +63,10 @@ void sxd_client::find_immortal() {
 // 见好就收后
 //     [ 19, 0, 0, 0, 0, 0, 0, 0, 556, 1076 ]
 //============================================================================
-Json::Value sxd_client::Mod_FindImmortal_Base_open_find_immortal() {
-    Json::Value data;
-    return this->send_and_receive(data, 68, 1);
+Json::Value sxd_client::Mod_FindImmortal_Base_open_find_immortal()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 68, 1);
 }
 
 //============================================================================
@@ -79,9 +86,10 @@ Json::Value sxd_client::Mod_FindImmortal_Base_open_find_immortal() {
 // Example
 //     [ 0, 20, 1500, 2, 0, 0, 1, 3, 18, 1081 ]
 //============================================================================
-Json::Value sxd_client::Mod_FindImmortal_Base_start_find_immortal() {
-    Json::Value data;
-    return this->send_and_receive(data, 68, 2);
+Json::Value sxd_client::Mod_FindImmortal_Base_start_find_immortal()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 68, 2);
 }
 
 //============================================================================
@@ -98,47 +106,54 @@ Json::Value sxd_client::Mod_FindImmortal_Base_start_find_immortal() {
 // Example
 //     [ 0, 20, 1500, 2, 0, 0, 558 ]
 //============================================================================
-Json::Value sxd_client::Mod_FindImmortal_Base_pickup_award() {
-    Json::Value data;
-    return this->send_and_receive(data, 68, 4);
+Json::Value sxd_client::Mod_FindImmortal_Base_pickup_award()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 68, 4);
 }
 
 //============================================================================
 // R179 五福临门
 //============================================================================
-void sxd_client::find_immortal2() {
-    auto data = this->Mod_FindImmortal_Base_is_five_blessings_open();
-    if (data[0].asInt() != Mod_FindImmortal_Base::YES)
-        return;
+void sxd_client::find_immortal2()
+{
+	auto data = this->Mod_FindImmortal_Base_is_five_blessings_open();
+	if (data[0].asInt() != Mod_FindImmortal_Base::YES)
+		return;
 
-    for (;;) {
-        data = this->Mod_FindImmortal_Base_open_five_blessings();
-        int bless_number = data[0].asInt();
-        int stage = data[1].asInt();
-        if (stage) {
-            data = this->Mod_FindImmortal_Base_end_bless();
-            if (data[0].asInt() != Mod_FindImmortal_Base::SUCCESS) {
-                common::log(boost::str(boost::format("【五福临门】见好就收失败，result[%1%]") % data[0]), iEdit);
-                return;
-            }
-            std::vector<int> awards = { 0, 0, 0, 0 };
-            for (const Json::Value& item : data[1]) {
-                awards[0] += item[1].asInt();
-                awards[1] += item[2].asInt();
-                awards[2] += item[3].asInt();
-                awards[3] += item[4].asInt();
-            }
-            common::log(boost::str(boost::format("【五福临门】见好就收，获得 [阅历×%1%]，[仙令×%2%]，[星魂×%3%]，[魔石碎片×%4%]") % awards[0] % awards[1] % awards[2] % awards[3]), iEdit);
-        }
-        if (bless_number == 0)
-            break;
-        data = this->Mod_FindImmortal_Base_start_bless();
-        if (data[0].asInt() != Mod_FindImmortal_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【五福临门】画龙鱼失败，result[%1%]") % data[0]), iEdit);
-            return;
-        }
-        common::log("【五福临门】画龙鱼", iEdit);
-    }
+	for (;;)
+	{
+		data = this->Mod_FindImmortal_Base_open_five_blessings();
+		int bless_number = data[0].asInt();
+		int stage = data[1].asInt();
+		if (stage)
+		{
+			data = this->Mod_FindImmortal_Base_end_bless();
+			if (data[0].asInt() != Mod_FindImmortal_Base::SUCCESS)
+			{
+				common::log(boost::str(boost::format("【五福临门】见好就收失败，result[%1%]") % data[0]), iEdit);
+				return;
+			}
+			std::vector<int> awards = { 0, 0, 0, 0 };
+			for (const Json::Value& item : data[1])
+			{
+				awards[0] += item[1].asInt();
+				awards[1] += item[2].asInt();
+				awards[2] += item[3].asInt();
+				awards[3] += item[4].asInt();
+			}
+			common::log(boost::str(boost::format("【五福临门】见好就收，获得 [阅历×%1%]，[仙令×%2%]，[星魂×%3%]，[魔石碎片×%4%]") % awards[0] % awards[1] % awards[2] % awards[3]), iEdit);
+		}
+		if (bless_number == 0)
+			break;
+		data = this->Mod_FindImmortal_Base_start_bless();
+		if (data[0].asInt() != Mod_FindImmortal_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【五福临门】画龙鱼失败，result[%1%]") % data[0]), iEdit);
+			return;
+		}
+		common::log("【五福临门】画龙鱼", iEdit);
+	}
 }
 
 //============================================================================
@@ -149,9 +164,10 @@ void sxd_client::find_immortal2() {
 // Example
 //     [ 11 ]
 //============================================================================
-Json::Value sxd_client::Mod_FindImmortal_Base_is_five_blessings_open() {
-    Json::Value data;
-    return this->send_and_receive(data, 68, 14);
+Json::Value sxd_client::Mod_FindImmortal_Base_is_five_blessings_open()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 68, 14);
 }
 
 //============================================================================
@@ -166,9 +182,10 @@ Json::Value sxd_client::Mod_FindImmortal_Base_is_five_blessings_open() {
 //     [ 10, 0, null, 20 ]
 //     [ 9, 1, [ [ 4, 1200, 0, 2, 1 ], [ 3, 600, 3, 0, 0 ], [ 3, 600, 3, 0, 0 ], [ 5, 1200, 0, 3, 2 ], [ 4, 1200, 0, 2, 1 ] ], 20 ]
 //============================================================================
-Json::Value sxd_client::Mod_FindImmortal_Base_open_five_blessings() {
-    Json::Value data;
-    return this->send_and_receive(data, 68, 10);
+Json::Value sxd_client::Mod_FindImmortal_Base_open_five_blessings()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 68, 10);
 }
 
 //============================================================================
@@ -181,9 +198,10 @@ Json::Value sxd_client::Mod_FindImmortal_Base_open_five_blessings() {
 // Example
 //     [ 0, 1, [ [ 4, 1200, 0, 2, 1 ], [ 3, 600, 3, 0, 0 ], [ 4, 1200, 0, 2, 1 ], [ 3, 600, 3, 0, 0 ], [ 5, 1200, 0, 3, 2 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_FindImmortal_Base_start_bless() {
-    Json::Value data;
-    return this->send_and_receive(data, 68, 11);
+Json::Value sxd_client::Mod_FindImmortal_Base_start_bless()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 68, 11);
 }
 
 //============================================================================
@@ -200,7 +218,8 @@ Json::Value sxd_client::Mod_FindImmortal_Base_start_bless() {
 // Example
 //     [ 0, [ [ 4, 1200, 0, 2, 1 ], [ 3, 600, 3, 0, 0 ], [ 3, 600, 3, 0, 0 ], [ 5, 1200, 0, 3, 2 ], [ 4, 1200, 0, 2, 1 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_FindImmortal_Base_end_bless() {
-    Json::Value data;
-    return this->send_and_receive(data, 68, 13);
+Json::Value sxd_client::Mod_FindImmortal_Base_end_bless()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 68, 13);
 }

@@ -4,30 +4,35 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_Laba_Base {
+class Mod_Laba_Base
+{
 public:
-    static const int SUCCESS = 2;
+	static const int SUCCESS = 2;
 };
 
-void sxd_client::five_elements_laba() {
-    std::string scraps[] = { "", "初级金灵碎片", "初级木灵碎片", "初级水灵碎片", "初级火灵碎片", "初级土灵碎片", "中级金灵碎片", "中级木灵碎片", "中级水灵碎片", "中级火灵碎片", "中级土灵碎片" };
-    Json::Value data = this->Mod_Laba_Base_laba_info();
-    int free_count = data[0].asInt();
-    int coin_count = data[1].asInt();
-    while (free_count + coin_count > 0) {
-        data = this->Mod_Laba_Base_draw();
-        if (data[0].asInt() != Mod_Laba_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【五行天仪】转一次失败，result[%1%]") % data[0]), iEdit);
-            return;
-        }
-        std::vector<std::string> items;
-        std::transform(data[1][0][0].begin(), data[1][0][0].end(), std::back_inserter(items), [&scraps](const Json::Value& x) {
-            return boost::str(boost::format("[%1%]") % scraps[x[0].asInt()]);
-        });
-        common::log(boost::str(boost::format("【五行天仪】转一次，获得：%1%") % boost::algorithm::join(items, "，")), iEdit);
-        free_count = data[3].asInt();
-        coin_count = data[4].asInt();
-    }
+void sxd_client::five_elements_laba()
+{
+	std::string scraps[] = { "", "初级金灵碎片", "初级木灵碎片", "初级水灵碎片", "初级火灵碎片", "初级土灵碎片", "中级金灵碎片", "中级木灵碎片", "中级水灵碎片", "中级火灵碎片", "中级土灵碎片" };
+	Json::Value data = this->Mod_Laba_Base_laba_info();
+	int free_count = data[0].asInt();
+	int coin_count = data[1].asInt();
+	while (free_count + coin_count > 0)
+	{
+		data = this->Mod_Laba_Base_draw();
+		if (data[0].asInt() != Mod_Laba_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【五行天仪】转一次失败，result[%1%]") % data[0]), iEdit);
+			return;
+		}
+		std::vector<std::string> items;
+		std::transform(data[1][0][0].begin(), data[1][0][0].end(), std::back_inserter(items), [&scraps](const Json::Value& x)
+		{
+			return boost::str(boost::format("[%1%]") % scraps[x[0].asInt()]);
+		});
+		common::log(boost::str(boost::format("【五行天仪】转一次，获得：%1%") % boost::algorithm::join(items, "，")), iEdit);
+		free_count = data[3].asInt();
+		coin_count = data[4].asInt();
+	}
 }
 
 //============================================================================
@@ -42,9 +47,10 @@ void sxd_client::five_elements_laba() {
 // Example
 //     [ 1, 9, 0, 0, 11350, [ [ 8, 1 ], [ 3, 0 ], [ 6, 3 ], [ 4, 0 ], [ 9, 3 ], [ 7, 0 ], [ 5, 1 ], [ 1, 2 ], [ 10, 3 ], [ 2, 0 ] ], 500 ]
 //============================================================================
-Json::Value sxd_client::Mod_Laba_Base_laba_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 172, 0);
+Json::Value sxd_client::Mod_Laba_Base_laba_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 172, 0);
 }
 
 //============================================================================
@@ -73,9 +79,10 @@ Json::Value sxd_client::Mod_Laba_Base_laba_info() {
 // Example
 //     [ 2, [ [ [ [ 7 ], [ 1 ], [ 2 ] ] ] ], 11360, 0, 9, 0, 0, [ [ 8, 1 ], [ 3, 0 ], [ 6, 3 ], [ 4, 0 ], [ 9, 3 ], [ 7, 0 ], [ 5, 1 ], [ 1, 2 ], [ 10, 3 ], [ 2, 0 ] ], 500 ]
 //============================================================================
-Json::Value sxd_client::Mod_Laba_Base_draw() {
-    Json::Value data;
-    data.append(0);
-    return this->send_and_receive(data, 172, 1);
+Json::Value sxd_client::Mod_Laba_Base_draw()
+{
+	Json::Value data;
+	data.append(0);
+	return this->send_and_receive(data, 172, 1);
 }
 

@@ -3,43 +3,51 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_SaTakeBible_Base {
+class Mod_SaTakeBible_Base
+{
 public:
-    static const int SUCCESS = 11;
+	static const int SUCCESS = 11;
 };
 
 static std::string protectors[] = { "", "白龙马", "沙悟净", "猪八戒", "孙悟空", "唐僧" };
 
-void sxd_client::sa_take_bible() {
-    // first get
-    Json::Value data = this->Mod_SaTakeBible_Base_get_take_bible_info();
-    Json::Value bible_info = data;
-    if (bible_info[2].asInt() == bible_info[3].asInt()) {
-        common::log("【圣域取经】次数已用完", 0);
-        return;
-    }
-    if (bible_info[6].asInt() == 0) {
-        data = this->Mod_SaTakeBible_Base_refresh();
-        if (data[0].asInt() != Mod_SaTakeBible_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【圣域取经】刷新取经使者失败，msg[%1%]") % data[0]), iEdit);
-            return;
-        }
-        common::log(boost::str(boost::format("【圣域取经】刷新取经使者，获得 [%1%]") % protectors[data[1].asInt()]), iEdit);
-    }
-    // second get
-    bible_info = this->Mod_SaTakeBible_Base_get_take_bible_info();
-    if (bible_info[6].asInt() == 0) {
-        common::log(boost::str(boost::format("【圣域取经】数据异常，can_protection[%1%]") % bible_info[6]), iEdit);
-        return;
-    }
-    if (bible_info[5].asInt() == 0) {
-        data = this->Mod_SaTakeBible_Base_start_take_bible();
-        if (data[0].asInt() != Mod_SaTakeBible_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【圣域取经】护送失败，msg[%1%]") % data[0]), iEdit);
-            return;
-        }
-        common::log(boost::str(boost::format("【圣域取经】开始护送，取经使者 [%1%]") % protectors[bible_info[6].asInt()]), iEdit);
-    }
+void sxd_client::sa_take_bible()
+{
+	// first get
+	Json::Value data = this->Mod_SaTakeBible_Base_get_take_bible_info();
+	Json::Value bible_info = data;
+	if (bible_info[2].asInt() == bible_info[3].asInt())
+	{
+		common::log("【圣域取经】次数已用完", 0);
+		return;
+	}
+	if (bible_info[6].asInt() == 0)
+	{
+		data = this->Mod_SaTakeBible_Base_refresh();
+		if (data[0].asInt() != Mod_SaTakeBible_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【圣域取经】刷新取经使者失败，msg[%1%]") % data[0]), iEdit);
+			return;
+		}
+		common::log(boost::str(boost::format("【圣域取经】刷新取经使者，获得 [%1%]") % protectors[data[1].asInt()]), iEdit);
+	}
+	// second get
+	bible_info = this->Mod_SaTakeBible_Base_get_take_bible_info();
+	if (bible_info[6].asInt() == 0)
+	{
+		common::log(boost::str(boost::format("【圣域取经】数据异常，can_protection[%1%]") % bible_info[6]), iEdit);
+		return;
+	}
+	if (bible_info[5].asInt() == 0)
+	{
+		data = this->Mod_SaTakeBible_Base_start_take_bible();
+		if (data[0].asInt() != Mod_SaTakeBible_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【圣域取经】护送失败，msg[%1%]") % data[0]), iEdit);
+			return;
+		}
+		common::log(boost::str(boost::format("【圣域取经】开始护送，取经使者 [%1%]") % protectors[bible_info[6].asInt()]), iEdit);
+	}
 }
 
 //============================================================================
@@ -66,9 +74,10 @@ void sxd_client::sa_take_bible() {
 //     [ [ [ 1, 20, 1615000, 4, 140, 9, 1988 ], [ 2, 25, 2012500, 8, 205, 6, 2501 ], [ 3, 30, 3275000, 20, 330, 7, 1510 ], [ 4, 35, 4650000, 27, 580, 4, 1917 ], [ 5, 40, 14275500, 48, 1680, 3, 1000 ] ], null,
 //       0, 3, 10, 0, 1, "", 0, 3 ]
 //============================================================================
-Json::Value sxd_client::Mod_SaTakeBible_Base_get_take_bible_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 395, 2);
+Json::Value sxd_client::Mod_SaTakeBible_Base_get_take_bible_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 395, 2);
 }
 
 //============================================================================
@@ -83,9 +92,10 @@ Json::Value sxd_client::Mod_SaTakeBible_Base_get_take_bible_info() {
 // Example
 //     [ 11, 1, 10, 3 ]
 //============================================================================
-Json::Value sxd_client::Mod_SaTakeBible_Base_refresh() {
-    Json::Value data;
-    return this->send_and_receive(data, 395, 8);
+Json::Value sxd_client::Mod_SaTakeBible_Base_refresh()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 395, 8);
 }
 
 //============================================================================
@@ -99,7 +109,8 @@ Json::Value sxd_client::Mod_SaTakeBible_Base_refresh() {
 // Example
 //     [ 11, 0, 1 ]
 //============================================================================
-Json::Value sxd_client::Mod_SaTakeBible_Base_start_take_bible() {
-    Json::Value data;
-    return this->send_and_receive(data, 395, 10);
+Json::Value sxd_client::Mod_SaTakeBible_Base_start_take_bible()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 395, 10);
 }

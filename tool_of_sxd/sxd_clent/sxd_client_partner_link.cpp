@@ -3,45 +3,51 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_PartnerLink_Base {
+class Mod_PartnerLink_Base
+{
 public:
-    static const int SUCCESS = 2;
-    static const int GENERAL = 5;
-    static const int ADVANCED = 6;
+	static const int SUCCESS = 2;
+	static const int GENERAL = 5;
+	static const int ADVANCED = 6;
 };
 
 //============================================================================
 // R179 ÌìÔµÏµÍ³
 //============================================================================
-void sxd_client::partner_link() {
-    for (;;) {
-        auto data = this->Mod_PartnerLink_Base_get_shopping_info();
-        // ÆÕÍ¨Ôµ»ê±¦Ïä
-        auto item = *std::find_if(data[0].begin(), data[0].end(), [](const Json::Value& x) {return x[0].asInt()==Mod_PartnerLink_Base::GENERAL;});
-        int times = item[2].asInt();
-        if (times == 0)
-            break;
-        data = this->Mod_PartnerLink_Base_buy_item(Mod_PartnerLink_Base::GENERAL);
-        if (data[0].asInt() != Mod_PartnerLink_Base::SUCCESS) {
-            common::log(boost::str(boost::format("¡¾ÌìÔµÏµÍ³¡¿¿ªÆôÆÕÍ¨Ôµ»ê±¦ÏäÊ§°Ü£¬result[%1%]") % data[0]), iEdit);
-            break;
-        }
-        common::log("¡¾ÌìÔµÏµÍ³¡¿¿ªÆôÆÕÍ¨Ôµ»ê±¦Ïä", iEdit);
-    }
-    for (;;) {
-        auto data = this->Mod_PartnerLink_Base_get_shopping_info();
-        // ¸ß¼¶Ôµ»ê±¦Ïä
-        auto item = *std::find_if(data[0].begin(), data[0].end(), [](const Json::Value& x) {return x[0].asInt()==Mod_PartnerLink_Base::ADVANCED;});
-        auto times = item[2].asInt();
-        if (times == 0)
-            break;
-        data = this->Mod_PartnerLink_Base_buy_item(Mod_PartnerLink_Base::ADVANCED);
-        if (data[0].asInt() != Mod_PartnerLink_Base::SUCCESS) {
-            common::log(boost::str(boost::format("¡¾ÌìÔµÏµÍ³¡¿¿ªÆô¸ß¼¶Ôµ»ê±¦ÏäÊ§°Ü£¬result[%1%]") % data[0]), iEdit);
-            break;
-        }
-        common::log("¡¾ÌìÔµÏµÍ³¡¿¿ªÆô¸ß¼¶Ôµ»ê±¦Ïä", iEdit);
-    }
+void sxd_client::partner_link()
+{
+	for (;;)
+	{
+		auto data = this->Mod_PartnerLink_Base_get_shopping_info();
+		// ÆÕÍ¨Ôµ»ê±¦Ïä
+		auto item = *std::find_if(data[0].begin(), data[0].end(), [](const Json::Value& x) { return x[0].asInt() == Mod_PartnerLink_Base::GENERAL; });
+		int times = item[2].asInt();
+		if (times == 0)
+			break;
+		data = this->Mod_PartnerLink_Base_buy_item(Mod_PartnerLink_Base::GENERAL);
+		if (data[0].asInt() != Mod_PartnerLink_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("¡¾ÌìÔµÏµÍ³¡¿¿ªÆôÆÕÍ¨Ôµ»ê±¦ÏäÊ§°Ü£¬result[%1%]") % data[0]), iEdit);
+			break;
+		}
+		common::log("¡¾ÌìÔµÏµÍ³¡¿¿ªÆôÆÕÍ¨Ôµ»ê±¦Ïä", iEdit);
+	}
+	for (;;)
+	{
+		auto data = this->Mod_PartnerLink_Base_get_shopping_info();
+		// ¸ß¼¶Ôµ»ê±¦Ïä
+		auto item = *std::find_if(data[0].begin(), data[0].end(), [](const Json::Value& x) { return x[0].asInt() == Mod_PartnerLink_Base::ADVANCED; });
+		auto times = item[2].asInt();
+		if (times == 0)
+			break;
+		data = this->Mod_PartnerLink_Base_buy_item(Mod_PartnerLink_Base::ADVANCED);
+		if (data[0].asInt() != Mod_PartnerLink_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("¡¾ÌìÔµÏµÍ³¡¿¿ªÆô¸ß¼¶Ôµ»ê±¦ÏäÊ§°Ü£¬result[%1%]") % data[0]), iEdit);
+			break;
+		}
+		common::log("¡¾ÌìÔµÏµÍ³¡¿¿ªÆô¸ß¼¶Ôµ»ê±¦Ïä", iEdit);
+	}
 }
 
 //============================================================================
@@ -54,9 +60,10 @@ void sxd_client::partner_link() {
 //     [ [ [ 7, 12, 3, 3, 10, 100 ], [ 6, 6, 3, 3, 8, 200 ], [ 5, 2, 3, 3, 9, 500000 ] ] ]
 //     [ [ [ 7, 12, 3, 3, 10, 100 ], [ 6, 6, 3, 3, 8, 200 ], [ 5, 2, 2, 3, 9, 500000 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_PartnerLink_Base_get_shopping_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 290, 2);
+Json::Value sxd_client::Mod_PartnerLink_Base_get_shopping_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 290, 2);
 }
 
 //============================================================================
@@ -69,8 +76,9 @@ Json::Value sxd_client::Mod_PartnerLink_Base_get_shopping_info() {
 // Example
 //     [ 5 ] --> [ 2, [ [ 18, 2 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_PartnerLink_Base_buy_item(int type) {
-    Json::Value data;
-    data.append(type);
-    return this->send_and_receive(data, 290, 3);
+Json::Value sxd_client::Mod_PartnerLink_Base_buy_item(int type)
+{
+	Json::Value data;
+	data.append(type);
+	return this->send_and_receive(data, 290, 3);
 }

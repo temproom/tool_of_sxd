@@ -3,23 +3,26 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_Research_Base {
+class Mod_Research_Base
+{
 public:
-    static const int SUCCEED = 0;
+	static const int SUCCEED = 0;
 };
 
 //============================================================================
 // 奇术
 //============================================================================
-void sxd_client::research() {
-    auto data = this->Mod_Research_Base_research_list();
-    auto research_list = data[0];
-    for (int i = 0; i < 10; ++i) {
-        int research_id = research_list[rand() % research_list.size()][1].asInt();
-        data = this->Mod_Research_Base_research_upgrade(research_id);
-        if (data[0].asInt() == Mod_Research_Base::SUCCEED)
-            common::log(boost::str(boost::format("【奇术】升级奇术 [%1%]") % research_id), iEdit);
-    }
+void sxd_client::research()
+{
+	auto data = this->Mod_Research_Base_research_list();
+	auto research_list = data[0];
+	for (int i = 0; i < 10; ++i)
+	{
+		int research_id = research_list[rand() % research_list.size()][1].asInt();
+		data = this->Mod_Research_Base_research_upgrade(research_id);
+		if (data[0].asInt() == Mod_Research_Base::SUCCEED)
+			common::log(boost::str(boost::format("【奇术】升级奇术 [%1%]") % research_id), iEdit);
+	}
 }
 
 //============================================================================
@@ -54,10 +57,11 @@ void sxd_client::research() {
 //         [ 20, 28, 134, 135, 135, 1, 426452, 0 ],
 //         [ 15, 23, 109, 110, 110, 1, 268368, 0 ] ], 172355366, 0, 0 ]
 //============================================================================
-Json::Value sxd_client::Mod_Research_Base_research_list() {
-    Json::Value data;
-    data.append(0);
-    return this->send_and_receive(data, 7, 0);
+Json::Value sxd_client::Mod_Research_Base_research_list()
+{
+	Json::Value data;
+	data.append(0);
+	return this->send_and_receive(data, 7, 0);
 }
 
 //============================================================================
@@ -70,8 +74,9 @@ Json::Value sxd_client::Mod_Research_Base_research_list() {
 // Example
 //     [ 16 ] -> [ 0, 1, 16, 163, 164, 164, 0, 674898, 172355366, 0, 0 ]
 //============================================================================
-Json::Value sxd_client::Mod_Research_Base_research_upgrade(int id) {
-    Json::Value data;
-    data.append(id);
-    return this->send_and_receive(data, 7, 1);
+Json::Value sxd_client::Mod_Research_Base_research_upgrade(int id)
+{
+	Json::Value data;
+	data.append(id);
+	return this->send_and_receive(data, 7, 1);
 }

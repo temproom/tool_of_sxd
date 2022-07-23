@@ -3,26 +3,29 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_Assistant_Base {
+class Mod_Assistant_Base
+{
 public:
-    static const int SUCCESS = 0;
+	static const int SUCCESS = 0;
 };
 
 //============================================================================
 // R179 活跃度
 //============================================================================
-void sxd_client::assistant() {
-    auto data = this->Mod_Assistant_Base_info();
-    auto info = data;
-    for (unsigned sn = 1; sn < info.size(); sn++) {
-        if (info[sn].asInt())
-            continue;
-        data = this->Mod_Assistant_Base_get_award(sn);
-        if (data[0].asInt() == Mod_Assistant_Base::SUCCESS)
-            common::log(boost::str(boost::format("【活跃度】领取第 [%1%] 个活跃度奖励") % sn), iEdit);
-        else
-            break;
-    }
+void sxd_client::assistant()
+{
+	auto data = this->Mod_Assistant_Base_info();
+	auto info = data;
+	for (unsigned sn = 1; sn < info.size(); sn++)
+	{
+		if (info[sn].asInt())
+			continue;
+		data = this->Mod_Assistant_Base_get_award(sn);
+		if (data[0].asInt() == Mod_Assistant_Base::SUCCESS)
+			common::log(boost::str(boost::format("【活跃度】领取第 [%1%] 个活跃度奖励") % sn), iEdit);
+		else
+			break;
+	}
 }
 
 //============================================================================
@@ -37,9 +40,10 @@ void sxd_client::assistant() {
 // Mod_Assistant_Base.get_award(1)后
 //     [ 172, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
 //============================================================================
-Json::Value sxd_client::Mod_Assistant_Base_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 52, 0);
+Json::Value sxd_client::Mod_Assistant_Base_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 52, 0);
 }
 
 //============================================================================
@@ -50,8 +54,9 @@ Json::Value sxd_client::Mod_Assistant_Base_info() {
 // Example
 //     [ 0 ]
 //============================================================================
-Json::Value sxd_client::Mod_Assistant_Base_get_award(int sn) {
-    Json::Value data;
-    data.append(sn);
-    return this->send_and_receive(data, 52, 1);
+Json::Value sxd_client::Mod_Assistant_Base_get_award(int sn)
+{
+	Json::Value data;
+	data.append(sn);
+	return this->send_and_receive(data, 52, 1);
 }

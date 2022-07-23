@@ -3,26 +3,30 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_WagerShop_Base {
+class Mod_WagerShop_Base
+{
 public:
-    static const int SUCCESS = 7;
+	static const int SUCCESS = 7;
 };
 
 //============================================================================
 // 游乐城赌坊-大转盘
 //============================================================================
-void sxd_client::wager_shop() {
-    Json::Value data = this->Mod_WagerShop_Base_get_turntable_info();
-    int left_times = data[1].asInt();
-    while (left_times) {
-        data = this->Mod_WagerShop_Base_turntable();
-        if (data[0].asInt() != Mod_WagerShop_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【游乐城赌坊】大转盘抽奖失败，result[%1%]") % data[0]), 0);
-            return;
-        }
-        common::log(boost::str(boost::format("【游乐城赌坊】大转盘抽奖，获得[金币×%1%]") % data[2]), iEdit);
-        left_times = data[3].asInt();
-    }
+void sxd_client::wager_shop()
+{
+	Json::Value data = this->Mod_WagerShop_Base_get_turntable_info();
+	int left_times = data[1].asInt();
+	while (left_times)
+	{
+		data = this->Mod_WagerShop_Base_turntable();
+		if (data[0].asInt() != Mod_WagerShop_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【游乐城赌坊】大转盘抽奖失败，result[%1%]") % data[0]), 0);
+			return;
+		}
+		common::log(boost::str(boost::format("【游乐城赌坊】大转盘抽奖，获得[金币×%1%]") % data[2]), iEdit);
+		left_times = data[3].asInt();
+	}
 }
 
 //============================================================================
@@ -35,9 +39,10 @@ void sxd_client::wager_shop() {
 // Example
 //     [ 3, 3, 0 ]
 //============================================================================
-Json::Value sxd_client::Mod_WagerShop_Base_get_turntable_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 260, 10);
+Json::Value sxd_client::Mod_WagerShop_Base_get_turntable_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 260, 10);
 }
 
 //============================================================================
@@ -52,8 +57,9 @@ Json::Value sxd_client::Mod_WagerShop_Base_get_turntable_info() {
 // Example
 //     [ 7, 8, 50, 2, 50 ]
 //============================================================================
-Json::Value sxd_client::Mod_WagerShop_Base_turntable() {
-    Json::Value data;
-    return this->send_and_receive(data, 260, 11);
+Json::Value sxd_client::Mod_WagerShop_Base_turntable()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 260, 11);
 }
 

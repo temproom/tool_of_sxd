@@ -8,12 +8,13 @@
 #include <D:\boost_1_78_0\boost_1_78_0\boost/algorithm/string.hpp>
 #include <D:\boost_1_78_0\boost_1_78_0\boost/algorithm/string/regex.hpp>
 
-class QuestType {
+class QuestType
+{
 public:
-    static const int LevelLimit = -1;
-    static const int Acceptable = 0;
-    static const int Accepted = 1;
-    static const int Completed = 2;
+	static const int LevelLimit = -1;
+	static const int Acceptable = 0;
+	static const int Accepted = 1;
+	static const int Completed = 2;
 
 	static const int SUCCEED = 5;
 	static const int FAILED = 6;
@@ -22,7 +23,8 @@ public:
 	static const int NEWQUEST = 9;
 };
 
-class MissionType {
+class MissionType
+{
 public:
 	static const int SUCCESS = 10;
 	static const int LESS_POWER = 18;
@@ -35,7 +37,8 @@ public:
 //============================================================================
 // R177 自动任务
 //============================================================================
-void sxd_client::auto_quest() {
+void sxd_client::auto_quest()
+{
 	// 没有体力了
 	Json::Value data = this->Mod_Player_Base_get_player_info();
 	if (data[6].asInt() < 5)
@@ -48,7 +51,7 @@ void sxd_client::auto_quest() {
 	data = this->Mod_Player_Base_get_player_info();
 	int town_id = data[9].asInt();
 	mss town_data = db.get_code(version, "Town", town_id);
-	common::log(boost::str(boost::format("【自动任务】：当前城镇为：《%1%》\n")% town_data["text"]), iEdit);
+	common::log(boost::str(boost::format("【自动任务】：当前城镇为：《%1%》\n") % town_data["text"]), iEdit);
 
 	//接任务与完成任务
 	this->accept_quest(town_id);
@@ -81,7 +84,7 @@ void sxd_client::auto_quest() {
 	//180级神域以后的城镇，不打最后一个副本，防止到下一个城镇
 	//此时只剩最后一个副本没打，结束递归
 	if (not_mission_id.size() == 1)
-	{	
+	{
 		mss mission_data = db.get_mission(version, not_mission_id[0]);
 		std::string name = mission_data["mission_name"];
 
@@ -104,14 +107,14 @@ void sxd_client::auto_quest() {
 		common::log(boost::str(boost::format("【自动任务】：当前城镇：《%1%》已通关！\n") % town_data["text"]), iEdit);
 		return;
 	}
-	
+
 	//打副本
 	for (auto temp_mission_id : not_mission_id)
 	{
 		//common::log(boost::str(boost::format("temp_mission_id:%1%\n") % temp_mission_id), iEdit);
 		this->fight_mission(temp_mission_id);
 	}
-	
+
 	//递归循环，直到没体力，或者打完城镇所有副本（除了最后一个）
 	this->auto_quest();
 }
@@ -131,7 +134,7 @@ void sxd_client::accept_quest(int town_id)
 		{
 			mss temp_quest = db.get_quest(version, quest_id[0].asInt());
 			Json::Value temp_data = this->Mod_Quest_Base_accept_quest(quest_id[0].asInt());
-			if (temp_data[0].asInt() == QuestType::SUCCEED) 
+			if (temp_data[0].asInt() == QuestType::SUCCEED)
 			{
 				common::log(boost::str(boost::format("【自动任务】：接受任务：《%1%》成功\n") % temp_quest["quest_name"]), iEdit);
 			}
@@ -158,7 +161,7 @@ void sxd_client::accept_quest(int town_id)
 			{
 				common::log(boost::str(boost::format("【自动任务】：提交任务：《%1%》成功\n") % temp_quest_name), iEdit);
 			}
-		}		
+		}
 	}
 
 	//递归循环
@@ -170,7 +173,7 @@ void sxd_client::accept_quest(int town_id)
 	else
 	{
 		accept_quest(town_id);
-	}	
+	}
 }
 
 //============================================================================
@@ -191,7 +194,7 @@ void sxd_client::fight_mission(int mission_id)
 			std::string num = match[0];
 			if (stoi(num) == 4)
 			{
-				common::log(boost::str(boost::format("【副本战斗】：《%1%》为当前城镇最后一个副本，不打！\n") % name), iEdit);		
+				common::log(boost::str(boost::format("【副本战斗】：《%1%》为当前城镇最后一个副本，不打！\n") % name), iEdit);
 				return;
 			}
 		}
@@ -208,7 +211,7 @@ void sxd_client::fight_mission(int mission_id)
 	{
 		common::log(boost::str(boost::format("【副本战斗】：进入副本：《%1%》成功！\n") % mission_data["mission_name"]), iEdit);
 	}
-	else if(data_accept[0].asInt() == MissionType::LESS_POWER)
+	else if (data_accept[0].asInt() == MissionType::LESS_POWER)
 	{
 		common::log(boost::str(boost::format("【副本战斗】：进入副本：《%1%》失败！\t体力不足\n") % mission_data["mission_name"]), iEdit);
 	}
@@ -272,7 +275,7 @@ std::vector<int> sxd_client::get_monster_team_by_missionid(int mission_id)
 	int mission_type;
 
 	//判断是否为180神域之后的副本
-	if (mission_id >= 1182) 
+	if (mission_id >= 1182)
 	{
 		//这些副本可以直接通过monster_id查到team_id
 		int monster_id = stoi(mission["boss_id"]);
@@ -344,7 +347,7 @@ std::vector<int> sxd_client::get_monster_team_by_missionid(int mission_id)
 	int monster_count=0;
 
 	for (Json::Value iter : data)
-	{	
+	{
 		monsterid_count[monster_count].push_back(iter[0].asInt());
 		monsterid_count[monster_count].push_back(iter[2].asInt());
 
@@ -369,9 +372,10 @@ std::vector<int> sxd_client::get_monster_team_by_missionid(int mission_id)
 //		MissionTypeData.as
 //     872:[64,53070,5,25200,190,126000,0,"九重仙池(7)",0,0,0],
 //============================================================================
-Json::Value sxd_client::Mod_Quest_Base_list_player_quest() {
-    Json::Value data;
-    return this->send_and_receive(data, 3, 6);
+Json::Value sxd_client::Mod_Quest_Base_list_player_quest()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 3, 6);
 }
 
 //============================================================================
@@ -384,10 +388,11 @@ Json::Value sxd_client::Mod_Quest_Base_list_player_quest() {
 // Example
 //     [ [ [ 877 ], [ 869 ], [ 873 ], [ 891 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_Quest_Base_can_receive_quest(int town_map_id) {
-    Json::Value data;
-    data.append(town_map_id);
-    return this->send_and_receive(data, 3, 8);
+Json::Value sxd_client::Mod_Quest_Base_can_receive_quest(int town_map_id)
+{
+	Json::Value data;
+	data.append(town_map_id);
+	return this->send_and_receive(data, 3, 8);
 }
 
 
@@ -402,7 +407,8 @@ Json::Value sxd_client::Mod_Quest_Base_can_receive_quest(int town_map_id) {
 // Example
 //     [ [ [ -1 ], [ 0 ], [ 1 ], [ 2 ] ] ]	LevelLimit:int = -1;Acceptable:int = 0;Accepted:int = 1;Completed:int = 2;
 //============================================================================
-Json::Value sxd_client::Mod_Quest_Base_accept_quest(int quest_id) {
+Json::Value sxd_client::Mod_Quest_Base_accept_quest(int quest_id)
+{
 	Json::Value data;
 	data.append(quest_id);
 	return this->send_and_receive(data, 3, 3);
@@ -419,7 +425,8 @@ Json::Value sxd_client::Mod_Quest_Base_accept_quest(int quest_id) {
 // Example
 //     
 //============================================================================
-Json::Value sxd_client::Mod_Quest_Base_complete_quest(int quest_id) {
+Json::Value sxd_client::Mod_Quest_Base_complete_quest(int quest_id)
+{
 	Json::Value data;
 	data.append(quest_id);
 	return this->send_and_receive(data, 3, 5);
@@ -435,7 +442,8 @@ Json::Value sxd_client::Mod_Quest_Base_complete_quest(int quest_id) {
 // Example
 //     [ [ [ 877 ], [ 869 ], [ 873 ], [ 891 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_Quest_Base_finish_quest(int quest_id) {
+Json::Value sxd_client::Mod_Quest_Base_finish_quest(int quest_id)
+{
 	Json::Value data;
 	data.append(quest_id);
 	return this->send_and_receive(data, 3, 4);
@@ -455,10 +463,11 @@ Json::Value sxd_client::Mod_Quest_Base_finish_quest(int quest_id) {
 //if (_loc2_.isBoss == 0){_loc2_.monsterLen = 3;}else{_loc2_.monsterLen = 1;}
 //     [ [ [ 866, 1, 74, 0, 0, 0 ], [ 867, 1, 75, 0, 0, 0 ], [ 868, 1, 74, 1, 0, 0 ], [ 869, 1, 74, 0, 0, 0 ], [ 870, 1, 74, 0, 0, 0 ], [ 871, 1, 74, 1, 0, 0 ], [ 872, 1, 74, 0, 0, 0 ], [ 873, 1, 74, 0, 0, 0 ], [ 874, 1, 74, 1, 0, 0 ], [ 875, 1, 74, 0, 0, 0 ], [ 876, 1, 76, 0, 0, 0 ], [ 877, 1, 76, 1, 0, 0 ], [ 878, 1, 76, 0, 0, 0 ], [ 879, 1, 76, 0, 0, 0 ], [ 880, 1, 76, 1, 0, 0 ], [ 881, 1, 76, 0, 0, 0 ], [ 882, 1, 76, 0, 0, 0 ], [ 883, 1, 76, 1, 0, 0 ], [ 884, 1, 76, 0, 0, 0 ], [ 885, 1, 76, 0, 0, 0 ], [ 886, 1, 76, 1, 0, 0 ], [ 887, 1, 76, 0, 0, 0 ], [ 888, 1, 76, 0, 0, 0 ], [ 889, 1, 76, 1, 0, 0 ], [ 890, 0, 76, 0, 0, 0 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_Mission_Base_get_sections(int town_map_id){
-    Json::Value data;
-    data.append(town_map_id);
-    return this->send_and_receive(data, 4, 0);
+Json::Value sxd_client::Mod_Mission_Base_get_sections(int town_map_id)
+{
+	Json::Value data;
+	data.append(town_map_id);
+	return this->send_and_receive(data, 4, 0);
 }
 
 //============================================================================
@@ -474,7 +483,8 @@ Json::Value sxd_client::Mod_Mission_Base_get_sections(int town_map_id){
 // result=10, 进入副本成功; result=29, 180神域后精英副本只能挑战一次
 //     
 //============================================================================
-Json::Value sxd_client::Mod_Mission_Base_enter_mission(int mission_id) {
+Json::Value sxd_client::Mod_Mission_Base_enter_mission(int mission_id)
+{
 	Json::Value data;
 	data.append(mission_id);
 	return this->send_and_receive(data, 4, 1);
@@ -499,7 +509,8 @@ Json::Value sxd_client::Mod_Mission_Base_enter_mission(int mission_id) {
 //	this._worship = param1[param1.length - 2];
 //	this.warAura = param1[param1.length - 1];
 //============================================================================
-Json::Value sxd_client::Mod_Mission_Base_fight_monster(int monsterTeamId) {
+Json::Value sxd_client::Mod_Mission_Base_fight_monster(int monsterTeamId)
+{
 	Json::Value data;
 	data.append(monsterTeamId);
 	data.append(0);

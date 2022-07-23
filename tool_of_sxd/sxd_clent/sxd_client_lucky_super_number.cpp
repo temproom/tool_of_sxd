@@ -3,37 +3,42 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_StLuckySuperNumber_Base {
+class Mod_StLuckySuperNumber_Base
+{
 public:
-    static const int SUCCESS = 0;
+	static const int SUCCESS = 0;
 };
 
 //============================================================================
 // R179 幸运大比拼
 //============================================================================
-void sxd_client::lucky_super_number() {
-    for (;;) {
-        auto data = this->Mod_StLuckySuperNumber_Base_get_lucky_super_number_info();
-        int remain_draw_times = data[1].asInt();
-        if (remain_draw_times == 0)
-            break;
+void sxd_client::lucky_super_number()
+{
+	for (;;)
+	{
+		auto data = this->Mod_StLuckySuperNumber_Base_get_lucky_super_number_info();
+		int remain_draw_times = data[1].asInt();
+		if (remain_draw_times == 0)
+			break;
 
-        auto my_lucky_number_list = data[2];
-        for (const Json::Value& my_lucky_number : my_lucky_number_list) {
-            int position = my_lucky_number[0].asInt();
-            int number = my_lucky_number[1].asInt();
-            if (number)
-                continue;
+		auto my_lucky_number_list = data[2];
+		for (const Json::Value& my_lucky_number : my_lucky_number_list)
+		{
+			int position = my_lucky_number[0].asInt();
+			int number = my_lucky_number[1].asInt();
+			if (number)
+				continue;
 
-            data = this->Mod_StLuckySuperNumber_Base_draw(position);
-            if (data[0].asInt() != Mod_StLuckySuperNumber_Base::SUCCESS) {
-                //common::log(boost::str(boost::format("【幸运大比拼】抽取失败，result[%1%]") % data[0]), iEdit);
-                return;
-            }
-            common::log(boost::str(boost::format("【幸运大比拼】抽取第%1%个数字 [%2%]") % data[1] % data[2]), iEdit);
-            break;
-        }
-    }
+			data = this->Mod_StLuckySuperNumber_Base_draw(position);
+			if (data[0].asInt() != Mod_StLuckySuperNumber_Base::SUCCESS)
+			{
+				//common::log(boost::str(boost::format("【幸运大比拼】抽取失败，result[%1%]") % data[0]), iEdit);
+				return;
+			}
+			common::log(boost::str(boost::format("【幸运大比拼】抽取第%1%个数字 [%2%]") % data[1] % data[2]), iEdit);
+			break;
+		}
+	}
 }
 
 //============================================================================
@@ -48,9 +53,10 @@ void sxd_client::lucky_super_number() {
 //     [ 865, 3, [ [ 1, 7, 1 ], [ 2, 0, 0 ], [ 3, 0, 0 ], [ 4, 0, 0 ], [ 5, 0, 0 ] ], 4 ]
 //     [ 865, 2, [ [ 1, 7, 1 ], [ 2, 4, 1 ], [ 3, 0, 0 ], [ 4, 0, 0 ], [ 5, 0, 0 ] ], 4 ]
 //============================================================================
-Json::Value sxd_client::Mod_StLuckySuperNumber_Base_get_lucky_super_number_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 311, 0);
+Json::Value sxd_client::Mod_StLuckySuperNumber_Base_get_lucky_super_number_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 311, 0);
 }
 
 //============================================================================
@@ -62,8 +68,9 @@ Json::Value sxd_client::Mod_StLuckySuperNumber_Base_get_lucky_super_number_info(
 //     [ 0, 1, 7 ]
 //     [ 0, 2, 4 ]
 //============================================================================
-Json::Value sxd_client::Mod_StLuckySuperNumber_Base_draw(int position) {
-    Json::Value data;
-    data.append(position);
-    return this->send_and_receive(data, 311, 1);
+Json::Value sxd_client::Mod_StLuckySuperNumber_Base_draw(int position)
+{
+	Json::Value data;
+	data.append(position);
+	return this->send_and_receive(data, 311, 1);
 }

@@ -3,27 +3,31 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_StBigTurntable_Base {
+class Mod_StBigTurntable_Base
+{
 public:
-    static const int SUCCESS = 0;
+	static const int SUCCESS = 0;
 };
 
 //============================================================================
 // 游乐城大转盘
 //============================================================================
-void sxd_client::st_big_turntable() {
-    for (;;) {
-        Json::Value data = this->Mod_StBigTurntable_Base_get_big_turntable_info();
-        if (!data[0].asInt())
-            break;
+void sxd_client::st_big_turntable()
+{
+	for (;;)
+	{
+		Json::Value data = this->Mod_StBigTurntable_Base_get_big_turntable_info();
+		if (!data[0].asInt())
+			break;
 
-        data = this->Mod_StBigTurntable_Base_turntable();
-        if (data[0].asInt() != Mod_StBigTurntable_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【游乐城大转盘】抽奖失败，result[%1%]") % data[0]), 0);
-            return;
-        }
-        common::log(boost::str(boost::format("【游乐城大转盘】抽奖获得 [%1%×%2%]") % db.get_code(version, "Item", data[2].asInt())["text"] % data[3]), iEdit);
-    }
+		data = this->Mod_StBigTurntable_Base_turntable();
+		if (data[0].asInt() != Mod_StBigTurntable_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【游乐城大转盘】抽奖失败，result[%1%]") % data[0]), 0);
+			return;
+		}
+		common::log(boost::str(boost::format("【游乐城大转盘】抽奖获得 [%1%×%2%]") % db.get_code(version, "Item", data[2].asInt())["text"] % data[3]), iEdit);
+	}
 
 }
 
@@ -40,9 +44,10 @@ void sxd_client::st_big_turntable() {
 // Example
 //     [ 5, 20, 0, 5, [ [ 1, 3, 4251, 2, 0 ], [ 2, 22, 1743, 30, 0 ], [ 3, 37, 4481, 500, 0 ], [ 4, 35, 4481, 2000, 0 ], [ 5, 11, 1845, 20, 0 ], [ 6, 31, 4649, 3, 0 ], [ 7, 26, 2452, 8, 0 ], [ 8, 36, 4481, 300, 0 ], [ 9, 17, 2395, 6, 0 ], [ 10, 20, 1747, 3400000, 0 ] ], 1526313600, 1529855999 ]
 //============================================================================
-Json::Value sxd_client::Mod_StBigTurntable_Base_get_big_turntable_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 286, 0);
+Json::Value sxd_client::Mod_StBigTurntable_Base_get_big_turntable_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 286, 0);
 }
 
 //============================================================================
@@ -64,7 +69,8 @@ Json::Value sxd_client::Mod_StBigTurntable_Base_get_big_turntable_info() {
 // Example
 //     [ 0, 6, 4649, 3, 4, 0, [ [ 1, 3, 4251, 2, 0 ], [ 2, 22, 1743, 30, 0 ], [ 3, 37, 4481, 500, 0 ], [ 4, 35, 4481, 2000, 0 ], [ 5, 11, 1845, 20, 0 ], [ 6, 31, 4649, 3, 1 ], [ 7, 26, 2452, 8, 0 ], [ 8, 36, 4481, 300, 0 ], [ 9, 17, 2395, 6, 0 ], [ 10, 20, 1747, 3400000, 0 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_StBigTurntable_Base_turntable() {
-    Json::Value data;
-    return this->send_and_receive(data, 286, 1);
+Json::Value sxd_client::Mod_StBigTurntable_Base_turntable()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 286, 1);
 }

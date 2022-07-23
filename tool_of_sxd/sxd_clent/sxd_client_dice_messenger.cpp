@@ -4,53 +4,62 @@
 #include "common.h"
 #include "sxd_client.h"
 
-class Mod_DiceMessenger_Base {
+class Mod_DiceMessenger_Base
+{
 public:
-    static const int SUCCESS = 0;
+	static const int SUCCESS = 0;
 };
 
 //============================================================================
 // 骰子使者
 //============================================================================
-void sxd_client::dice_messenger() {
-    for (;;) {
-        Json::Value data = this->Mod_DiceMessenger_Base_get_info();
-        int all_times = data[3].asInt();
-        int today_time = data[4].asInt();
-        if (all_times == today_time)
-            break;
+void sxd_client::dice_messenger()
+{
+	for (;;)
+	{
+		Json::Value data = this->Mod_DiceMessenger_Base_get_info();
+		int all_times = data[3].asInt();
+		int today_time = data[4].asInt();
+		if (all_times == today_time)
+			break;
 
-        data = this->Mod_DiceMessenger_Base_play_dice();
-        if (data[0].asInt() != Mod_DiceMessenger_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【骰子使者】掷一下失败，result[%1%]") % data[0]), 0);
-            return;
-        }
-        std::vector<std::string> draws;
-        std::transform(data[1].begin(), data[1].end(), std::back_inserter(draws), [](const Json::Value& x) {
-            return x[0].asString();
-        });
-        common::log(boost::str(boost::format("【骰子使者】掷一下，获得骰子点数 [%1%]") % boost::algorithm::join(draws, "，")), iEdit);
+		data = this->Mod_DiceMessenger_Base_play_dice();
+		if (data[0].asInt() != Mod_DiceMessenger_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【骰子使者】掷一下失败，result[%1%]") % data[0]), 0);
+			return;
+		}
+		std::vector<std::string> draws;
+		std::transform(data[1].begin(), data[1].end(), std::back_inserter(draws), [](const Json::Value& x)
+		{
+			return x[0].asString();
+		});
+		common::log(boost::str(boost::format("【骰子使者】掷一下，获得骰子点数 [%1%]") % boost::algorithm::join(draws, "，")), iEdit);
 
-        data = this->Mod_DiceMessenger_Base_get_award();
-        if (data[0].asInt() != Mod_DiceMessenger_Base::SUCCESS) {
-            common::log(boost::str(boost::format("【骰子使者】领取奖励失败，result[%1%]") % data[0]), iEdit);
-            return;
-        }
-        std::vector<std::string> items;
-        std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x) {
-            return boost::str(boost::format("[%1%×%2%]") % db.get_code(version, "Item", x[0].asInt())["text"] % x[1]);
-        });
-        common::log(boost::str(boost::format("【骰子使者】领取奖励：%1%") % boost::algorithm::join(items, "，")), iEdit);
+		data = this->Mod_DiceMessenger_Base_get_award();
+		if (data[0].asInt() != Mod_DiceMessenger_Base::SUCCESS)
+		{
+			common::log(boost::str(boost::format("【骰子使者】领取奖励失败，result[%1%]") % data[0]), iEdit);
+			return;
+		}
+		std::vector<std::string> items;
+		std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x)
+		{
+			return boost::str(boost::format("[%1%×%2%]") % db.get_code(version, "Item", x[0].asInt())["text"] % x[1]);
+		});
+		common::log(boost::str(boost::format("【骰子使者】领取奖励：%1%") % boost::algorithm::join(items, "，")), iEdit);
 
-        data = this->Mod_DiceMessenger_Base_tol_get();
-        if (data[0].asInt() == Mod_DiceMessenger_Base::SUCCESS) {
-            std::vector<std::string> items;
-            std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x) {
-                return boost::str(boost::format("[%1%×%2%]") % db.get_code(version, "Item", x[0].asInt())["text"] % x[1]);
-            });
-            common::log(boost::str(boost::format("【骰子使者】领取累计点数奖励：%1%") % boost::algorithm::join(items, "，")), iEdit);
-        }
-    }
+		data = this->Mod_DiceMessenger_Base_tol_get();
+		if (data[0].asInt() == Mod_DiceMessenger_Base::SUCCESS)
+		{
+			std::vector<std::string> items;
+			std::transform(data[1].begin(), data[1].end(), std::back_inserter(items), [this](const Json::Value& x)
+			{
+				return boost::str(boost::format("[%1%×%2%]") % db.get_code(version, "Item", x[0].asInt())["text"] % x[1]);
+			});
+			common::log(boost::str(boost::format("【骰子使者】领取累计点数奖励：%1%") % boost::algorithm::join(items, "，")), iEdit);
+		}
+	}
 }
 
 //============================================================================
@@ -69,9 +78,10 @@ void sxd_client::dice_messenger() {
 //     [ 0, 5650, 50, 3, 0, [ [ 10, 1, [ [ 1747, 1200000 ] ] ], [ 10, 2, [ [ 4481, 100 ], [ 6074, 1 ] ] ], [ 7, 3, [ [ 3345, 1 ] ] ] ], [ [ 0 ], [ 0 ], [ 0 ] ], [ [ 400, 0, [ [ 5823, 5 ] ] ], [ 100, 0, [ [ 1740, 50 ] ] ], [ 200, 0, [ [ 2343, 50 ] ] ], [ 800, 0, [ [ 4291, 2 ] ] ], [ 600, 0, [ [ 4954, 2 ] ] ] ] ]
 //     [ 6, 5600, 50, 3, 1, [ [ 10, 1, [ [ 1747, 1200000 ] ] ], [ 10, 2, [ [ 4481, 100 ], [ 6074, 1 ] ] ], [ 7, 3, [ [ 3345, 1 ] ] ] ], [ [ 0 ], [ 0 ], [ 0 ] ], [ [ 400, 0, [ [ 5823, 5 ] ] ], [ 100, 0, [ [ 1740, 50 ] ] ], [ 200, 0, [ [ 2343, 50 ] ] ], [ 800, 0, [ [ 4291, 2 ] ] ], [ 600, 0, [ [ 4954, 2 ] ] ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_DiceMessenger_Base_get_info() {
-    Json::Value data;
-    return this->send_and_receive(data, 417, 0);
+Json::Value sxd_client::Mod_DiceMessenger_Base_get_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 417, 0);
 }
 
 //============================================================================
@@ -83,9 +93,10 @@ Json::Value sxd_client::Mod_DiceMessenger_Base_get_info() {
 // Example
 //     [ 0, [ [ 1 ], [ 1 ], [ 4 ] ] ]
 //============================================================================
-Json::Value sxd_client::Mod_DiceMessenger_Base_play_dice() {
-    Json::Value data;
-    return this->send_and_receive(data, 417, 1);
+Json::Value sxd_client::Mod_DiceMessenger_Base_play_dice()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 417, 1);
 }
 
 //============================================================================
@@ -98,9 +109,10 @@ Json::Value sxd_client::Mod_DiceMessenger_Base_play_dice() {
 // Example
 //     [ 0, [ [ 1747, 7200000 ] ], 5600 ]
 //============================================================================
-Json::Value sxd_client::Mod_DiceMessenger_Base_get_award() {
-    Json::Value data;
-    return this->send_and_receive(data, 417, 2);
+Json::Value sxd_client::Mod_DiceMessenger_Base_get_award()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 417, 2);
 }
 
 //============================================================================
@@ -112,8 +124,9 @@ Json::Value sxd_client::Mod_DiceMessenger_Base_get_award() {
 // Example
 //     [ 5, null ]
 //============================================================================
-Json::Value sxd_client::Mod_DiceMessenger_Base_tol_get() {
-    Json::Value data;
-    return this->send_and_receive(data, 417, 3);
+Json::Value sxd_client::Mod_DiceMessenger_Base_tol_get()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 417, 3);
 }
 

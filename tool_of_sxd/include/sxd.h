@@ -3,7 +3,8 @@
 
 #include "sxd_client.h"
 
-class sxd {
+class sxd
+{
 public:
 	sxd();
 	virtual ~sxd();
@@ -15,6 +16,8 @@ public:
 
 private:
 	static void auto_play(const std::string& version, const std::string& user_id, const std::string& url, const std::string& cookie);
+
+	//¡‘√¸
 	static void batch_fate(const std::string& version, const std::string& user_id, const std::string& url, const std::string& cookie);
 
 	static void collect_protocol(const std::string& version, const std::string& path);
