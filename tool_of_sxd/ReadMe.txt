@@ -30,3 +30,21 @@ size_t iconv (iconv_t icd,const char* * inbuf, size_t *inbytesleft,char* * outbu
 
 localtime_s
 线程安全
+
+C++字符串转换（stoi；stol；stoul；stoll；stoull；stof；stod；stold）
+
+函数参数默认值 编译时确定
+默认值要在右边，没有默认值的在左边
+可以在声明中设定默认值，也可以在定义时设定默认值(没有声明)，但不可以同时存在，二者选其一
+函数调用时，参数数量必须大于等于没有默认值的参数的数量，从左到右赋值
+//声明
+int out(int a,int b=2,int c=3,int d=4)	
+//定义
+int out(int a,int b,int c,int d)		
+{
+	cout<<a<<b<<c<<d;
+}
+//调用
+out(1);			1234
+out(1,1);		1134
+out(1,1,1);		1114
