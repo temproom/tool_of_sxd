@@ -206,6 +206,8 @@ std::string database::get_max_version()
 
 int database::callback(void* p, int argc, char** argv, char** azColName)
 {
+	//static_cast < type-id > ( expression )
+	//把expression转换为type-id类型，但没有运行时类型检查来保证转换的安全性
 	auto pitems = static_cast<std::list<mss>*>(p);
 	mss item;
 	for (auto i = 0; i < argc; i++)
