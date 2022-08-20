@@ -100,7 +100,8 @@ void sxd_client::receive_frame(Json::Value& data, short& module, short& action)
 		{
 			boost::asio::read(sock, response, boost::asio::transfer_exactly(4));
 		}
-		//catch (boost::thread_interrupted& ex) {
+		//catch (boost::thread_interrupted& ex) 
+		//{
 		//    common::log("·¢ÏÖ´íÎó(receive_frame)", iEdit);
 		//}
 		catch (const std::exception& ex)

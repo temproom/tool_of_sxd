@@ -51,7 +51,7 @@ void sxd_client::gift3()
 }
 
 //============================================================================
-// R172 灵石
+// 灵石
 // {module:34, action:18,
 // request:[Utils.ByteUtil],
 // SealStoneView.as 60:
@@ -74,7 +74,7 @@ Json::Value sxd_client::Mod_SealSoul_Base_get_day_stone()
 }
 
 //============================================================================
-// R172 俸禄
+// 俸禄
 // {module:0, action:20, request:[], response:[Utils.UByteUtil, Utils.IntUtil]};
 // PlayerData.as 352:
 //     this.campSalaryStatus = param1[0];
@@ -89,7 +89,7 @@ Json::Value sxd_client::Mod_Player_Base_get_player_camp_salary()
 }
 
 //============================================================================
-// R172 仙令数量
+// 仙令数量
 // {module:13, action:19, request:[], response:[Utils.ByteUtil]};
 // FarmData.as 546:
 //     this.getXianLingNum = param1[0];
@@ -104,7 +104,7 @@ Json::Value sxd_client::Mod_Farm_Base_player_is_player_get_xian_ling_gift()
 }
 
 //============================================================================
-// R172 仙令
+// 仙令
 // {module:13, action:20, request:[], response:[Utils.UByteUtil, Utils.ByteUtil]};
 // FarmData.as 552:
 //     this.getXianLingResult = param1[0];
@@ -141,7 +141,7 @@ void sxd_client::function_end()
 }
 
 //============================================================================
-// R171 随机礼包
+// 随机礼包
 // {module:127, action:1,
 // request:[],
 // response:[[Utils.ShortUtil, Utils.ShortUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.IntUtil, Utils.ByteUtil]]}
@@ -172,7 +172,7 @@ Json::Value sxd_client::Mod_FunctionEnd_Base_game_function_end_gift()
 }
 
 //============================================================================
-// R171 随机
+// 随机
 // {module:127, action:3,
 // request:[Utils.ShortUtil],
 // response:[Utils.ShortUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil]}
@@ -193,7 +193,7 @@ Json::Value sxd_client::Mod_FunctionEnd_Base_random_award(int id)
 }
 
 //============================================================================
-// R171 领取
+// 领取
 // {module:127, action:2,
 // request:[Utils.ShortUtil],
 // response:[Utils.UByteUtil, Utils.ShortUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.ByteUtil]}
@@ -231,7 +231,7 @@ void sxd_client::gift()
 }
 
 //============================================================================
-// R172 各种礼包
+// 各种礼包
 // {module:2, action:6, request:[],
 // response:[[Utils.IntUtil, Utils.IntUtil, Utils.StringUtil, Utils.StringUtil, [Utils.UByteUtil, Utils.IntUtil, Utils.IntUtil]]]};
 // ItemData.as 1966:
@@ -252,7 +252,7 @@ Json::Value sxd_client::Mod_Item_Base_get_player_gift_all_info()
 }
 
 //============================================================================
-// R172 领取
+// 领取
 // {module:2, action:29,
 // request:[Utils.IntUtil],
 // Example
@@ -271,7 +271,7 @@ Json::Value sxd_client::Mod_Item_Base_player_get_super_gift(int id)
 }
 
 //============================================================================
-// R172 阵营战礼包
+// 阵营战礼包
 // {module:42, action:18, request:[],
 // response:[Utils.UByteUtil, Utils.IntUtil, Utils.IntUtil]};
 // HeroesWarData.as 233:
@@ -287,7 +287,7 @@ void sxd_client::Mod_HeroesWar_Base_get_end_gift()
 }
 
 //============================================================================
-// R172 自定义挑战礼包
+// 自定义挑战礼包
 // {module:136, action:20, request:[], response:[Utils.UByteUtil, Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil]};
 // Example
 //     [ 10, 0, 0, 0 ]
@@ -300,7 +300,7 @@ void sxd_client::Mod_StChallenge_Base_get_end_li_bao()
 }
 
 //============================================================================
-// R172 极限挑战宝箱
+// 极限挑战宝箱
 // {module:169, action:5, request:[], response:[Utils.UByteUtil]};
 // Example
 //     [ 8 ]

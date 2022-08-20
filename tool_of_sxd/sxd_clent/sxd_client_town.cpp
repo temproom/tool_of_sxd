@@ -89,7 +89,7 @@ int sxd_client::login_town(const std::string& web_page)
 }
 
 //============================================================================
-// R170 登录
+// 登录
 // {module:0, action:0,
 // request:[Utils.StringUtil, Utils.StringUtil, Utils.StringUtil, Utils.StringUtil, Utils.IntUtil, Utils.StringUtil, Utils.IntUtil, Utils.ByteUtil, Utils.StringUtil, Utils.StringUtil],
 // response:[Utils.UByteUtil, Utils.IntUtil, Utils.UByteUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ByteUtil, Utils.UByteUtil, Utils.IntUtil]}
@@ -192,7 +192,7 @@ Json::Value sxd_client::Mod_Player_Base_get_player_info_by_username(std::string 
 }
 
 //============================================================================
-// R170 玩家已开启功能
+// 玩家已开启功能
 // {module:0, action:6,
 // request:[],
 // response:[[Utils.IntUtil, Utils.ByteUtil]]}
@@ -222,7 +222,7 @@ Json::Value sxd_client::Mod_Player_Base_get_player_function()
 }
 
 //============================================================================
-// R172 助手
+// 助手
 // {module:0, action:42, request:[],
 // response:[Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, [Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil], [Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil]]};
 // PlayerData.as 1260:
@@ -235,7 +235,7 @@ Json::Value sxd_client::Mod_Player_Base_get_game_assistant_info()
 }
 
 //============================================================================
-// R172 服务器时间
+// 服务器时间
 // {module:0, action:22, request:[], response:[Utils.IntUtil]};
 //============================================================================
 Json::Value sxd_client::Mod_Player_Base_server_time()
@@ -245,7 +245,7 @@ Json::Value sxd_client::Mod_Player_Base_server_time()
 }
 
 //============================================================================
-// R171 伙伴列表
+// 伙伴列表
 // {module:5, action:2,
 // request:[Utils.IntUtil],
 // response:[Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.StringUtil, Utils.StringUtil, Utils.IntUtil, Utils.ByteUtil, Utils.ByteUtil, Utils.ByteUtil, Utils.ShortUtil, [Utils.StringUtil, Utils.IntUtil, Utils.IntUtil, Utils.LongUtil, Utils.LongUtil, Utils.ShortUtil, Utils.ByteUtil, Utils.ShortUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.UByteUtil, [Utils.IntUtil], [Utils.IntUtil], Utils.UByteUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ShortUtil]]}
@@ -265,7 +265,7 @@ Json::Value sxd_client::Mod_Role_Base_get_role_list(int player_id)
 }
 
 //============================================================================
-// R171 进入城镇
+// 进入城镇
 // {module:1, action:0,
 // request:[Utils.IntUtil],
 // response:[Utils.UByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, [Utils.UByteUtil, Utils.ByteUtil, Utils.ByteUtil, Utils.ShortUtil], Utils.StringUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.UByteUtil, Utils.ByteUtil, Utils.IntUtil, Utils.StringUtil, Utils.ByteUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, [Utils.IntUtil], Utils.UByteUtil, [Utils.IntUtil], Utils.UByteUtil, Utils.ShortUtil, Utils.UByteUtil, Utils.ShortUtil, Utils.ByteUtil, Utils.ShortUtil, Utils.StringUtil, Utils.IntUtil, Utils.ShortUtil, Utils.StringUtil, Utils.IntUtil]}
@@ -310,7 +310,7 @@ Json::Value sxd_client::Mod_Town_Base_move_to(int x1, int y1, int x2, int y2)
 }
 
 //============================================================================
-// R196 CD
+// CD
 // "module":0,"action":41,"request":[Utils.IntUtil],"response":[Utils.IntUtil]
 // WarCdTimeType.as:
 //     public static const Mission:int = 13;

@@ -77,6 +77,7 @@ void sxd_client::fate()
 {
 	// read config
 	auto config = atoi(db.get_config(user_id.c_str(), "Fate").c_str());
+	config = 1;
 	common::log(boost::str(boost::format("【Fate】[%1%] (置0为不猎命，置1为每天免费猎一次命，置2为猎到姜子牙即停)") % config), 0);
 	for (;;)
 	{

@@ -22,17 +22,20 @@ void sxd_client::lucky_shop()
 	std::map<int, int> items_config1, items_config2;
 	std::istringstream(db.get_config(user_id.c_str(), "LuckyStore1")) >> config1;
 	std::istringstream(db.get_config(user_id.c_str(), "LuckyStore2")) >> config2;
+	
 	// …Ã∆∑≈‰÷√
 	for (const auto& item : config1)
 		items_config1[item[0].asInt()] = item[1].asInt();
 	for (const auto& item : items_config1)
 		common::log(boost::str(boost::format("°æLuckyStore1°ø[%1%(%2%)°¡%3%]£¨%4%") % db.get_lucky_shop_item(version, item.first)["item_name"] % item.first % item.second % db.get_lucky_shop_item(version, item.first)["item_comment"]), 0);
+	
 	// ≤ƒ¡œ≈‰÷√
 	for (const auto& item : config2)
 		items_config2[item[0].asInt()] = item[1].asInt();
 	for (const auto& item : items_config2)
 		common::log(boost::str(boost::format("°æLuckyStore2°ø[%1%(%2%)°¡%3%]£¨%4%") % db.get_code(version, "Item", item.first)["text"] % item.first % item.second % db.get_code(version, "Item", item.first)["comment"]), 0);
-	// 1. pack
+	
+	// 1. pack ±≥∞¸
 	std::map<int, int> items_my;
 	Json::Value data = this->Mod_Item_Base_get_player_pack_item_list();
 	Json::Value items = data[2];
@@ -45,7 +48,8 @@ void sxd_client::lucky_shop()
 		else
 			items_my[item_id] = item_count;
 	}
-	// 2. warehouse
+	
+	// 2. warehouse ≤÷ø‚
 	data = this->Mod_Item_Base_get_player_warehouse_grids();
 	items = data[3];
 	for (const auto& item : items)
@@ -57,7 +61,8 @@ void sxd_client::lucky_shop()
 		else
 			items_my[item_id] = item_count;
 	}
-	// 3. home warehouse
+	
+	// 3. home warehouse º“‘∞≤÷ø‚
 	data = this->Mod_Item_Base_get_player_home_warehouse_grids();
 	items = data[2];
 	for (const auto& item : items)
@@ -75,6 +80,7 @@ void sxd_client::lucky_shop()
 	// lucky store
 	data = this->Mod_LuckyStore_Base_get_lucky_store_item_list();
 	Json::Value lucky_store_items = data[0];
+	
 	// show
 	for (const auto& lucky_store_item : lucky_store_items)
 	{
@@ -115,7 +121,7 @@ void sxd_client::lucky_shop()
 				count_config += items_config1[lucky_store_id];
 		}
 		else
-		{             // ≤ƒ¡œ
+		{   // ≤ƒ¡œ
 			if (items_config2.find(item_id) != items_config2.end())
 				count_config += items_config2[item_id];
 
