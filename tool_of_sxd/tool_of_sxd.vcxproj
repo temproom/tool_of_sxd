@@ -159,6 +159,7 @@
     <ClInclude Include="include\common.h" />
     <ClInclude Include="include\database.h" />
     <ClInclude Include="include\iconv.h" />
+    <ClInclude Include="include\locker.h" />
     <ClInclude Include="include\protocol.h" />
     <ClInclude Include="include\sqlite3.h" />
     <ClInclude Include="include\sqlite3ext.h" />
@@ -167,6 +168,9 @@
     <ClInclude Include="include\sxd_web.h" />
     <ClInclude Include="libiconv\iconv.h" />
     <ClInclude Include="libiconv\localcharset.h" />
+    <ClInclude Include="my_log\block_queue.h" />
+    <ClInclude Include="my_log\log.h" />
+    <ClInclude Include="sql_connection_pool\sql_connection_pool.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -182,6 +186,7 @@
     <ClCompile Include="libiconv\localcharset.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="my_log\log.cpp" />
     <ClCompile Include="protocol\protocol.cpp" />
     <ClCompile Include="sqlite3\shell.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -189,6 +194,7 @@
     <ClCompile Include="sqlite3\sqlite3.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="sql_connection_pool\sql_connection_pool.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -248,6 +254,7 @@
     <ClCompile Include="sxd_clent\sxd_client_sa_take_bible.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_send_flower.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_server_chat_room.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_shanhaiworld.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_spring_carnival.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_st_altar.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_st_arena.cpp" />

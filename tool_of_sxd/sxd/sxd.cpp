@@ -17,12 +17,37 @@
 #include "common.h"
 #include "protocol.h"
 #include "sxd.h"
-
+#include "threadpool/threadpool.h"
 sxd::sxd()
 {}
 
 sxd::~sxd()
 {}
+
+//connection_pool *m_sql_pool;
+
+//void sxd::init(int close_log , int log_write , int sql_num )
+//{
+//	m_close_log = close_log;
+//	m_log_write = log_write;
+//	m_sql_num = sql_num;
+//}
+
+void sxd::log_write(const std::string& player_name, int close_log, int max_queue_size )
+{
+	//初始化日志
+	Log::get_instance()->init(player_name, close_log, max_queue_size);
+}
+
+void sxd::sql_pool()
+{
+	//m_sql_pool = connection_pool::GetInstance();
+	connection_pool::GetInstance()->init(10, 0);
+}
+//void sxd::thread_pool()
+//{
+//	m_thread_pool = new threadpool<sxd_client>(m_sql_pool,10, 100);
+//}
 
 void sxd::run(std::string arg, bool auto_exit)
 {
@@ -40,6 +65,8 @@ void sxd::run(std::string arg, bool auto_exit)
 		int i = 0;
 		for (auto it = boost::sregex_iterator(user_ini.begin(), user_ini.end(), user_regex); it != boost::sregex_iterator(); it++)
 		{
+			//Log::get_instance()->init((*it)[9], 1, 100);
+			//Log::get_instance()->write_log(boost::str(boost::format("%1%. %2%") % (++i) % (*it)[9]), -1, 0, 0)
 			common::log(boost::str(boost::format("%1%. %2%") % (++i) % (*it)[9]), -1, 0, 0);
 		}
 		common::log("请选择(输入0表示运行所有)：", -1, 0, 0);
@@ -81,8 +108,14 @@ void sxd::run(std::string arg, bool auto_exit)
 					continue;
 				common::log("", -1, 1, 0);
 
-				std::string play_name = (*it)[9];
+				play_name = (*it)[9];
+
+				//初始化日志
+				sxd::log_write(play_name,0,100);
+
+				Log::get_instance()->write_log(play_name, " 开始...");
 				common::log(boost::str(boost::format("【%1%】开始...") % play_name));
+
 				std::ostringstream oss;
 				oss << "Cookie: user=" << (*it)[3] << ";";
 				oss << "_time=" << (*it)[6] << ";_hash=" << (*it)[7] << ";";
@@ -90,21 +123,29 @@ void sxd::run(std::string arg, bool auto_exit)
 				std::string user_id = (*it)[1];
 				std::string url = (*it)[2];
 				std::string version = (*it)[8];
-				std::string max_version = db.get_max_version();
+
+				database* m_db = NULL;
+				connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+				std::string max_version = m_db->get_max_version();
+
+				Log::get_instance()->write_log(play_name, boost::str(boost::format("当前版本 [%1%]	最新版本 [%2%]") % version.c_str() % max_version.c_str()));
 				std::cout << "当前版本:" << max_version.c_str() << max_version.length() << "\n" << "最新版本:" << version.c_str() << version.length() << "\n";
 				if (version != max_version)
 				{
-					//common::log(boost::str(boost::format("当前版本 [%1%]，最新版本 [%2%]，请及时更新版本") % (++i) % play_name), -1, 0, 0);
+					Log::get_instance()->write_log(play_name, boost::str(boost::format("当前版本 [%1%]，最新版本 [%2%]，请及时更新版本") % version.c_str() % max_version.c_str()));
 					common::log(common::sprintf("当前版本 [%s]，最新版本 [%s]，请及时更新版本", version.c_str(), max_version.c_str()));
 					version = max_version;
 				}
 				std::string cookie = oss.str();
 				//sxd::batch_fate(version, user_id, url, cookie);
+
+				//std::thread tid(auto_play,(version, user_id, url, cookie));
 				sxd::auto_play(version, user_id, url, cookie);
 				//std::thread thread([url, cookie]() {sxd::play(version, url, cookie);});
 			}
 			catch (const std::exception& ex)
 			{
+				Log::get_instance()->write_log(play_name, boost::str(boost::format("发现错误(run)：%1%") % ex.what()));
 				common::log(boost::str(boost::format("发现错误(run)：%1%") % ex.what()));
 			}
 		}
@@ -121,7 +162,9 @@ void sxd::login()
 	std::string response_header;
 	std::string response_body;
 
-	auto users = db.get_all_users();
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+	auto users = m_db->get_all_users();
 	for (auto& user : users)
 	{
 		try
@@ -326,6 +369,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 	sxd_client sxd_client_super_town(version);
 	sxd_client sxd_client_saint_area(version);
 	sxd_client sxd_client_chat_room(version);
+	sxd_client sxd_client_shanhai_world(version);
 	Json::Value data;
 
 	// get web page from url and cookie
@@ -360,7 +404,11 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 			try
 			{
 				function_ids.push_back(item[0].asString());
-				std::string function_name = db.get_code(version, "Function", item[0].asInt())["text"];
+
+				database* m_db = NULL;
+				connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+				std::string function_name = m_db->get_code(version, "Function", item[0].asInt())["text"];
+
 				common::log(boost::str(boost::format("【Function】[%1%(%2%)]") % function_name % item[0]), 0);
 				function_names.push_back(function_name);
 			}
@@ -378,7 +426,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 
 	//common::log("【主页】请选择相应的功能" , 0);
 	//common::log(boost::str(boost::format("1.日常任务") % data[0].size()), 0);
-	common::log(" 1.日常任务\n 2.城镇任务\n 3.副本挑战\n请选择相应的功能：", 0);
+	common::log(" 1.日常任务\n 2.城镇任务\n 3.副本挑战\n请选择相应的功能：");
 	int fun_id;
 	std::cin >> fun_id;
 	if (fun_id == 1)
@@ -863,6 +911,21 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 			}
 		}
 	}
+	else if (fun_id == 2)
+	{
+		sxd_client_town.auto_quest();
+	}
+	else if (fun_id == 3)
+	{
+		/*std::cout << "kai\n";
+		sxd_client_town.Mod_ShanhaiWorld_Base_challenge();
+		std::cout << "wan\n";*/
+		/*if (!sxd_client_shanhai_world.shanhaiworld_login(&sxd_client_town))
+		{
+			sxd_client_shanhai_world.tong_tian_tower();
+		}*/
+		sxd_client_town.tong_tian_tower();
+	}
 
 
 	/*		
@@ -974,19 +1037,19 @@ void sxd::collect()
 		std::cout << "请输入版本号：" << std::endl << std::flush;
 		std::string version;
 		std::cin >> version;
-		//sxd::collect_protocol(version, "d:\\随心\\协议\\" + version + "\\com\\protocols");
-		//sxd::collect_end_function_gift(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\gifttypedata.as");
-		//sxd::collect_function(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\functiontypedata.as");
-		//sxd::collect_gift(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\gifttypedata.as");
-		//sxd::collect_item(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\itemtypedata.as");
-		//sxd::collect_lucky_shop_item(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\itemtypedata.as");
-		//sxd::collect_role(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\roletype.as");
-		//sxd::collect_town(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\towntypedata.as");
-		//sxd::collect_facture_reel(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\facturereeltype.as");
-		//sxd::collect_mission_monster(version, "d:\\随心\\协议\\missionmonstertypedata.as");
-		//sxd::collect_mission_team(version, "d:\\随心\\协议\\missionmonstertypedata.as");
-		//sxd::collect_quest(version, "d:\\随心\\协议\\questtypedata.as");
-		//sxd::collect_mission(version, "d:\\随心\\协议\\missiontypedata.as");
+		/*sxd::collect_protocol(version, "d:\\随心\\协议\\" + version + "\\com\\protocols");
+		sxd::collect_end_function_gift(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\gifttypedata.as");
+		sxd::collect_function(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\functiontypedata.as");
+		sxd::collect_gift(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\gifttypedata.as");
+		sxd::collect_item(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\itemtypedata.as");
+		sxd::collect_lucky_shop_item(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\itemtypedata.as");
+		sxd::collect_role(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\roletype.as");
+		sxd::collect_town(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\towntypedata.as");
+		sxd::collect_facture_reel(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\facturereeltype.as");
+		sxd::collect_mission_monster(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\missionmonstertypedata.as");
+		sxd::collect_mission_team(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\missionmonstertypedata.as");
+		sxd::collect_quest(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\questtypedata.as");
+		sxd::collect_mission(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\missiontypedata.as");*/
 
 	}
 	catch (const std::exception& ex)
@@ -998,8 +1061,12 @@ void sxd::collect()
 void sxd::collect_end_function_gift(const std::string& version, const std::string& path)
 {
 	std::string type = "EndFunctionGift";
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
+
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1014,17 +1081,21 @@ void sxd::collect_end_function_gift(const std::string& version, const std::strin
 		auto sql = boost::format("INSERT INTO code(version, type, value, text, sign, comment) VALUES('%1%', '%2%', '%3%', '%4%', '%5%', '%6%')");
 		sql % version % type % match[1] % match[3] % match[2] % "";
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_function(const std::string& version, const std::string& path)
 {
 	std::string type = "Function";
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
+
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1038,17 +1109,21 @@ void sxd::collect_function(const std::string& version, const std::string& path)
 		auto sql = boost::format("INSERT INTO code(version, type, value, text, sign, comment) VALUES('%1%', '%2%', '%3%', '%4%', '%5%', '%6%')");
 		sql % version % type % match[1] % match[3] % match[2] % "";
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_gift(const std::string& version, const std::string& path)
 {
 	std::string type = "Gift";
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
+
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1063,17 +1138,21 @@ void sxd::collect_gift(const std::string& version, const std::string& path)
 		auto sql = boost::format("INSERT INTO code(version, type, value, text, sign, comment) VALUES('%1%', '%2%', '%3%', '%4%', '%5%', '%6%')");
 		sql % version % type % match[1] % match[3] % match[2] % "";
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_item(const std::string& version, const std::string& path)
 {
 	std::string type = "Item";
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
+
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1087,16 +1166,19 @@ void sxd::collect_item(const std::string& version, const std::string& path)
 		auto sql = boost::format("INSERT INTO code(version, type, value, text, sign, comment) VALUES('%1%', '%2%', '%3%', '%4%', '%5%', '%6%')");
 		sql % version % type % match[1] % match[2] % "" % match[3];
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_lucky_shop_item(const std::string& version, const std::string& path)
 {
-	db.execute("BEGIN");
-	db.execute("DELETE FROM lucky_shop_item where version!='" + version + "'");
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute("DELETE FROM lucky_shop_item where version!='" + version + "'");
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1110,18 +1192,22 @@ void sxd::collect_lucky_shop_item(const std::string& version, const std::string&
 		auto sql = boost::format("INSERT INTO lucky_shop_item(version, id, item_id, count, ingot, coin) VALUES('%1%', %2%, %3%, %4%, %5%, %6%)");
 		sql % version % match["id"] % match["item_id"] % match["count"] % match["ingot"] % match["coin"];
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str());
+		m_db->execute(sql.str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 
 }
 
 void sxd::collect_role(const std::string& version, const std::string& path)
 {
 	std::string type = "Role";
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
+
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1135,17 +1221,21 @@ void sxd::collect_role(const std::string& version, const std::string& path)
 		auto sql = boost::format("INSERT INTO code(version, type, value, text, sign, comment) VALUES('%1%', '%2%', '%3%', '%4%', '%5%', '%6%')");
 		sql % version % type % match[1] % match[3] % match[2] % "";
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_town(const std::string& version, const std::string& path)
 {
 	std::string type = "Town";
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
+
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM code where version!='" + version + "' and type='" + type + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1159,16 +1249,19 @@ void sxd::collect_town(const std::string& version, const std::string& path)
 		auto sql = boost::format("INSERT INTO code(version, type, value, text, sign, comment) VALUES('%1%', '%2%', '%3%', '%4%', '%5%', '%6%')");
 		sql % version % type % match[1] % match[6] % match[2] % match[3];
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_facture_reel(const std::string& version, const std::string& path)
 {
-	db.execute("BEGIN");
-	db.execute("DELETE FROM facture_reel where version!='" + version + "'");
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute("DELETE FROM facture_reel where version!='" + version + "'");
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1182,16 +1275,19 @@ void sxd::collect_facture_reel(const std::string& version, const std::string& pa
 		auto sql = boost::format("INSERT INTO facture_reel(version, reel_id, item_id, count, position, mission_id) VALUES('%1%', '%2%', '%3%', '%4%', '%5%', '%6%')");
 		sql % version % match[1] % match[2] % match[3] % match[4] % match[5];
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_protocol(const std::string& version, const std::string& path)
 {
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM protocol where version!='" + version + "'").c_str());
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM protocol where version!='" + version + "'").c_str());
 
 	boost::filesystem::directory_iterator ite;
 	for (boost::filesystem::directory_iterator it(path); it != ite; ++it)
@@ -1221,16 +1317,19 @@ void sxd::collect_protocol(const std::string& version, const std::string& path)
 			sql << "'" << boost::regex_replace(std::string((*it)["request"]), boost::regex("Utils(.*?)Util"), "\"$&\"") << "', ";
 			sql << "'" << boost::regex_replace(std::string((*it)["response"]), boost::regex("Utils(.*?)Util"), "\"$&\"") << "'";
 			sql << ")";
-			db.execute(sql.str().c_str());
+			m_db->execute(sql.str().c_str());
 		}
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 } //sxd::collect_protocols
 
 void sxd::collect_mission_monster(const std::string& version, const std::string& path)
 {
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM mission_monster where version!='" + version + "'").c_str());
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM mission_monster where version!='" + version + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1244,16 +1343,19 @@ void sxd::collect_mission_monster(const std::string& version, const std::string&
 		auto sql = boost::format("INSERT INTO mission_monster(version, team_id, scene_id, monster_id) VALUES('%1%', '%2%', '%3%', '%4%')");
 		sql % version % match[1] % match[2] % match[4];
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_mission(const std::string& version, const std::string& path)
 {
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM mission where version!='" + version + "'").c_str());
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM mission where version!='" + version + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1268,16 +1370,19 @@ void sxd::collect_mission(const std::string& version, const std::string& path)
 		auto sql = boost::format("INSERT INTO mission(version, mission_id, scene_id, boss_id, mission_name, hero_mission, boss_mission) VALUES('%1%', '%2%', '%3%', '%4%', '%5%', '%6%', '%7%')");
 		sql % version % match[1] % match[2] % match[8] % match[9] % match[10] % match[11];
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_quest(const std::string& version, const std::string& path)
 {
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM quest where version!='" + version + "'").c_str());
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM quest where version!='" + version + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1292,16 +1397,19 @@ void sxd::collect_quest(const std::string& version, const std::string& path)
 		auto sql = boost::format("INSERT INTO quest(version, quest_id, quest_type, level, quest_name, mission_id) VALUES('%1%', '%2%', '%3%', '%4%', '%5%', '%6%')");
 		sql % version % match[1] % match[2] % match[4] % match[5] % match[18];
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }
 
 void sxd::collect_mission_team(const std::string& version, const std::string& path)
 {
-	db.execute("BEGIN");
-	db.execute(("DELETE FROM mission_team where version!='" + version + "'").c_str());
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM mission_team where version!='" + version + "'").c_str());
 	std::string content = common::read_file(path);
 	// regex 1
 	boost::smatch match;
@@ -1315,8 +1423,8 @@ void sxd::collect_mission_team(const std::string& version, const std::string& pa
 		auto sql = boost::format("INSERT INTO mission_team(version, _id, team_id, monster_id) VALUES('%1%', '%2%', '%3%', '%4%')");
 		sql % version % match[1] % match[2] % match[3];
 		common::log(common::utf2gbk(sql.str()));
-		db.execute(sql.str().c_str());
+		m_db->execute(sql.str().c_str());
 		content = match.suffix();
 	}
-	db.execute("COMMIT");
+	m_db->execute("COMMIT");
 }

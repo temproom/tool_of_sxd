@@ -204,15 +204,22 @@ Json::Value sxd_client::send_and_receive(const Json::Value& data_s, short module
 	Json::Value data_r;
 	this->send_frame(data_s, module_s, action_s);
 	auto start = std::time(NULL);
+	bool re_send = false;
 	for (;;)
 	{
 		this->receive_frame(data_r, module_r, action_r);
 		if (module_s == module_r && action_s == action_r && (!f || f(data_r)))
 			return data_r;
 		auto end = std::time(NULL);
-		if (end - start > 60)
+		if (end - start > 60&&re_send)
 		{
 			throw std::runtime_error("Request timed out");
+		}
+		if (end - start > 30&&!re_send)
+		{
+			//std::cout << "ÖØ·¢\n";
+			this->send_frame(data_s, module_s, action_s);
+			re_send = true;
 		}
 	}
 	throw std::runtime_error("Impossible");

@@ -214,6 +214,7 @@ void sxd_client::fight_mission(int mission_id)
 	else if (data_accept[0].asInt() == MissionType::LESS_POWER)
 	{
 		common::log(boost::str(boost::format("【副本战斗】：进入副本：《%1%》失败！\t体力不足\n") % mission_data["mission_name"]), iEdit);
+		return;
 	}
 	else
 	{
@@ -223,16 +224,14 @@ void sxd_client::fight_mission(int mission_id)
 	//打怪
 	int i = 1;
 	for (auto team_id : monster_teams)
-	{
-		Json::Value data_receive;
-
+	{		
 		//若是失败，连续挑战10次
 		int j = 0;
 		for (j;j < 10;j++)
 		{
 			//战斗
-			data_receive = this->Mod_Mission_Base_fight_monster(team_id);
-
+			Json::Value data_receive = this->Mod_Mission_Base_fight_monster(team_id);
+			
 			//战斗结果
 			int status = data_receive[data_receive.size() - 3].asInt();
 

@@ -57,6 +57,18 @@
     <ClInclude Include="include\sxd_web.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\locker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sql_connection_pool\sql_connection_pool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_log\block_queue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_log\log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -309,6 +321,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="protocol\protocol.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_shanhaiworld.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="my_log\log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sql_connection_pool\sql_connection_pool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

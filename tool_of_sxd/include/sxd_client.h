@@ -15,6 +15,8 @@
 #include "vector"
 
 #include "database.h"
+#include "sql_connection_pool/sql_connection_pool.h"
+//#include "threadpool/threadpool.h"
 
 class sxd_client {
 private:
@@ -28,6 +30,14 @@ private:
 	short pre_module;
 	short pre_action;
 
+	int m_state;				//0Îªsend£¬1Îªreceive
+	Json::Value m_data_s;
+	short m_module_s;
+	short m_action_s;
+	Json::Value m_data_r;
+	short m_module_r;
+	short m_action_r;
+
 	int iEdit;
 	bool bLogin;
 	int x, y;
@@ -36,6 +46,7 @@ private:
 	// - sxd_client.cpp
 	//============================================================================
 public:
+
 	sxd_client(const std::string& version, const int hwnd = -1);
 	virtual ~sxd_client();
 	void connect(const std::string& host, const std::string& port);
@@ -800,7 +811,6 @@ public:
 	Json::Value Mod_ServerChatRoom_Base_chat_with_players(const std::string& message, const std::string& eip_num = "", const std::string& eip_index = "");
 	Json::Value Mod_ServerChatRoom_Base_get_pet_escort_award();
 
-public:
 	//============================================================================
 	// - sxd_client_quest.cpp
 	//============================================================================
@@ -819,6 +829,20 @@ public:
 	Json::Value Mod_MissionPractic_Base_get_practice_info(int mission_Id);
 	Json::Value Mod_Mission_Base_open_box();
 	Json::Value Mod_Mission_Base_pickup_award();
+
+	//============================================================================
+	// - sxd_client_shanhaiworld.cpp
+	//============================================================================
+	int shanhaiworld_login(sxd_client* sxd_client_town);
+	void tong_tian_tower();
+	Json::Value Mod_ShanhaiWorld_Base_get_login_info(int node_id);
+	Json::Value Mod_ShanhaiWorld_Base_login(const std::string& server_name, int player_id, int time, const std::string& pass_code);
+	Json::Value Mod_ShanhaiWorld_Base_get_room_list();
+	Json::Value Mod_ShanhaiWorld_Base_enter_town(int node_id);
+
+	Json::Value Mod_ShanhaiWorld_Base_panel_info();
+	Json::Value Mod_ShanhaiWorld_Base_challenge();
+
 };
 
 #endif /* SXD_CLIENT_H_ */

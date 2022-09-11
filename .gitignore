@@ -240,3 +240,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/tool_of_sxd/threadpool/threadpool.h

@@ -6,6 +6,7 @@
 #include <thread>
 #include "common.h"
 #include "sxd_client.h"
+#include <string>
 
 class Mod_Player_Base
 {
@@ -70,15 +71,62 @@ int sxd_client::login_town(const std::string& web_page)
 	common::log(boost::str(boost::format("【登录】玩家排名信息，竞技排名[%1%]，帮派[%2%]，战力[%3%]，声望[%4%]，阅历[%5%]，成就[%6%]，先攻[%7%]，境界[%8%]，鲜花[%9%]，仙令[%10%]") % data[0][0][1] % common::utf2gbk(data[0][0][2].asString()) % data[0][0][3] % data[0][0][4] % data[0][0][5] % data[0][0][6] % data[0][0][7] % data[0][0][8] % data[0][0][9] % data[0][0][10]), iEdit);
 
 	// 7. enter_town
-	data = this->Mod_Town_Base_enter_town(town_map_id);
-	if (data[0].asInt() != Mod_Town_Base::SUCCESS)
+	if (town_map_id == 153)
 	{
-		std::cout << data[0].asInt() << "\n" << Mod_Town_Base::SUCCESS << "\n";
-		common::log(boost::str(boost::format("【登录】玩家进入 [%1%] 失败，result[%2%]") % db.get_code(version, "Town", town_map_id)["text"] % data[0]), iEdit);
-		return 3;
-	}
-	common::log(boost::str(boost::format("【登录】玩家进入 [%1%]") % db.get_code(version, "Town", town_map_id)["text"]), iEdit);
+		town_map_id = 149;
+		data = this->Mod_Town_Base_enter_town(town_map_id);
+		if (data[0].asInt() != Mod_Town_Base::SUCCESS)
+		{
+			std::cout << data[0].asInt() << "\n" << Mod_Town_Base::SUCCESS << "\n";
+			common::log(boost::str(boost::format("【登录】玩家进入 [%1%] 失败，result[%2%]") % db.get_code(version, "Town", town_map_id)["text"] % data[0]), iEdit);
+			return 3;
+		}
+		common::log(boost::str(boost::format("【登录】玩家进入 [%1%]") % db.get_code(version, "Town", town_map_id)["text"]), iEdit);
+		/*data = this->Mod_ShanhaiWorld_Base_get_room_list();
+		int node_id = data[1].asInt();
+		
+		获取登录山海界的信息
+		data = this->Mod_ShanhaiWorld_Base_get_login_info(1);
+		std::string server_name = data[3].asString();
+		int time = data[4].asInt();
+		std::string pass_code = data[5].asString();
 
+		host = data[1].asString();
+		port = data[2].asString();
+		 先连接服务器
+		this->connect(host, port);
+		common::log(boost::str(boost::format("【登录】连接服务器 [%1%:%2%] 成功") % host % port), iEdit);
+
+		登录山海界
+		data = this->Mod_ShanhaiWorld_Base_login(server_name, player_id, time, pass_code);
+		if (data[0].asInt() != 0)
+		{
+			std::cout << data[0].asInt() << "\n" << Mod_Town_Base::SUCCESS << "\n";
+			common::log(boost::str(boost::format("【登录】玩家登录 [%1%] 失败，result[%2%]") % db.get_code(version, "Town", town_map_id)["text"] % data[0]), iEdit);
+			return 3;
+		}
+		int room_id = data[3].asInt();
+
+		进入山海界城镇
+		data = this->Mod_ShanhaiWorld_Base_enter_town(room_id);
+		if (data[0].asInt() != 0)
+		{
+			std::cout << data[0].asInt() << "\n" << Mod_Town_Base::SUCCESS << "\n";
+			common::log(boost::str(boost::format("【登录】玩家进入 [%1%] 失败，result[%2%]") % db.get_code(version, "Town", town_map_id)["text"] % data[0]), iEdit);
+			return 3;
+		}*/
+	}
+	else
+	{
+		data = this->Mod_Town_Base_enter_town(town_map_id);
+		if (data[0].asInt() != Mod_Town_Base::SUCCESS)
+		{
+			std::cout << data[0].asInt() << "\n" << Mod_Town_Base::SUCCESS << "\n";
+			common::log(boost::str(boost::format("【登录】玩家进入 [%1%] 失败，result[%2%]") % db.get_code(version, "Town", town_map_id)["text"] % data[0]), iEdit);
+			return 3;
+		}
+		common::log(boost::str(boost::format("【登录】玩家进入 [%1%]") % db.get_code(version, "Town", town_map_id)["text"]), iEdit);
+	}
 	// 8. chat
 	Json::Value config;
 	std::istringstream(db.get_config(user_id.c_str(), "TownChat")) >> config;

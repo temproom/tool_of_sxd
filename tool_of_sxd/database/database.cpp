@@ -5,14 +5,15 @@
 #include <lexical_cast.hpp>
 #include "common.h"
 #include "sqlite3.h"
-
+#include <my_log\log.h>
 database::database()
 {
 	if (sqlite3_open_v2(".\\sxd.sqlite", &db, SQLITE_OPEN_READWRITE, NULL) == 0)
 		return;
-	if (sqlite3_open_v2("..\\sxd.sqlite", &db, SQLITE_OPEN_READWRITE, NULL) == 0)
-		return;
+	/*if (sqlite3_open_v2("..\\sxd.sqlite", &db, SQLITE_OPEN_READWRITE, NULL) == 0)
+		return;*/
 	std::cerr << sqlite3_errmsg(db) << std::endl;
+	Log::get_instance()->write_log("database", sqlite3_errmsg(db),-1);
 	exit(1);
 } //database::database
 
