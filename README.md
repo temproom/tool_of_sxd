@@ -28,6 +28,17 @@ bjam --toolset=msvc --build-type=complete stage ，回车
 
 2、配置属性->链接器->常规:"附加库目录":同上面的"库目录"，例:D:\my_workspace\C_program\C_boost\boost_1_79_0\stage\lib
 
+    zlib库
+用boost配置zlib库
+
+VS2015 x64 本机工具命令提示符
+
+d:进入D盘，然后cd D:\boost_1_78_0\boost_1_78_0
+
+运行
+
+b2 toolset=msvc-14.0 --with-iostreams -sZLIB_SOURCE="D:\zlib\zlib1212\zlib-1.2.12" -sZLIB_INCLUDE="D:\zlib\zlib1212\zlib-1.2.12"  --build-type=complete address-model=64
+
     libiconv库
 	
 https://blog.csdn.net/ZX_Infinite/article/details/119283069
