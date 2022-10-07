@@ -3,14 +3,13 @@
 #include <ctime>
 
 #include <boost/format.hpp>
-
+#include <boost/asio.hpp>
 #define BOOST_THREAD_PROVIDES_GENERIC_SHARED_MUTEX_ON_WIN
 #include <boost/thread.hpp>
 
 #include "protocol.h"
 #include "common.h"
 #include "sxd_client.h"
-#include <boost/asio.hpp>
 #include "vector"
 
 sxd_client::sxd_client(const std::string& version, const int hwnd) :

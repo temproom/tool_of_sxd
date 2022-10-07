@@ -11,13 +11,16 @@
 
 #include <format.hpp>
 
-#include "database.h"
 #include "sxd_web.h"
+#include "database.h"
 #include "sxd_client.h"
 #include "common.h"
 #include "protocol.h"
 #include "sxd.h"
 //#include "threadpool/threadpool.h"
+
+std::string player_name = "助手";
+
 sxd::sxd()
 {}
 
@@ -58,7 +61,7 @@ void sxd::run(std::string arg, bool auto_exit)
 	std::string user_ini = common::read_file("user.ini");
 
 	//正则表达式读取文件信息，获取cookies
-	boost::regex user_regex("userid=(.*?)\r\nurl=(.*?)\ncode=(.*?)\r\ntime1=(.*?)\r\nhash1=(.*?)\r\ntime=(.*?)\r\nhash=(.*?)\r\nversion=(.*?)\r\nname=(.*?)\r\n");
+	boost::regex user_regex("\\[(.*?)\\]\r\nurl=(.*?)\ncode=(.*?)\r\ntime1=(.*?)\r\nhash1=(.*?)\r\ntime=(.*?)\r\nhash=(.*?)\r\nname=(.*?)\r\n");
 
 	if (arg == "menu")
 	{
@@ -67,7 +70,7 @@ void sxd::run(std::string arg, bool auto_exit)
 		{
 			//Log::get_instance()->init((*it)[9], 1, 100);
 			//Log::get_instance()->write_log(boost::str(boost::format("%1%. %2%") % (++i) % (*it)[9]), -1, 0, 0)
-			common::log(boost::str(boost::format("%1%. %2%") % (++i) % (*it)[9]), -1, 0, 0);
+			common::log(boost::str(boost::format("%1%. %2%") % (++i) % (*it)[8]), -1, 0, 0);
 		}
 		common::log("请选择(输入0表示运行所有)：", -1, 0, 0);
 		std::getline(std::cin, arg);
@@ -108,13 +111,13 @@ void sxd::run(std::string arg, bool auto_exit)
 					continue;
 				common::log("", -1, 1, 0);
 
-				play_name = (*it)[9];
+				player_name = (*it)[8];
 
 				//初始化日志
-				sxd::log_write(play_name,0,100);
+				sxd::log_write(player_name,0,100);
 
-				Log::get_instance()->write_log(play_name, " 开始...");
-				common::log(boost::str(boost::format("【%1%】开始...") % play_name));
+				//Log::get_instance()->write_log(player_name, " 开始...");
+				common::log(boost::str(boost::format("【%1%】开始...") % player_name));
 
 				std::ostringstream oss;
 				oss << "Cookie: user=" << (*it)[3] << ";";
@@ -122,17 +125,17 @@ void sxd::run(std::string arg, bool auto_exit)
 				oss << "login_time_sxd_xxxxxxxx=" << (*it)[4] << ";login_hash_sxd_xxxxxxxx=" << (*it)[5] << "\r\n";
 				std::string user_id = (*it)[1];
 				std::string url = (*it)[2];
-				std::string version = (*it)[8];
+				std::string version = "2022093001";
 
 				database* m_db = NULL;
 				connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
 				std::string max_version = m_db->get_max_version();
 
-				Log::get_instance()->write_log(play_name, boost::str(boost::format("当前版本 [%1%]	最新版本 [%2%]") % version.c_str() % max_version.c_str()));
+				//Log::get_instance()->write_log(player_name, boost::str(boost::format("当前版本 [%1%]	最新版本 [%2%]") % version.c_str() % max_version.c_str()));
 				std::cout << "当前版本:" << max_version.c_str() << max_version.length() << "\n" << "最新版本:" << version.c_str() << version.length() << "\n";
 				if (version != max_version)
 				{
-					Log::get_instance()->write_log(play_name, boost::str(boost::format("当前版本 [%1%]，最新版本 [%2%]，请及时更新版本") % version.c_str() % max_version.c_str()));
+					//Log::get_instance()->write_log(player_name, boost::str(boost::format("当前版本 [%1%]，最新版本 [%2%]，请及时更新版本") % version.c_str() % max_version.c_str()));
 					common::log(common::sprintf("当前版本 [%s]，最新版本 [%s]，请及时更新版本", version.c_str(), max_version.c_str()));
 					version = max_version;
 				}
@@ -145,7 +148,7 @@ void sxd::run(std::string arg, bool auto_exit)
 			}
 			catch (const std::exception& ex)
 			{
-				Log::get_instance()->write_log(play_name, boost::str(boost::format("发现错误(run)：%1%") % ex.what()));
+				Log::get_instance()->write_log(player_name, boost::str(boost::format("发现错误(run)：%1%") % ex.what()));
 				common::log(boost::str(boost::format("发现错误(run)：%1%") % ex.what()));
 			}
 		}

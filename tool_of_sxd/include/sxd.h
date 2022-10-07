@@ -3,14 +3,14 @@
 
 #include "sxd_client.h"
 
-static std::string play_name;
+extern std::string player_name;
 
 class sxd
 {
 public:
 	sxd();
 	virtual ~sxd();
-
+	
 	static void log_write(const std::string& player_name, int close_log=0, int max_queue_size = 100);
 	static void sql_pool();
 	//static void thread_pool();

@@ -3,11 +3,10 @@
 #define SXD_CLIENT_H_
 
 #include <string>
-
-#include <D:\boost_1_78_0\boost_1_78_0\boost/asio/io_service.hpp>
-#include <D:\boost_1_78_0\boost_1_78_0\boost/asio/ip/tcp.hpp>
-#include <D:\boost_1_78_0\boost_1_78_0\boost/iostreams/filtering_stream.hpp>
-#include <D:\boost_1_78_0\boost_1_78_0\boost/iostreams/filter/zlib.hpp>
+#include <asio/io_service.hpp>
+#include <asio/ip/tcp.hpp>
+#include <iostreams/filtering_stream.hpp>
+#include <iostreams/filter/zlib.hpp>
 
 #include "json/json.h"
 //#include "jsoncpp.cpp"

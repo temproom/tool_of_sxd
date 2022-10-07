@@ -1,10 +1,11 @@
+
 #include "stdafx.h"
 #include <string.h>
 #include <time.h>
 #include <stdarg.h>
 #include "log.h"
 #include <thread>
-#include <windows.h>
+#include <sxd.h>
 
 Log::Log()
 {
@@ -86,7 +87,7 @@ bool Log::init(const std::string& player_name, int close_log, int max_queue_size
 	return true;
 }
 
-void Log::write_log(const std::string& name,const std::string& message, int hwnd, bool log_file , bool time )
+void Log::write_log(const std::string& name, const std::string& message, int hwnd, bool log_file , bool time )
 {
 	std::time_t now = std::time(0);
 	std::string log_str;
@@ -126,14 +127,26 @@ void Log::write_log(const std::string& name,const std::string& message, int hwnd
 	m_mutex.unlock();
 	if (m_is_async && !m_log_queue->full())
 	{
-		m_txt_queue->push(txt_str);
-		m_log_queue->push(log_str);
+		if (txt_str.size())
+		{
+			m_txt_queue->push(txt_str);
+		}
+		if (log_str.size())
+		{
+			m_log_queue->push(log_str);
+		}	
 	}
 	else
 	{
 		m_mutex.lock();
-		ofile_log << log_str << std::flush;
-		ofile_txt << txt_str << std::flush;
+		if (txt_str.size())
+		{
+			ofile_txt << txt_str << std::flush;
+		}
+		if (log_str.size())
+		{
+			ofile_log << log_str << std::flush;
+		}		
 		m_mutex.unlock();
 	}
 }

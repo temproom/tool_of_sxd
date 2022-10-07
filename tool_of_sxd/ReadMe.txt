@@ -4,6 +4,9 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
+环境
+win10，vs2022，
+
 jsoncpp
 https://github.com/open-source-parsers/jsoncpp/releases
 运行源码根目录下有个Python文件叫amalgamate.py，生成dist文件夹，复制到项目目录

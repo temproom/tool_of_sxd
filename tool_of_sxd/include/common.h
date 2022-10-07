@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include <D:\boost_1_78_0\boost_1_78_0\boost/filesystem.hpp>
+#include <filesystem.hpp>
 
 class common {
 public:

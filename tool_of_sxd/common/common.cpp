@@ -4,8 +4,10 @@
 #include <sstream>
 #include <regex>
 #include "iconv.h"
-#include <windows.h>
 #include "common.h"
+#include "sxd.h"
+#include "my_log/log.h"
+#include <windows.h>
 
 common::common(void)
 {}
@@ -339,7 +341,9 @@ std::string common::sprintf(const char* fmt, ...)
 
 void common::log(const std::string& message, int hwnd, bool file, bool time)
 {
-	std::time_t now = std::time(0);
+	extern std::string player_name;
+	Log::get_instance()->write_log(player_name, message, hwnd, file, time);
+	/*std::time_t now = std::time(0);
 	std::string path = "log";
 	boost::filesystem::create_directory(path);
 	if (hwnd)
@@ -372,7 +376,7 @@ void common::log(const std::string& message, int hwnd, bool file, bool time)
 			ofile << to_string(now, "%H:%M:%S") << " " << std::flush;
 		ofile << message << "\r\n" << std::flush;
 		ofile.close();
-	}
+	}*/
 }
 
 bool common::contain(const std::vector<std::string>& v, const std::string& s)
