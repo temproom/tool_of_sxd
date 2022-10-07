@@ -16,7 +16,7 @@ https://blog.csdn.net/nanke_yh/article/details/124346308
 1、双击bootstrap.bat文件，生成b2.exe；
 
 2、在cmd中输入以下命令（未尝试）或者双击b2.exe运行。
-bjam --toolset=msvc --build-type=complete stage ，回车
+bjam --toolset=msvc-14.3 --build-type=complete threading=multi address-model=64 stage ，回车
 这里面--build-type=complete时link，runtime-link3种组合下debug， release的多线程版本都生成出来了。
 除此之外还生成了link=static，runtime-link=static的debug， release的单线程版本。得到stage下的dll和lib文件
 
@@ -37,7 +37,7 @@ d:进入D盘，然后cd D:\boost_1_78_0\boost_1_78_0
 
 运行
 
-b2 toolset=msvc-14.0 --with-iostreams -sZLIB_SOURCE="D:\zlib\zlib1212\zlib-1.2.12" -sZLIB_INCLUDE="D:\zlib\zlib1212\zlib-1.2.12"  --build-type=complete address-model=64
+b2 toolset=msvc-14.3 --with-iostreams -sZLIB_SOURCE="D:\zlib\zlib1212\zlib-1.2.12" -sZLIB_INCLUDE="D:\zlib\zlib1212\zlib-1.2.12"  --build-type=complete address-model=64
 
     libiconv库
 	

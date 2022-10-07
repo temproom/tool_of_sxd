@@ -47,7 +47,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\boost_1_78_0\boost_1_78_0\boost;D:\json\jsoncpp-1.9.5\jsoncpp-1.9.5\include;D:\boost_1_78_0\boost_1_78_0;D:\随心\tool_of_sxd\tool_of_sxd\include;D:\随心\tool_of_sxd\tool_of_sxd;$(IncludePath)</IncludePath>
+    <IncludePath>D:\vs2022_file\tool_of_sxd\tool_of_sxd;D:\vs2022_file\tool_of_sxd\tool_of_sxd\include;D:\boost_1_78_0\boost_1_78_0\boost;D:\json\jsoncpp-1.9.5\jsoncpp-1.9.5\include;D:\boost_1_78_0\boost_1_78_0;$(IncludePath)</IncludePath>
     <LibraryPath>D:\boost_1_78_0\boost_1_78_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -141,7 +141,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\随心\tool_of_sxd\tool_of_sxd\protocol;D:\随心\tool_of_sxd\tool_of_sxd\libiconv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\vs2022_file\tool_of_sxd\tool_of_sxd\libiconv;D:\vs2022_file\tool_of_sxd\tool_of_sxd\protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4311</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -202,6 +202,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="sxd\sxd.cpp" />
+    <ClCompile Include="sxd_clent\StEightImmortals.cpp" />
     <ClCompile Include="sxd_clent\sxd_client.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_assistant.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_awake.cpp" />

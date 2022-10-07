@@ -818,6 +818,7 @@ public:
 	void fight_mission(int mission_id);
 	void accept_quest(int town_id);
 	std::vector<int> get_monster_team_by_missionid(int mission_id);
+	std::vector<int> get_monster_teamid_by_missionid(int mission_id);
 	Json::Value Mod_Quest_Base_list_player_quest();
 	Json::Value Mod_Quest_Base_can_receive_quest(int town_map_id);
 	Json::Value Mod_Quest_Base_accept_quest(int quest_id);
@@ -842,6 +843,14 @@ public:
 
 	Json::Value Mod_ShanhaiWorld_Base_panel_info();
 	Json::Value Mod_ShanhaiWorld_Base_challenge();
+
+	//============================================================================
+	// - sxd_client_StEightImmortals.cpp
+	//============================================================================
+	void StEightImmortals();
+	Json::Value Mod_StEightImmortals_Base_get_finished_missions(int mission_id);
+	Json::Value Mod_StEightImmortals_Base_enter_mission(int mission_id);
+	Json::Value Mod_StEightImmortals_Base_fight();
 
 };
 

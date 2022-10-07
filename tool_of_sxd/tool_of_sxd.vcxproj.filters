@@ -332,6 +332,9 @@
     <ClCompile Include="sql_connection_pool\sql_connection_pool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="sxd_clent\StEightImmortals.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tool_of_sxd.rc">

@@ -3,10 +3,10 @@
 #include "common.h"
 #include "sxd_client.h"
 #include "vector"
-
-#include <D:\boost_1_78_0\boost_1_78_0\boost/regex.hpp>
-#include <D:\boost_1_78_0\boost_1_78_0\boost/algorithm/string.hpp>
-#include <D:\boost_1_78_0\boost_1_78_0\boost/algorithm/string/regex.hpp>
+#include <windows.h>
+#include <regex.hpp>
+#include <algorithm/string.hpp>
+#include <algorithm/string/regex.hpp>
 
 class QuestType
 {
@@ -53,6 +53,30 @@ void sxd_client::auto_quest()
 	mss town_data = db.get_code(version, "Town", town_id);
 	common::log(boost::str(boost::format("【自动任务】：当前城镇为：《%1%》\n") % town_data["text"]), iEdit);
 
+	//获取副本列表
+	// 149:元圣之渊（Lv296-300）, 147:幽光岛, 145:混沌灵域, 106:极寒冰原, 105:无垠沙漠, 100:雷鸣之地, 93:天柱城, 
+	// 90:灵峰（Lv261-265）, 84:虚无幻境, 83:龙蜃气域, 82:赤焱魔域, 81:浮冰湾, 80:雪月湖
+	// 79:须弥山(Lv230-235), 76:幻雪城, 75:天穹岭, 73:无妄之海, 70:凤凰城, 68:帝苑, 65:上古禁地, 62:盘龙城, 58:仙府, 56:神域, 
+	// 55:天河镇(Lv181-185), 54:海市蜃楼, 43:海云台, 40:云中界, 39:明镜城, 35:天庭
+	// 33:卧龙城, 29:大理城, 27:白鹿书院, 26:魔都, 24:百花城, 23:太一城, 22:长安城, 
+	// 21:逍遥城, 15:月牙城, 14:扬州城, 13:不归山, 9:雁门郡, 8:玄霄宫, 7:古道城, 4:天剑宗
+	int town_ids[] = { 149,147,145,106,105,100,93,90,84,83,82,81,80,79,76,75,73,70,68,65,62,58,56,55, 54, 43, 40, 39, 35, 33, 29, 27, 26, 24, 23, 22, 21, 15, 14, 13, 9, 8, 7, 4 };
+	//std::reverse(sections.begin(), sections.end());
+	std::vector<int> not_mission_ids;
+	for (auto id : town_ids)
+	{
+		Json::Value data = this->Mod_Mission_Base_get_sections(id);
+		auto sections = data[0];
+		for (auto it : sections)
+		{
+			if (!it[1].asInt())
+			{
+				//记录未通关副本的id
+				not_mission_ids.push_back(it[0].asInt());
+			}
+		}
+	}
+
 	//接任务与完成任务
 	this->accept_quest(town_id);
 
@@ -88,7 +112,7 @@ void sxd_client::auto_quest()
 		mss mission_data = db.get_mission(version, not_mission_id[0]);
 		std::string name = mission_data["mission_name"];
 
-		if (not_mission_id[0] >= 1182)
+		if (not_mission_id[0] >= 1182 && not_mission_id[0] < 2193)
 		{
 			boost::smatch match;
 			if (regex_search(name, match, boost::regex("[1-9]")))
@@ -177,7 +201,7 @@ void sxd_client::accept_quest(int town_id)
 }
 
 //============================================================================
-// R177 副本战斗	
+//  副本战斗	
 //============================================================================
 void sxd_client::fight_mission(int mission_id)
 {
@@ -186,7 +210,7 @@ void sxd_client::fight_mission(int mission_id)
 
 	//180级神域以后的城镇，不打最后一个副本，防止到下一个城镇
 	std::string name = mission_data["mission_name"];
-	if (mission_id >= 1182)
+	if (mission_id >= 1182 && mission_id < 2193)
 	{
 		boost::smatch match;
 		if (regex_search(name, match, boost::regex("[1-9]")))
@@ -203,7 +227,7 @@ void sxd_client::fight_mission(int mission_id)
 
 	//获取monster_teams
 	std::vector<int> monster_teams;
-	monster_teams = this->get_monster_team_by_missionid(mission_id);
+	monster_teams = this->get_monster_teamid_by_missionid(mission_id);
 
 	//进入副本
 	data_accept = this->Mod_Mission_Base_enter_mission(mission_id);
@@ -230,12 +254,14 @@ void sxd_client::fight_mission(int mission_id)
 		for (j;j < 10;j++)
 		{
 			//战斗
+			Sleep(2000);
 			Json::Value data_receive = this->Mod_Mission_Base_fight_monster(team_id);
-			
+			//Sleep(500);
 			//战斗结果
-			int status = data_receive[data_receive.size() - 3].asInt();
-
-			if (status == MissionType::SUCCESS)
+			int status = data_receive[data_receive.size() - 3].asInt();		//10
+			Json::Value flag = data_receive[data_receive.size() - 8];	//20
+			//int waraure = data_receive[data_receive.size() - 7].asInt();	//500
+			if (status == MissionType::SUCCESS && (flag.size()!=0))
 			{
 				common::log(boost::str(boost::format("【副本战斗】：第%1%次挑战：《%2%_%3%》成功！\n") % (j + 1) % mission_data["mission_name"] % i), iEdit);
 				i++;
@@ -244,6 +270,7 @@ void sxd_client::fight_mission(int mission_id)
 			else
 			{
 				common::log(boost::str(boost::format("【副本战斗】：第%1%次挑战：《%2%_%3%》失败！\nstatus=%4%\n") % (j + 1) % mission_data["mission_name"] % i%status), iEdit);
+				Sleep(14000);
 			}
 		}
 		if (j == 10)
@@ -252,14 +279,17 @@ void sxd_client::fight_mission(int mission_id)
 			return;
 		}
 	}
+	//Json::Value datak;
 	this->Mod_Mission_Base_open_box();
+	//this->send_frame(datak, 4, 4);
 	common::log("【副本战斗】：打开奖励盒子\n", iEdit);
 	this->Mod_Mission_Base_pickup_award();
+	//this->send_frame(datak, 4, 5);
 	common::log("【副本战斗】：拾起奖励\n", iEdit);
 }
 
 //============================================================================
-// R177 获取mission_monster_team_id		
+//获取mission_monster_team_id		
 //180级神域之后的副本不分boss，只分精英，type=31	mission_id>=1182为神域之后的副本
 //============================================================================
 std::vector<int> sxd_client::get_monster_team_by_missionid(int mission_id)
@@ -354,16 +384,45 @@ std::vector<int> sxd_client::get_monster_team_by_missionid(int mission_id)
 	}*/
 }
 
+//============================================================================
+//获取mission_monster_team_id		
+//============================================================================
+std::vector<int> sxd_client::get_monster_teamid_by_missionid(int mission_id)
+{
+	//返回的monster_team列表
+	std::vector<int> monster_team;
+
+	//查表mission，得到副本信息
+	mss mission = db.get_monster_teamid_by_missionid(version, mission_id);
+
+	std::string teams = mission["mission_team"];
+	std::string temp;
+	int i = 0;
+	while (i < teams.size())
+	{
+		std::string temp;
+		while (teams[i] != ','&& i < teams.size())
+		{
+			temp += teams[i];
+			++i;
+		}
+		++i;
+		int team = stoi(temp);
+		monster_team.push_back(team);
+	}
+	return monster_team;
+}
+
 
 //============================================================================
-// R171 当前任务
+//  当前任务
 // {module:3, action:6, request:[],
 // response:[[Utils.IntUtil, Utils.ByteUtil]]};
 // Example
 // quest_id, state
 //     [ [ [ 897, 1 ], [ 894, 1 ], [ 874, 1 ], [ 900, 1 ], [ 876, 1 ], [ 893, 1 ], [ 875, 1 ], [ 872, 2 ], [ 889, 1 ], [ 899, 1 ], [ 890, 1 ], [ 895, 1 ], [ 898, 1 ], [ 896, 1 ], [ 892, 1 ], [ 887, 1 ] ] ]
 //		1表示已接，2表示已完成
-//		QuestTypeData.as
+//QuestTypeData.as
 //     887:[2,24200,0,"巨斧青龙兵","...","...","去[九重仙池7)]击败",193,193,5100000,1700000,0,0,"...","...","...",872,1],
 //		1：主线，2：支线任务，3：功能任务，4：精英任务
 //		第三个数字，主线中表示等级，支线中表示未通关，
@@ -378,7 +437,7 @@ Json::Value sxd_client::Mod_Quest_Base_list_player_quest()
 }
 
 //============================================================================
-// R171 可接任务
+//  可接任务
 // {module:3, action:8,
 // request:[Utils.IntUtil],
 // Example		_data.call(Mod_Quest_Base.can_receive_quest,this.canReceiveQuestCallback,[_ctrl.player.mapId]);
@@ -397,7 +456,7 @@ Json::Value sxd_client::Mod_Quest_Base_can_receive_quest(int town_map_id)
 
 
 //============================================================================
-// R171 接任务
+//  接任务
 // {module:3, action:,
 // request:[Utils.IntUtil],
 // Example		 _data.call(Mod_Quest_Base.accept_quest,func,[questId]);
@@ -414,7 +473,7 @@ Json::Value sxd_client::Mod_Quest_Base_accept_quest(int quest_id)
 }
 
 //============================================================================
-// R171 提交任务
+//  提交任务
 // {module:3, action:5,
 // request:[Utils.IntUtil],		questId
 // Example
@@ -432,7 +491,7 @@ Json::Value sxd_client::Mod_Quest_Base_complete_quest(int quest_id)
 }
 
 //============================================================================
-// R171 做任务 这个用不了
+//  做任务 这个用不了
 // {module:3, action:4,
 // request:[Utils.IntUtil],
 // Example
@@ -449,7 +508,7 @@ Json::Value sxd_client::Mod_Quest_Base_finish_quest(int quest_id)
 }
 
 //============================================================================
-// R171 副本
+//  副本
 // {module:4, action:0,
 // request:[Utils.IntUtil],
 // Example
@@ -470,7 +529,7 @@ Json::Value sxd_client::Mod_Mission_Base_get_sections(int town_map_id)
 }
 
 //============================================================================
-// R171 进入副本
+//  进入副本
 // {module:4, action:1,
 // request:[Utils.IntUtil],
 // Example
@@ -490,7 +549,7 @@ Json::Value sxd_client::Mod_Mission_Base_enter_mission(int mission_id)
 }
 
 //============================================================================
-// R171 进入副本后，打怪
+//  进入副本后，打怪
 // {module:4, action:2,
 // request:[Utils.IntUtil,Utils.ByteUtil],
 // Example
@@ -517,7 +576,7 @@ Json::Value sxd_client::Mod_Mission_Base_fight_monster(int monsterTeamId)
 }
 
 //============================================================================
-// R171 获取扫荡信息，目的是获取副本怪物信息
+//  获取扫荡信息，目的是获取副本怪物信息
 // {module:25, action:0,
 // request:[Utils.IntUtil],
 // Example		[missionId]

@@ -241,6 +241,18 @@ std::list<mss> database::get_mission_teamid_by_monsterid(const char* version, in
 	return this->get_records("mission_monster", where_clause.str());
 }
 
+// table mission_to_monster
+mss database::get_monster_teamid_by_missionid(const std::string& version, int mission_id)
+{
+	return this->get_monster_teamid_by_missionid(version.c_str(), mission_id);
+}
+mss database::get_monster_teamid_by_missionid(const char* version, int mission_id)
+{
+	std::ostringstream where_clause;
+	where_clause << "version='" << version << "' and mission_id=" << mission_id;
+	return this->get_record("mission_to_monster", where_clause.str());
+}
+
 // table quest
 mss database::get_quest(const std::string& version, int quest_id)
 {

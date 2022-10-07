@@ -52,5 +52,7 @@ private:
 	static void collect_mission(const std::string& version, const std::string& path);
 	static void collect_quest(const std::string& version, const std::string& path);
 
+	static void collect_mission_to_monster(const std::string& version, const std::string& path);
+
 };
 #endif /* SXD_H_ */

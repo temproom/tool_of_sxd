@@ -17,7 +17,7 @@
 #include "common.h"
 #include "protocol.h"
 #include "sxd.h"
-#include "threadpool/threadpool.h"
+//#include "threadpool/threadpool.h"
 sxd::sxd()
 {}
 
@@ -917,14 +917,32 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 	}
 	else if (fun_id == 3)
 	{
-		/*std::cout << "kai\n";
-		sxd_client_town.Mod_ShanhaiWorld_Base_challenge();
-		std::cout << "wan\n";*/
-		/*if (!sxd_client_shanhai_world.shanhaiworld_login(&sxd_client_town))
+		common::log(" 1.通天塔\n 2.八仙过海\n 请选择相应的功能：");
+		int fun;
+		std::cin >> fun;
+		if (fun == 1)
 		{
-			sxd_client_shanhai_world.tong_tian_tower();
-		}*/
-		sxd_client_town.tong_tian_tower();
+			sxd_client_town.tong_tian_tower();
+		}	
+		if (fun == 2)
+		{
+			// super town 仙界
+			{
+				try
+				{
+					if (!common::contain(function_names, "仙界"))
+						common::log("【仙界】未开启", 0);
+					else if (!sxd_client_super_town.login_super_town(&sxd_client_town))
+					{
+						sxd_client_super_town.StEightImmortals();             // 八仙过海
+					}
+				}
+				catch (const std::exception& ex)
+				{
+					common::log(boost::str(boost::format("发现错误(super town)：%1%") % ex.what()));
+				}
+			}		
+		}
 	}
 
 
@@ -1048,9 +1066,9 @@ void sxd::collect()
 		sxd::collect_facture_reel(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\facturereeltype.as");
 		sxd::collect_mission_monster(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\missionmonstertypedata.as");
 		sxd::collect_mission_team(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\missionmonstertypedata.as");
-		sxd::collect_quest(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\questtypedata.as");
-		sxd::collect_mission(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\missiontypedata.as");*/
-
+		sxd::collect_quest(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\questtypedata.as");*/
+		//sxd::collect_mission(version, "d:\\随心\\协议\\" + version + "\\com\\assist\\server\\source\\missiontypedata.as");
+		sxd::collect_mission_to_monster(version, "d:\\随心\\协议\\" + version + "\\mission.txt"); 
 	}
 	catch (const std::exception& ex)
 	{
@@ -1422,6 +1440,34 @@ void sxd::collect_mission_team(const std::string& version, const std::string& pa
 	{
 		auto sql = boost::format("INSERT INTO mission_team(version, _id, team_id, monster_id) VALUES('%1%', '%2%', '%3%', '%4%')");
 		sql % version % match[1] % match[2] % match[3];
+		common::log(common::utf2gbk(sql.str()));
+		m_db->execute(sql.str().c_str());
+		content = match.suffix();
+	}
+	m_db->execute("COMMIT");
+}
+
+void sxd::collect_mission_to_monster(const std::string& version, const std::string& path)
+{
+	database* m_db = NULL;
+	connectionRAII sqlcon(&m_db, connection_pool::GetInstance());
+
+	m_db->execute("BEGIN");
+	m_db->execute(("DELETE FROM mission_to_monster where version!='" + version + "'").c_str());
+	std::string content = common::read_file(path);
+	// regex 1
+	boost::smatch match;
+	//boost::regex regex1("\"(\\d+?)\":\{\"(.*?)\":\"(.*?)\",\"(.*?)\":(\\d+?),\"(.*?)\":\\[(.*?)\\](.*?)\},");
+	//boost::regex_search(content, match, regex1);
+	//std::cout << "match\n" ;
+	//std::cout << match << "\n";
+	//content = match.str();
+	// regex2
+	boost::regex regex2("\"(\\d+?)\":\\{\"(\\S*)\":\"(\\S*)\",\"(\\S*)\":(\\d+?),\"(\\S*)\":\\[(\\S*)\\](\\S*)\\},\r\n");
+	while (boost::regex_search(content, match, regex2))
+	{
+		auto sql = boost::format("INSERT INTO mission_to_monster(version, mission_id, mission_name, map_id, mission_team) VALUES('%1%', '%2%', '%3%', '%4%', '%5%')");
+		sql% version% match[1] % match[3] % match[5] % match[7];
 		common::log(common::utf2gbk(sql.str()));
 		m_db->execute(sql.str().c_str());
 		content = match.suffix();

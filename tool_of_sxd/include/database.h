@@ -46,6 +46,10 @@ public:
 	std::list<mss> get_mission_teamid_by_monsterid(const std::string& version, int monster_id);
 	std::list<mss> get_mission_teamid_by_monsterid(const char* version, int monster_id);
 
+	// table mission_to_monster
+	mss get_monster_teamid_by_missionid(const std::string& version, int mission_id);
+	mss get_monster_teamid_by_missionid(const char* version, int mission_id);
+
 	// table quest
 	mss get_quest(const std::string& version, int quest_id);
 	mss get_quest(const char* version, int quest_id);
