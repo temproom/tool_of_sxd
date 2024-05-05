@@ -202,6 +202,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="sxd\sxd.cpp" />
+    <ClCompile Include="sxd\sxd_client_sa_trials.cpp" />
     <ClCompile Include="sxd_clent\StEightImmortals.cpp" />
     <ClCompile Include="sxd_clent\sxd_client.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_assistant.cpp" />
@@ -211,9 +212,11 @@
     <ClCompile Include="sxd_clent\sxd_client_bug.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_chaos_equipment.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_chat.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_ClearClouds.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_coin_mission.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_courtyard_pet.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_dance.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_DevilExpedition.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_dice_messenger.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_dragonball.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_dunhuang_treasure.cpp" />
@@ -236,16 +239,20 @@
     <ClCompile Include="sxd_clent\sxd_client_link_fate.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_lucky_shop.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_lucky_super_number.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_MainRoleFaXiang.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_marry.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_marry_home.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_memoirs.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_MemoryZone.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_nine_regions.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_partner_link.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_pet_animal.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_PhantomGemLottery.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_pot_world.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_quest.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_regression.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_release_welfare.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_RepressDemonTower.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_research.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_rob_money.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_roll_cake.cpp" />
@@ -276,6 +283,10 @@
     <ClCompile Include="sxd_clent\sxd_client_wager_shop.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_wish_pool.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_wish_tower.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_master_practice.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_WuFaField.cpp" />
+    <ClCompile Include="sxd_client_Fairyland.cpp" />
+    <ClCompile Include="sxd_client_FiveElementsPalace.cpp" />
     <ClCompile Include="sxd_web\sxd_web.cpp" />
     <ClCompile Include="tool_of_sxd.cpp" />
   </ItemGroup>

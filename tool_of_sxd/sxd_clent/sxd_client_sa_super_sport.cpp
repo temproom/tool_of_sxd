@@ -19,9 +19,12 @@ void sxd_client::sa_super_sport()
 		// race info
 		Json::Value data = this->Mod_SaSuperSport_Base_race_info();
 		if (data[1].asInt() == 0)
+		{
+			common::log("【圣域竞技场】：挑战次数已用完！！");
 			return;
+		}			
 		std::vector<Json::Value> player_list;
-		std::copy(data[4].begin(), data[4].end(), std::back_inserter(player_list));
+		std::copy(data[5].begin(), data[5].end(), std::back_inserter(player_list));
 		std::sort(player_list.begin(), player_list.end(), [](const Json::Value& x, const Json::Value& y) { return x[5].asInt() < y[5].asInt(); });
 
 		// challage
@@ -46,10 +49,10 @@ void sxd_client::sa_super_sport()
 }
 
 //============================================================================
-// R172 圣域竞技场面板
+//  圣域竞技场面板
 // {module:384, action:0, request:[], response:[Utils.UByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, [Utils.IntUtil, Utils.ByteUtil, Utils.StringUtil, Utils.StringUtil, Utils.StringUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil]]};
 // SaSuperSportData.as 32:
-//     oObject.list(param1, this.raceObject, ["race_type", "challage_times", "score", "rank", "player_list"]);
+//     oObject.list(param1,this.raceObject,["race_type","challage_times","score","rank","proficiency","player_list"]);
 //     for each (_loc_4 in this.raceObject.player_list)
 //         oObject.list(_loc_4, _loc_3, ["sa_player_id", "seq", "stage_name", "server_name", "nickname", "war_power", "score", "role_id", "rank", "level"]);
 // Example
@@ -64,7 +67,7 @@ Json::Value sxd_client::Mod_SaSuperSport_Base_race_info()
 }
 
 //============================================================================
-// R172 挑战
+//  挑战
 // {module:384, action:3, request:[Utils.ByteUtil, Utils.IntUtil],
 // Example
 //     [ 2, 346 ]

@@ -18,7 +18,8 @@ void sxd_client::sa_take_bible()
 	Json::Value bible_info = data;
 	if (bible_info[2].asInt() == bible_info[3].asInt())
 	{
-		common::log("【圣域取经】次数已用完", 0);
+		//common::log("【圣域取经】次数已用完", 0);
+		common::log("【圣域取经】次数已用完！！");
 		return;
 	}
 	if (bible_info[6].asInt() == 0)
@@ -55,7 +56,7 @@ void sxd_client::sa_take_bible()
 // {module:395, action:2,
 // request:[],
 // response:[[Utils.UByteUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.ByteUtil, Utils.IntUtil], [Utils.IntUtil, Utils.StringUtil, Utils.ByteUtil, Utils.ByteUtil, Utils.ByteUtil], Utils.ByteUtil, Utils.ByteUtil, Utils.ShortUtil, Utils.ByteUtil, Utils.UByteUtil, Utils.StringUtil, Utils.ByteUtil, Utils.ByteUtil]}
-// SaTakeBibleController.as 225:
+// SaTakeBibleController.as 249:
 //     _loc_2.protectionList = this.renderProtectionList(_loc_1[0]);
 //     _loc_2.protectPlayerList = this.renderProtectPlayerList(_loc_1[1]);
 //     **_loc_2.takeBibleTimes = _loc_1[2];

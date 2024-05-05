@@ -19,30 +19,39 @@ public:
 	static const int SUCCESS = 10;
 	static const int FAILURE = 38;
 	static const int EMPTY_HEALTH = 17;
+	static const int NOTHING_TO_FIGHT = 21;
+	static const int HEALTH_ITEM_STAGE = 19;
 	static const int MISSION_COMPLETE = 33;
 };
 
 void sxd_client::StEightImmortals()
 {
 	Json::Value data;
-	data = this->Mod_StEightImmortals_Base_get_finished_missions(7);
+
+	//获取八仙过海副本信息
+	data = this->Mod_StEightImmortals_Base_get_finished_missions(9);
+
 	for (int i = 5; i < 73; i++)
 	{
+		//进入副本
 		data = this->Mod_StEightImmortals_Base_enter_mission(i);
-		if (data[0].asInt() == 10)
+
+
+		if (data[0].asInt() == EightImmortalsType::SUCCESS)
 		{
 			int k = 0;
-			while (k != 21)
+			while (k != EightImmortalsType::NOTHING_TO_FIGHT)
 			{
 				data = this->Mod_StEightImmortals_Base_fight();
 				k = data[0].asInt();
-				std::cout << k << "\n";
-				if (k == 19)
+				//std::cout << k << "\n";
+				if (k == EightImmortalsType::HEALTH_ITEM_STAGE)
 				{
+					//使用生命道具
 					Json::Value datak;
 					this->send_and_receive(datak, 129, 5);
 				}
-				if (k == 17)
+				if (k == EightImmortalsType::EMPTY_HEALTH)
 				{
 					i--;
 					break;
@@ -51,10 +60,10 @@ void sxd_client::StEightImmortals()
 		}
 	}
 	data = this->Mod_StEightImmortals_Base_enter_mission(4);
-	std::cout << "看看看\n";
+	//std::cout << "看看看\n";
 	int k = 0;
 	//data = this->Mod_StEightImmortals_Base_fight();
-	while (k!=21)
+	while (k!= EightImmortalsType::NOTHING_TO_FIGHT)
 	{
 		data = this->Mod_StEightImmortals_Base_fight();
 		k = data[0].asInt();
@@ -74,6 +83,7 @@ void sxd_client::StEightImmortals()
 //     oObject.list(_loc5_,_loc8_,["mission_seq","star","star1","star2","star3"]);
 // Example
 // [["mission_seq","star","star1","star2","star3"],[,,,,]]
+// [[副本序号,"获得星数","奖励，0表示已领取，1表示未领取","star2","star3"],[,,,,]]
 //============================================================================
 Json::Value sxd_client::Mod_StEightImmortals_Base_get_finished_missions(int mission_id)
 {

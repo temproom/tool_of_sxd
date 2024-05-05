@@ -265,4 +265,16 @@ mss database::get_quest(const char* version, int quest_id)
 	return this->get_record("quest", where_clause.str());
 }
 
+// table tongtiantower
+mss database::get_team_id(const std::string& version, int heaven, int floor)
+{
+	return this->get_team_id(version.c_str(), heaven, floor);
+}
+mss database::get_team_id(const char* version, int heaven, int floor)
+{
+	std::ostringstream where_clause;
+	where_clause << "heaven=" << heaven << " and floor=" << floor << " and version='" << version << "'";
+	return this->get_record("tongtiantower", where_clause.str());
+}
+
 database db;

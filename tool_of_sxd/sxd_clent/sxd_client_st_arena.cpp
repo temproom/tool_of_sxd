@@ -30,36 +30,44 @@ void sxd_client::st_arena()
 			// open st arena
 			data = this->Mod_StArena_Base_open_st_arena();
 			common::log(boost::str(boost::format("【仙界竞技场】我的积分 [%1%]，积分奖励 [%2%荣誉]，今日还可挑战 [%3%] 次") % data[0] % data[2] % data[1]), 0);
-			if (data[1].asInt() == 0)
-				return;
-
-			// sort
-			Json::Value challenge_list = data[5];       // 挑战者
-			std::vector<Json::Value> challenge_vector;  // 挑战者排序
-			std::copy(challenge_list.begin(), challenge_list.end(), std::back_inserter(challenge_vector));
-			std::sort(challenge_vector.begin(), challenge_vector.end(), [](Json::Value& x, Json::Value& y) { return x[1].asInt() < y[1].asInt(); });
-
-			// challenge
-			data = this->Mod_StArena_Base_challenge(challenge_vector[0][0].asInt());
-			if (data[0].asInt() != Mod_StArena_Base::SUCCESS)
+			int times = data[1].asInt();
+			if (times == 0)
 			{
-				common::log(boost::str(boost::format("【仙界竞技场】挑战失败，result[%1%]") % data[0]), iEdit);
+				common::log("【仙界竞技场】：挑战次数已用完！！");
 				return;
-			}
-			std::string challenge_name = common::utf2gbk(data[1][0][2][1][1].asString());
-			if (data[3].asInt())
-				common::log(boost::str(boost::format("【仙界竞技场】挑战 [%1%]，战胜获得积分 [%2%]") % challenge_name % data[3]), iEdit);
-			else
+			}				
+			while (times > 0)
 			{
-				common::log(boost::str(boost::format("【仙界竞技场】挑战 [%1%]，战败") % challenge_name), iEdit);
+				// sort
+				data = this->Mod_StArena_Base_open_st_arena();
+				Json::Value challenge_list = data[6];       // 挑战者
+				std::vector<Json::Value> challenge_vector;  // 挑战者排序
+				std::copy(challenge_list.begin(), challenge_list.end(), std::back_inserter(challenge_vector));
+				std::sort(challenge_vector.begin(), challenge_vector.end(), [](Json::Value& x, Json::Value& y) { return x[1].asInt() < y[1].asInt(); });
 
-				// refresh_player_list 容易卡住
-				/*data = this->Mod_StArena_Base_refresh_player_list();
-				 if (data[0] != Mod_StArena_Base::SUCCESS)
-				 common::log(boost::str(boost::format("【仙界竞技场】换一批失败，result[%1%]") % data[0]), iEdit);
-				 else
-				 common::log("【仙界竞技场】换一批", iEdit);*/
-			}
+				// challenge
+				data = this->Mod_StArena_Base_challenge(challenge_vector[0][0].asInt());
+				if (data[0].asInt() != Mod_StArena_Base::SUCCESS)
+				{
+					common::log(boost::str(boost::format("【仙界竞技场】挑战失败，result[%1%]") % data[0]), iEdit);
+					return;
+				}
+				std::string challenge_name = common::utf2gbk(data[1][0][2][1][1].asString());
+				if (data[3].asInt())
+					common::log(boost::str(boost::format("【仙界竞技场】挑战 [%1%]，战胜获得积分 [%2%]") % challenge_name % data[3]), iEdit);
+				else
+				{
+					common::log(boost::str(boost::format("【仙界竞技场】挑战 [%1%]，战败") % challenge_name), iEdit);
+
+					// refresh_player_list 容易卡住
+					/*data = this->Mod_StArena_Base_refresh_player_list();
+					 if (data[0] != Mod_StArena_Base::SUCCESS)
+					 common::log(boost::str(boost::format("【仙界竞技场】换一批失败，result[%1%]") % data[0]), iEdit);
+					 else
+					 common::log("【仙界竞技场】换一批", iEdit);*/
+				}
+				times--;
+			}		
 		}
 		else
 			common::log(boost::str(boost::format("【仙界竞技场】数据异常，race_step[%1%]") % data[0]), iEdit);
@@ -90,7 +98,7 @@ Json::Value sxd_client::Mod_StArena_Base_get_race_step()
 // {module:214, action:0, request:[],
 // response:[Utils.IntUtil, Utils.ShortUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, [Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.ShortUtil], [Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.StringUtil, Utils.IntUtil, Utils.StringUtil, Utils.IntUtil, Utils.IntUtil, Utils.StringUtil, Utils.IntUtil, Utils.ByteUtil], [Utils.IntUtil, Utils.StringUtil, Utils.StringUtil, Utils.StringUtil, Utils.IntUtil, Utils.IntUtil]]};
 // StArenaData.as 37:
-//     oObject.list(param1, _loc_2, ["integral", "reduceChallengeCount", "awardFeats", "awardGetTime", "reduceRefreshTime", "challengeList", "reportList", "integralRankList"]);
+//     oObject.list(param1,_loc2_,["integral","reduceChallengeCount","awardFeats","awardGetTime","reduceRefreshTime","proficiency","challengeList","reportList","integralRankList"]);
 //     for each (_loc_3 in _loc_2["challengeList"])
 //         oObject.list(_loc_3, _loc_4, ["st_player_id", "integral", "role_id", "level"]);
 // Example

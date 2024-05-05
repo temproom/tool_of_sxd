@@ -256,28 +256,43 @@ public:
 
 void sxd_client::st_union_task()
 {
-	for (;;)
+	
+	Json::Value data = this->Mod_StUnionTask_Base_get_challenge_info();
+	if (data[1].asInt() != 0)
 	{
-		this->Mod_StUnionTask_Base_get_challenge_info();
-		Json::Value data = this->Mod_StUnionTask_Base_fight();
-		if (data[0].asInt() == Mod_StUnionTask_Base::NOT_ENOUGH_TICKET)
+		for (int i = data[1].asInt(); i > 0; --i)
 		{
-			common::log("【魔神挑战】挑战券不足", 0);
+			Json::Value datat = this->Mod_StUnionTask_Base_buy_ticket();
+			if (datat[0].asInt() == Mod_StUnionTask_Base::SUCCESS)
+			{
+				common::log("【魔神挑战】购买挑战券成功", iEdit);
+			}
+		}
+	}
+	data = this->Mod_StUnionTask_Base_get_challenge_info();
+	while (data[0].asInt()!=0)
+	{
+		Sleep(1000);
+		Json::Value datak = this->Mod_StUnionTask_Base_fight();
+		if (datak[0].asInt() == Mod_StUnionTask_Base::NOT_ENOUGH_TICKET)
+		{
+			common::log("【魔神挑战】挑战券不足", iEdit);
 			return;
 		}
-		else if (data[0].asInt() == Mod_StUnionTask_Base::NOT_IN_UNION)
+		else if (datak[0].asInt() == Mod_StUnionTask_Base::NOT_IN_UNION)
 		{
-			common::log("【魔神挑战】未加仙盟", 0);
+			common::log("【魔神挑战】未加仙盟", iEdit);
 			return;
 		}
-		else if (data[0].asInt() != Mod_StUnionTask_Base::SUCCESS)
+		else if (datak[0].asInt() != Mod_StUnionTask_Base::SUCCESS)
 		{
-			common::log(boost::str(boost::format("【魔神挑战】挑战失败，result[%1%]") % data[0]), iEdit);
-			return;
+			common::log(boost::str(boost::format("【魔神挑战】挑战失败，result[%1%]") % datak[0]), iEdit);
 		}
 		else
-			common::log("【魔神挑战】挑战", iEdit);
+			common::log("【魔神挑战】挑战成功", iEdit);
+		data = this->Mod_StUnionTask_Base_get_challenge_info();
 	}
+	common::log("【魔神挑战】本周全部挑战完毕", iEdit);
 }
 
 //============================================================================
@@ -312,7 +327,7 @@ Json::Value sxd_client::Mod_StUnionTask_Base_get_challenge_info()
 }
 
 //============================================================================
-// R171 挑战
+//  挑战
 // {module:337, action:1,
 // request:[], response:[Utils.UByteUtil, [Utils.ByteUtil, Utils.IntUtil, [...
 // StUnionTaskData.as 98:
@@ -327,6 +342,26 @@ Json::Value sxd_client::Mod_StUnionTask_Base_fight()
 {
 	Json::Value data;
 	return this->send_and_receive(data, 337, 1);
+}
+
+//============================================================================
+//  购买挑战
+// {module:337, action:3,
+// request:[], response:[Utils.UByteUtil, [Utils.ByteUtil, Utils.IntUtil, [...
+// StUnionTaskData.as 98:
+//     this.info.buyTicketResult = param1[0];
+//	if (this.info.buyTicketResult == Mod_StUnionTask_Base.SUCCESS)
+//	{
+//		++this.info.ticket_num;
+//		--this.info.left_buy_times;
+// Example
+//     [ 0 ]
+//     [ 0 ]
+//============================================================================
+Json::Value sxd_client::Mod_StUnionTask_Base_buy_ticket()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 337, 3);
 }
 
 //============================================================================

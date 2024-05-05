@@ -10,6 +10,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
+	//common::setfont(20);
 	std::srand((unsigned)std::time(NULL));
 	argc = 1;
 	sxd::sql_pool();

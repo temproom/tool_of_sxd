@@ -335,6 +335,39 @@
     <ClCompile Include="sxd_clent\StEightImmortals.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="sxd\sxd_client_sa_trials.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_master_practice.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_DevilExpedition.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_PhantomGemLottery.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_MemoryZone.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_WuFaField.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_MainRoleFaXiang.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_ClearClouds.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_client_FiveElementsPalace.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_client_Fairyland.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_RepressDemonTower.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tool_of_sxd.rc">

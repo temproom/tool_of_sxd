@@ -54,6 +54,10 @@ public:
 	mss get_quest(const std::string& version, int quest_id);
 	mss get_quest(const char* version, int quest_id);
 
+	// table tongtiantower
+	mss get_team_id(const std::string& version, int heaven, int floor);
+	mss get_team_id(const char* version, int heaven, int floor);
+
 private:
 	static int callback(void* p, int argc, char** argv, char** azColName);
 

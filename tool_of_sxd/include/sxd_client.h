@@ -653,7 +653,8 @@ public:
 	Json::Value Mod_StUnionActivity_Base_player_get_tree_gift();
 	void st_union_task();
 	Json::Value Mod_StUnionTask_Base_get_challenge_info();
-	Json::Value Mod_StUnionTask_Base_fight();
+	Json::Value Mod_StUnionTask_Base_fight(); 
+	Json::Value Mod_StUnionTask_Base_buy_ticket();
 	std::vector<Json::Value> get_all_st_union_members();
 	Json::Value Mod_StUnionTask_Base_get_st_union_list(int page);
 	Json::Value Mod_StUnionTask_Base_get_st_union_info_simp(int st_union_i);
@@ -682,7 +683,7 @@ public:
 	Json::Value Mod_MarryHome_Base_batch_get_furniture_effect();
 
 	//============================================================================
-	// - sxd_client_st_super_sport.cpp
+	// - sxd_client_st_super_sport.cpp 仙界竞技场
 	//============================================================================
 	void get_rank_award(sxd_client* sxd_client_town);
 	Json::Value Mod_StSuperSport_Base_get_player_st_super_sport();
@@ -729,7 +730,7 @@ public:
 	Json::Value Mod_StMine_Base_rob_mine_hole(int hole_id, int robbed_player_id);
 
 	//============================================================================
-	// - sxd_client_st_practice_room.cpp
+	// - sxd_client_st_practice_room.cpp 仙界练功房
 	//============================================================================
 	void st_practice_room();
 
@@ -746,7 +747,7 @@ public:
 	Json::Value Mod_StPracticeRoom_Base_sit_down(int room_id, int seat_id);
 
 	//============================================================================
-	// - sxd_client_st_take_bible.cpp
+	// - sxd_client_st_take_bible.cpp 仙界取经
 	//============================================================================
 	void st_take_bible();
 	Json::Value Mod_StTakeBible_Base_get_take_bible_info();
@@ -760,7 +761,7 @@ public:
 	Json::Value Mod_StTakeBible_Base_rob(int rob_id, int sequence_id);
 
 	//============================================================================
-	// - sxd_client_st_arena.cpp
+	// - sxd_client_st_arena.cpp 仙界
 	//============================================================================
 	void st_arena();
 	Json::Value Mod_StArena_Base_get_race_step();
@@ -772,7 +773,7 @@ public:
 	Json::Value Mod_StArena_Base_buy_exploit_shop_item(int id, int count);
 
 	//============================================================================
-	// - sxd_client_saint_area.cpp
+	// - sxd_client_saint_area.cpp 圣域
 	//============================================================================
 	int login_saint_area(sxd_client* sxd_client_town);
 	Json::Value Mod_SaintAreaLogin_Base_get_status();
@@ -781,7 +782,7 @@ public:
 	Json::Value Mod_SaintAreaTown_Base_enter_town();
 
 	//============================================================================
-	// - sxd_client_sa_take_bible.cpp
+	// - sxd_client_sa_take_bible.cpp 圣域取经
 	//============================================================================
 	void sa_take_bible();
 	Json::Value Mod_SaTakeBible_Base_get_take_bible_info();
@@ -789,14 +790,25 @@ public:
 	Json::Value Mod_SaTakeBible_Base_start_take_bible();
 
 	//============================================================================
-	// - sxd_client_sa_super_sport.cpp
+	// - sxd_client_sa_super_sport.cpp  圣域竞技场
 	//============================================================================
 	void sa_super_sport();
 	Json::Value Mod_SaSuperSport_Base_race_info();
 	Json::Value Mod_SaSuperSport_Base_challage(int seq, int rank);
 
 	//============================================================================
-	// - sxd_client_server_chat_room.cpp
+	// - sxd_client_sa_trials.cpp  圣域秘境
+	//============================================================================
+	void sa_trials();
+	Json::Value Mod_SaTrials_Base_get_panel_info();
+	Json::Value Mod_SaTrials_Base_open_box();
+	Json::Value Mod_SaTrials_Base_choose_box_type();
+	Json::Value Mod_SaTrials_Base_gain_step_award();
+	Json::Value Mod_SaTrials_Base_choose_step_award();
+	Json::Value Mod_SaTrials_Base_challage();
+
+	//============================================================================
+	// - sxd_client_server_chat_room.cpp 聊天室
 	//============================================================================
 	int login_server_chat(sxd_client* sxd_client_town);
 	Json::Value Mod_ServerChatRoom_Base_get_recent_room_list();
@@ -811,7 +823,7 @@ public:
 	Json::Value Mod_ServerChatRoom_Base_get_pet_escort_award();
 
 	//============================================================================
-	// - sxd_client_quest.cpp
+	// - sxd_client_quest.cpp 任务系统
 	//============================================================================
 	void auto_quest();
 	void fight_mission(int mission_id);
@@ -831,25 +843,136 @@ public:
 	Json::Value Mod_Mission_Base_pickup_award();
 
 	//============================================================================
-	// - sxd_client_shanhaiworld.cpp
+	// - sxd_client_shanhaiworld.cpp 山海界 通天塔
 	//============================================================================
 	int shanhaiworld_login(sxd_client* sxd_client_town);
-	void tong_tian_tower();
 	Json::Value Mod_ShanhaiWorld_Base_get_login_info(int node_id);
 	Json::Value Mod_ShanhaiWorld_Base_login(const std::string& server_name, int player_id, int time, const std::string& pass_code);
 	Json::Value Mod_ShanhaiWorld_Base_get_room_list();
 	Json::Value Mod_ShanhaiWorld_Base_enter_town(int node_id);
 
-	Json::Value Mod_ShanhaiWorld_Base_panel_info();
-	Json::Value Mod_ShanhaiWorld_Base_challenge();
+	void tong_tian_tower_challenge();
+	void tong_tian_tower_challenge(int heaven, int floor, Json::Value data);
+	void tong_tian_tower_practice();
+	Json::Value Mod_TongTianTower_Base_panel_info();
+	Json::Value Mod_TongTianTower_Base_challenge(Json::Value data_k);
+	Json::Value Mod_TongTianTower_Base_practice(int cur_heaven, int cur_floor, int times);
 
 	//============================================================================
-	// - sxd_client_StEightImmortals.cpp
+	// - sxd_client_StEightImmortals.cpp 八仙过海
 	//============================================================================
 	void StEightImmortals();
 	Json::Value Mod_StEightImmortals_Base_get_finished_missions(int mission_id);
 	Json::Value Mod_StEightImmortals_Base_enter_mission(int mission_id);
 	Json::Value Mod_StEightImmortals_Base_fight();
+
+	//============================================================================
+	// - sxd_client_master_practice.cpp  宗师修行
+	//============================================================================
+	void MasterPractice();
+	void challenge(const std::string& job, int job_id, int battleStars);
+	Json::Value Mod_MasterPractice_Base_main_panel();
+	Json::Value Mod_MasterPractice_Base_start_challenge(int job_id, int battleStars);
+	//Json::Value Mod_MasterPractice_Base_fight();
+	
+
+	//============================================================================
+	// - sxd_client_DevilExpedition.cpp   魔界远征
+	//============================================================================
+	void DevilExpedition();
+	void Single_DevilExpedition();
+	Json::Value Mod_DevilExpedition_Base_enter_town(int town_id);
+	Json::Value Mod_DevilExpedition_Base_get_mission_data_m1();
+
+	Json::Value Mod_DevilExpedition_Base_get_mission_data_m7();
+	Json::Value Mod_DevilExpedition_Base_fight_monster_m7(int mission_id);
+	Json::Value Mod_DevilExpedition_Base_notify_mission_data_change_m7();
+
+	Json::Value Mod_DevilExpedition_Base_get_fight_hermit_record();
+
+	Json::Value Mod_DevilExpedition_Base_get_mission_data_m6();
+	Json::Value Mod_DevilExpedition_Base_fight_monster_m6(int mission_id);
+
+	Json::Value Mod_DevilExpedition_Base_start_expedition_single(int mission_id);
+	Json::Value Mod_DevilExpedition_Base_reject_buy_box();
+
+
+	//============================================================================
+	// - sxd_client_PhantomGemLottery.cpp   多宝山
+	//============================================================================
+	void PhantomGemLottery();
+	Json::Value Mod_PhantomGemLottery_Base_panel_info();
+	Json::Value Mod_PhantomGemLottery_Base_find(int id, int type);
+	Json::Value Mod_PhantomGemLottery_Base_get_requite_award();
+
+
+	//============================================================================
+	// - sxd_client_MemoryZone.cpp   回忆之境
+	//============================================================================
+	void MemoryZone();
+	Json::Value Mod_MemoryZone_Base_back_panel(int curtype);
+	Json::Value Mod_MemoryZone_Base_backtrack(int role_id);
+
+
+	//============================================================================
+	// - sxd_client_ImmortalLeague.cpp   神仙联赛
+	//============================================================================
+
+	//============================================================================
+	// - sxd_client_ClearClouds.cpp   拨云见日
+	//============================================================================
+	void ClearClouds();
+	Json::Value Mod_ClearClouds_Base_open_buy_panel();
+	Json::Value Mod_ClearClouds_Base_buy_gift(int id);
+
+
+	//============================================================================
+	// - sxd_client_MainRoleFaXiang.cpp   法相，守护魔兽 faxiang，fa_xiang，MRFXExtraMo, zhu_jue_fo:int = 1;zhu_jue_mo:int = 2
+	//============================================================================
+	void MainRoleFaXiang();
+	void MRFXExtraMo();
+	void MRFXExtraFo();
+	Json::Value Mod_MainRoleFaXiang_Base_extra_mo_info();
+	Json::Value Mod_MainRoleFaXiang_Base_extra_mo_challenge();
+
+	Json::Value Mod_MainRoleFaXiang_Base_extra_fo_info();		//祈愿信息
+	Json::Value Mod_MainRoleFaXiang_Base_extra_pray();			//祈愿
+	Json::Value Mod_MainRoleFaXiang_Base_extra_refresh_pray();	//刷新祈愿道具
+	Json::Value Mod_MainRoleFaXiang_Base_extra_choose_pray_award(int item_id);	//选择祈愿道具
+	Json::Value Mod_MainRoleFaXiang_Base_gain_pray_award();			//收获祈愿道具
+
+
+	//============================================================================
+	// - sxd_client_WuFaField.cpp   悟法领域 WuFaField，gongfa
+	//============================================================================
+	void WuFaField();
+	Json::Value Mod_WuFaField_Base_panel_info();
+	Json::Value Mod_WuFaField_Base_draw(int type, int num);
+
+	//============================================================================
+	// - sxd_client_FiveElementsPalace.cpp   五行天宫 FiveElementsPalace，FiveElemetsPalace
+	//============================================================================
+	void FiveElementsPalace();
+	Json::Value Mod_FiveElementsPalace_Base_five_elements_info();
+	Json::Value Mod_FiveElementsPalace_Base_get_deploy();
+	Json::Value Mod_FiveElementsPalace_Base_deploy(int role_id, int grid_id);
+	Json::Value Mod_FiveElementsPalace_Base_fight(int mission_id);
+	Json::Value Mod_FiveElementsPalace_Base_fight_boss(int mission_id);
+
+	//============================================================================
+	// - sxd_client_Fairyland.cpp   九霄云巅
+	//============================================================================
+	void Fairyland();
+	Json::Value Mod_Fairyland_Base_fairyland_info();
+	Json::Value Mod_Fairyland_Base_fight(int floor);
+
+	//============================================================================
+	// - sxd_client_RepressDemonTower.cpp   锁妖塔
+	//============================================================================
+	void RepressDemonTower();
+	Json::Value Mod_RepressDemonTower_Base_panel_info();
+	Json::Value Mod_RepressDemonTower_Base_challenge(int floor);
+	Json::Value Mod_RepressDemonTower_Base_get_monster_team_info(int floor);
 
 };
 

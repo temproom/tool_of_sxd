@@ -53,6 +53,9 @@ public:
 
 	// 其他
 	static bool contain(const std::vector<std::string>& v, const std::string& s);
+
+	//控制台字体
+	static void setfont(int size = 30);
 };
 
 #endif /* COMMON_H_ */#pragma once

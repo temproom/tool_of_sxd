@@ -383,3 +383,20 @@ bool common::contain(const std::vector<std::string>& v, const std::string& s)
 {
 	return std::find(v.begin(), v.end(), s) != v.end();
 }
+
+void  common::setfont(int size)
+{
+	CONSOLE_FONT_INFOEX cfi;
+	cfi.cbSize = sizeof cfi;
+	cfi.nFont = 0;
+	cfi.dwFontSize.X = 0;
+	cfi.dwFontSize.Y = size;  //设置字体大小
+	cfi.FontFamily = FF_DONTCARE;
+	cfi.FontWeight = 600; //字体粗细 FW_BOLD
+	wcscpy_s(cfi.FaceName, L"微软雅黑");  //设置字体，必须是控制台已有的
+	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+	//获得当前字体
+	//HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	//CONSOLE_FONT_INFO consoleCurrentFont;
+	//GetCurrentConsoleFont(handle, FALSE, &consoleCurrentFont);
+}
