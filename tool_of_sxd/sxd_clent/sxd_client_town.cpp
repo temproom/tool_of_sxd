@@ -71,7 +71,43 @@ int sxd_client::login_town(const std::string& web_page)
 	common::log(boost::str(boost::format("【登录】玩家排名信息，竞技排名[%1%]，帮派[%2%]，战力[%3%]，声望[%4%]，阅历[%5%]，成就[%6%]，先攻[%7%]，境界[%8%]，鲜花[%9%]，仙令[%10%]") % data[0][0][1] % common::utf2gbk(data[0][0][2].asString()) % data[0][0][3] % data[0][0][4] % data[0][0][5] % data[0][0][6] % data[0][0][7] % data[0][0][8] % data[0][0][9] % data[0][0][10]), iEdit);
 
 	// 7. enter_town
-	if (town_map_id == 153)
+	if (town_map_id == 157)
+	{
+		town_map_id = 149;
+		data = this->Mod_Town_Base_enter_town(town_map_id);
+		if (data[0].asInt() != Mod_Town_Base::SUCCESS)
+		{
+			std::cout << data[0].asInt() << "\n" << Mod_Town_Base::SUCCESS << "\n";
+			common::log(boost::str(boost::format("【登录】玩家进入 [%1%] 失败，result[%2%]") % db.get_code(version, "Town", town_map_id)["text"] % data[0]), iEdit);
+			return 3;
+		}
+		common::log(boost::str(boost::format("【登录】玩家进入 [%1%]") % db.get_code(version, "Town", town_map_id)["text"]), iEdit);
+		
+		/*
+		//万法界
+		//获取登录信息
+		//oObject.list(param1,this._wfjLoginInfo,["result","host","port","server_name","time","pass_code"]);
+		data = this->Mod_WanfaWorld_Base_get_login_info();
+
+		std::string wanfa_host = data[1].asString();
+		std::string wanfa_port = data[2].asString();
+		std::string server_name = data[3].asString();
+		int time = data[4].asInt();
+		std::string pass_code = data[5].asString();
+
+		this->connect(wanfa_host, wanfa_port);
+		data = Mod_WanfaWorld_Base_login(server_name, player_id, time, pass_code);
+
+		data = this->Mod_WanfaWorld_Base_enter_town(town_map_id);
+		if (data[0].asInt() != 0)
+		{
+			common::log(boost::str(boost::format("【登录】玩家进入 [%1%] 失败，result[%2%]") % db.get_code(version, "Town", town_map_id)["text"] % data[0]), iEdit);
+			return 3;
+		}
+		common::log(boost::str(boost::format("【登录】玩家进入 [%1%]") % db.get_code(version, "Town", town_map_id)["text"]), iEdit);
+		*/
+	}
+	else if (town_map_id == 153)
 	{
 		town_map_id = 149;
 		data = this->Mod_Town_Base_enter_town(town_map_id);
@@ -298,12 +334,16 @@ Json::Value sxd_client::Mod_Player_Base_server_time()
 // request:[Utils.IntUtil],
 // response:[Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.StringUtil, Utils.StringUtil, Utils.IntUtil, Utils.ByteUtil, Utils.ByteUtil, Utils.ByteUtil, Utils.ShortUtil, [Utils.StringUtil, Utils.IntUtil, Utils.IntUtil, Utils.LongUtil, Utils.LongUtil, Utils.ShortUtil, Utils.ByteUtil, Utils.ShortUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.IntUtil, Utils.UByteUtil, [Utils.IntUtil], [Utils.IntUtil], Utils.UByteUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.ByteUtil, Utils.IntUtil, Utils.IntUtil, Utils.ShortUtil]]}
 // RoleMsgData.as 95:
-//     oObject.list(param1, _loc_2, ["main_player_role_id", "eqId", "player_id", "sport_ranking", "listener_count", "flower_count", "fame", "faction_name", "max_nickname", "max_flower_count", "player_pet_animal_lv", "player_pet_animal_stage", "sigilId", "become_immortal_level", "role_list"]);
+//     旧版oObject.list(param1, _loc_2, ["main_player_role_id", "eqId", "player_id", "sport_ranking", "listener_count", "flower_count", "fame", "faction_name", "max_nickname", "max_flower_count", "player_pet_animal_lv", "player_pet_animal_stage", "sigilId", "become_immortal_level", "role_list"]);
+//     新版oObject.list(param1, _loc2_, ["main_player_role_id", "eqId", "player_id", "sport_ranking", "listener_count", "flower_count", "fame", "faction_name", "max_nickname", "max_flower_count", "player_pet_animal_lv", "player_pet_animal_stage", "sigilId", "become_immortal_level", "link_soul_role_count","role_list"]);
 //     for each (_loc_7 in _loc_2.role_list)
-//         oObject.list(_loc_7, _loc_6, ["name", "roleId", "playerRoleId", "exp", "expMax", "lv", "jobId", "role_stunt_id", "pShengMing", "pShengMing", "pWuLi", "pJueJi", "pFaShu", "fatePower", "isdeploy", "toTransList", "beTransList", "has_excl_arti", "stId", "goldenDanId", "suit_equip_id"]);
+//        旧版oObject.list(_loc_7, _loc_6, ["name", "roleId", "playerRoleId", "exp", "expMax", "lv", "jobId", "role_stunt_id", "pShengMing", "pShengMing", "pWuLi", "pJueJi", "pFaShu", "fatePower", "isdeploy", "toTransList", "beTransList", "has_excl_arti", "stId", "goldenDanId", "suit_equip_id"]);
+//        新版oObject.list(_loc7_, _loc6_, ["name", "roleId", "playerRoleId", "exp", "expMax", "lv", "jobId", "role_stunt_id", "pShengMing", "pShengMing", "pWuLi", "pJueJi", "pFaShu", "fatePower", "isdeploy", "toTransList", "beTransList", "has_excl_arti", "stId", "goldenDanId", "suit_equip_id"]);
 // Example
-//     [ 803481, 1335, 355546, 2869, 12, 94, 1895779, "\u5ea6\u6708\u5982\u5e74", "\u7504\u6590\u6590.s1", 93, 9, 6, 0, 0,
-//         [ [ "\u5c06\u81e3", 8, 803510, 1565127684, 3087000000, 162, 5, 71, 64560, 64560, 120, 100, 100, 19752, 0, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u695a\u695a", 9, 803485, 1554773331, 2975400000, 161, 2, 7, 29806, 29806, 60, 60, 50, 0, 2, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u9b54\u5973\u591c\u9b45", 16, 804682, 198100960, 205898132, 95, 5, 72, 25340, 25340, 90, 125, 50, 0, 1, [ [ 70 ] ], null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u90ce\u68ee\u4e09.s1", 104, 803481, 1679568120, 3087000000, 162, 3, 181, 391518, 391518, 896, 853, 581, 70923, 0, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u5c0f\u4ed9\u7ae5", 23, 803561, 1561503932, 3087000000, 162, 6, 16, 31270, 31270, 70, 175, 375, 836, 0, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u795e\u6768\u622c", 70, 808183, 1679568120, 3087000000, 162, 5, 166, 380420, 380420, 928, 912, 719, 147461, 0, null, [ [ 16 ] ], 3, 2, 0, 0, 5426, 9, 9, 50, 0, 48, 50, 0, 34, 50, 0, 9, 50, 0, 3606, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u5f20\u9ebb\u5b50", 22, 803482, 8777164, 31330000, 86, 2, 70, 21518, 21518, 70, 50, 50, 490, 1, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u963f\u5bbd", 29, 803537, 1556173550, 3087000000, 162, 1, 74, 43436, 43436, 85, 80, 60, 34, 0, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] ] ]
+//     旧版[ 803481, 1335, 355546, 2869, 12, 94, 1895779, "\u5ea6\u6708\u5982\u5e74", "\u7504\u6590\u6590.s1", 93, 9, 6, 0, 0,
+//     新版[ 1069, 8091, 211, 2, 20, 197, 20864472, "\u72c2\u5ba2", "\u51af\u8bfa\u4f9d\u66fc", 179, 10, 10, 0, 51, 4, 
+//         旧版[ [ "\u5c06\u81e3", 8, 803510, 1565127684, 3087000000, 162, 5, 71, 64560, 64560, 120, 100, 100, 19752, 0, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u695a\u695a", 9, 803485, 1554773331, 2975400000, 161, 2, 7, 29806, 29806, 60, 60, 50, 0, 2, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u9b54\u5973\u591c\u9b45", 16, 804682, 198100960, 205898132, 95, 5, 72, 25340, 25340, 90, 125, 50, 0, 1, [ [ 70 ] ], null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u90ce\u68ee\u4e09.s1", 104, 803481, 1679568120, 3087000000, 162, 3, 181, 391518, 391518, 896, 853, 581, 70923, 0, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u5c0f\u4ed9\u7ae5", 23, 803561, 1561503932, 3087000000, 162, 6, 16, 31270, 31270, 70, 175, 375, 836, 0, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u795e\u6768\u622c", 70, 808183, 1679568120, 3087000000, 162, 5, 166, 380420, 380420, 928, 912, 719, 147461, 0, null, [ [ 16 ] ], 3, 2, 0, 0, 5426, 9, 9, 50, 0, 48, 50, 0, 34, 50, 0, 9, 50, 0, 3606, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u5f20\u9ebb\u5b50", 22, 803482, 8777164, 31330000, 86, 2, 70, 21518, 21518, 70, 50, 50, 490, 1, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], [ "\u963f\u5bbd", 29, 803537, 1556173550, 3087000000, 162, 1, 74, 43436, 43436, 85, 80, 60, 34, 0, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] ] ]
+//         新版[ [ "\u5723\u7535\u6bcd", 251, 2253, 0, -1, 300, 6, 388, 7034970, 7034970, 7400, 6751, 6104, 0, 1, null, null, 4, 137, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, 0, 0 ], [ "\u5723\u6e38\u5c0f\u4ed9", 640, 2353, 12176730618, 22690400000, 276, 2, 726, 7129119, 7129119, 7764, 7387, 5599, 0, 1, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, 0, 0 ], [ "\u5723\u59dc\u5b50\u7259", 552, 2331, 0, -1, 300, 15, 698, 17506328, 17506328, 15250, 14537, 13598, 804493, 2, null, null, 3, 103, 51, 0, 95, 1, 1, 50, 0, 1, 50, 0, 1, 50, 0, 1, 50, 0, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, 0, 0 ], [ "\u9b54\u98de\u9675", 876, 2329, 0, -1, 300, 2, 848, 27793959, 27793959, 30897, 30581, 26210, 800163, 0, [ [ 884 ] ], [ [ 633 ] ], 3, 179, 51, 0, 94, 80, 712, 150, 0, 80, 63, 0, 80, 103, 0, 80, 108, 0, 11, 1, 1, 64, 0, 0, 0, 5, 0, 33, 0, 5, 451, 1, 0, 0, null, null, 0, 0 ], [ "\u5723\u5e72\u5c06", 615, 2350, 0, -1, 300, 2, 761, 11685591, 11685591, 8270, 7893, 6104, 0, 1, null, null, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, 0, 0 ], [ "\u4f5b\u8d75\u7075\u513f", 633, 2085, 0, -1, 300, 6, 787, 22582745, 22582745, 22649, 21987, 23050, 800163, 0, [ [ 876 ] ], [ [ 603 ] ], 3, 117, 51, 0, 101, 64, 64, 50, 0, 64, 50, 0, 64, 50, 0, 64, 50, 0, 69, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 451, 0, 0, 0, null, null, 0, 0 ], [ "\u9b54\u62d3\u8dcb\u7389\u513f", 884, 2346, 0, -1, 300, 5, 923, 55692255, 55692255, 51068, 47706, 42388, 860180, 0, null, [ [ 876 ] ], 3, 191, 51, 0, 82, 80, 80, 91, 0, 80, 75, 0, 712, 178, 0, 80, 98, 0, 7, 1, 1, 40, 0, 28, 0, 47, 1, 4, 0, 5, 451, 1, 0, 0, null, null, 0, 0 ], [ "\u9b54\u9152\u5251\u4ed9", 638, 1988, 0, -1, 300, 2, 779, 7916266, 7916266, 8869, 8546, 6752, 0, 1, null, [ [ 472 ] ], 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, 0, 0 ], [ "\u51af\u6d77\u68ee\u5821", 207, 1069, 0, -1, 300, 6, 857, 30404889, 30404889, 39600, 37118, 34604, 1106207, 0, null, null, 4, 153, 0, 0, 91, 80, 80, 52, 0, 80, 165, 1, 712, 120, 0, 80, 85, 0, 5, 1, 1, 67, 0, 27, 0, 60, 0, 15, 0, 5, 450, 0, 21, 0, null, null, 18, 0 ], [ "\u4f5b\u6797\u6708\u5982", 603, 2063, 0, -1, 300, 1, 743, 52964127, 52964127, 35501, 33842, 30716, 808214, 0, [ [ 633 ] ], [ [ 472 ] ], 3, 121, 51, 0, 20, 80, 712, 178, 0, 80, 57, 0, 80, 72, 0, 80, 103, 0, 13, 1, 0, 44, 0, 20, 0, 19, 0, 22, 0, 5, 452, 0, 0, 0, null, null, 0, 0 ] ] ] 
 //============================================================================
 Json::Value sxd_client::Mod_Role_Base_get_role_list(int player_id)
 {

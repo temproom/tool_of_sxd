@@ -368,6 +368,45 @@
     <ClCompile Include="sxd_clent\sxd_client_RepressDemonTower.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_satrials.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_MysticCapture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_Sect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_RaceOrder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_SeekImmortalRoad.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_monopoly.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_wanfa.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_glazepavilion.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_SoulHuntBlessGif.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_CosmosFight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_LinlangPavilion.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_XiuZhenRealm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_HeroesBattle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tool_of_sxd.rc">

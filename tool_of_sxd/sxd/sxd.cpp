@@ -373,6 +373,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 	sxd_client sxd_client_saint_area(version);
 	sxd_client sxd_client_chat_room(version);
 	sxd_client sxd_client_shanhai_world(version);
+	sxd_client sxd_client_sect_area(version);			//宗门仙境
 	Json::Value data;
 
 	// get web page from url and cookie
@@ -429,36 +430,80 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 
 	//common::log("【主页】请选择相应的功能" , 0);
 	//common::log(boost::str(boost::format("1.日常任务") % data[0].size()), 0);
-	int cir = 1;
-	while (cir != 0)
+	for (;;)
 	{
-		common::log("\n\n\t 1.日常任务\n\t 2.城镇任务\n\t 3.副本挑战\n\t 0.退出\n\t请选择相应的功能：");
+		common::log("\n\n\t 1.日常任务\n\t 2.城镇任务\n\t 3.副本挑战\n\t 4.挂机任务\n\t 5.测试\n\t 0.退出\n\t请选择相应的功能：");
 		int fun_id;
 		std::cin >> fun_id;
 		if (fun_id == 1)
 		{
-			common::log("\n\n\t 1.小分队补充任务\n\t 2.自动任务\n\t 3.周末魔神远征\n\t请选择相应的功能：");
+			common::log("\n\n\t 1.小分队补充任务\n\t 2.自动任务\n\t 3.周末魔神远征\n\t 4.仙幽幻境\n\t请选择相应的功能：");
 			int fen_dui;
-			
+
 			std::cin >> fen_dui;
 			if (fen_dui == 1)
 			{
-				sxd_client_town.ClearClouds();			//拨云见日，领取免费礼包
-				sxd_client_town.WuFaField();			//悟法领域
-				sxd_client_town.PhantomGemLottery();	//多宝山，道源求宝
-				sxd_client_town.MemoryZone();			//回忆之境，免费一次
-				sxd_client_town.MainRoleFaXiang();		//主角法相，守护魔兽和造物佛手
+				sxd_client_town.ClearClouds();			// 拨云见日，领取免费礼包
+				sxd_client_town.WuFaField();			// 悟法领域
+				sxd_client_town.PhantomGemLottery();	// 多宝山，道源求宝
+				sxd_client_town.MemoryZone();			// 回忆之境，免费一次
+				sxd_client_town.MainRoleFaXiang();		// 主角法相，守护魔兽和造物佛手
+				sxd_client_town.marry_gift();			// 结婚，亲密度礼物
+				sxd_client_town.RaceOrder();			// 赛事战令
+				sxd_client_town.SeekImmortalRoad();		// 寻仙之路
+				sxd_client_town.StVoid();				// 仙界虚空点赞
+				sxd_client_town.Sect();					// 宗门任务	
+				sxd_client_town.release_welfare();		// 更新福利
+				sxd_client_town.LinlangPavilion();		//琳琅阁
+				sxd_client_town.black_shop();			//秘宝商铺奇珍异宝
+				sxd_client_town.XiuZhenRealm();			//修真境界				
+				//sxd_client_town.Monopoly();			// 山河游历，骰子
+				//sxd_client_town.sa_take_bible();      // 圣域取经
+				sxd_client_town.TombArtifacts();		// 诸法器冢
+				//sxd_client_town.GlazePavilion();		// 琉璃宝阁
+				sxd_client_town.SoulHuntBlessGif();		//灵域猎妖-灵域福赠
+				sxd_client_town.HeroesBattleScoreRace();//群英战积分赛
+				sxd_client_town.CosmosFight();			//寰宇乱斗			
+				sxd_client_town.hide_treasure_map();	// hide treasure map，藏宝图
+				sxd_client_town.spring_big_run();		//新春大放送
 
 				if (!sxd_client_super_town.login_super_town(&sxd_client_town))
 				{
 					sxd_client_super_town.st_union_task();              // 魔神挑战
-					sxd_client_super_town.st_arena();					// 仙界竞技场
+					//sxd_client_super_town.st_arena();					// 仙界竞技场
+
 				}
+
+				// 宠物派遣
+				{
+					try
+					{
+						if (!common::contain(function_names, "聊天室"))
+							common::log("【全网聊天】未开启", 0);
+						else if (!sxd_client_chat_room.login_server_chat(&sxd_client_town))
+						{
+							sxd_client_chat_room.pet_escort(&sxd_client_town);	// 宠物派遣
+						}
+					}
+					catch (const std::exception& ex)
+					{
+						common::log(boost::str(boost::format("发现错误(server chat room)：%1%") % ex.what()));
+					}
+				}
+
 				if (!sxd_client_saint_area.login_saint_area(&sxd_client_town))
 				{
 					sxd_client_saint_area.sa_take_bible();              // 圣域取经
 					sxd_client_saint_area.sa_super_sport();             // 圣域竞技场
 				}
+
+				/*{
+					if (!sxd_client_sect_area.login_Sect_area(&sxd_client_town))
+					{
+						sxd_client_sect_area.Sect();
+					}
+
+				}*/
 			}
 			else if (fen_dui == 2)
 			{
@@ -935,7 +980,9 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 				// super sport 竞技场
 				{
 					if (!common::contain(function_names, "竞技场"))
+					{
 						common::log("【竞技场】未开启", 0);
+					}
 					else
 					{
 						sxd_client_town.super_sport();
@@ -946,103 +993,153 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 			{
 				sxd_client_town.Single_DevilExpedition();			//周末魔神远征			
 			}
+			else if (fen_dui == 4)
+			{
+				sxd_client_town.MysticCapture();					//仙幽猎境（幻灵）
+			}
 		}
 		else if (fun_id == 2)
 		{
-			sxd_client_town.auto_quest();
+			sxd_client_town.auto_quest();		//自动任务
 		}
 		else if (fun_id == 3)
 		{
-			common::log(" \n\t 1.通天塔\n\t 2.仙界挑战\n\t 3.圣域挑战\n\t 4,圣域秘境\n\t 5,宗师修行\n\t 6,魔界远征\n\t 7,五行天宫\n\t 8,九霄云巅\n\t 9,锁妖塔\n\t 请选择相应的功能：");
-			int fun;
-			std::cin >> fun;
-			if (fun == 1)
+			for (;;)
 			{
-				sxd_client_town.tong_tian_tower_challenge();			// 通天塔挑战
-				//sxd_client_town.tong_tian_tower_practice();				// 通天塔扫荡
-			}
-			else if (fun == 2)
-			{
-				if (!common::contain(function_names, "仙界"))
-					common::log("【仙界】未开启", 0);
-				else if (!sxd_client_super_town.login_super_town(&sxd_client_town))
+				common::log(" \n\t 1.通天塔\n\t 2.仙界挑战\n\t 3.圣域挑战\n\t 4,圣域秘境\n\t 5,宗师修行\n\t 6,魔界远征\n\t 7,五行天宫\n\t 8,九霄云巅\n\t 9,锁妖塔\n\t 10,圣域秘境塔\n\t 11,诸法洞天\n\t 12,诸法洞天：无尽模式\n\t 0,退出\n\t 请选择相应的功能：");
+				int fun;
+				std::cin >> fun;
+				if (fun == 1)
 				{
-					common::log(" \n\t 1.八仙过海\n\t 2.魔神挑战\n\t 3.仙界竞技场\n\t 请选择相应的功能：");
-					int i;
-					std::cin >> i;
-					if (i == 1)
+					sxd_client_town.tong_tian_tower_challenge();			// 通天塔挑战
+					//sxd_client_town.tong_tian_tower_practice();				// 通天塔扫荡
+				}
+				else if (fun == 2)
+				{
+					if (!common::contain(function_names, "仙界"))
+						common::log("【仙界】未开启", 0);
+					else if (!sxd_client_super_town.login_super_town(&sxd_client_town))
 					{
-						sxd_client_super_town.StEightImmortals();            // 八仙过海
-					}
-					if (i == 2)
-					{
-						sxd_client_super_town.st_union_task();              // 魔神挑战
-					}
-					if (i == 3)
-					{
-						sxd_client_super_town.st_arena();					// 仙界竞技场
+						common::log(" \n\t 1.八仙过海\n\t 2.魔神挑战\n\t 3.仙界竞技场\n\t 请选择相应的功能：");
+						int i;
+						std::cin >> i;
+						if (i == 1)
+						{
+							sxd_client_super_town.StEightImmortals();            // 八仙过海
+						}
+						if (i == 2)
+						{
+							sxd_client_super_town.st_union_task();              // 魔神挑战
+						}
+						if (i == 3)
+						{
+							sxd_client_super_town.st_arena();					// 仙界竞技场
+						}
 					}
 				}
-			}
-			else if (fun == 3)
-			{
-				if (!common::contain(function_names, "圣域"))
-					common::log("【圣域】未开启", 0);
-				else if (!sxd_client_saint_area.login_saint_area(&sxd_client_town))
+				else if (fun == 3)
 				{
-					common::log(" \n\t 1.圣域取经\n\t 2.圣域竞技场\n\t 3.无尽龙域 4.圣域秘境\n\t 请选择相应的功能：");
-					int i;
-					std::cin >> i;
-					if (i == 1)
+					if (!common::contain(function_names, "圣域"))
+						common::log("【圣域】未开启", 0);
+					else if (!sxd_client_saint_area.login_saint_area(&sxd_client_town))
 					{
-						sxd_client_saint_area.sa_take_bible();              // 圣域取经
-					}
-					if (i == 2)
-					{
-						sxd_client_saint_area.sa_super_sport();             // 圣域竞技场
-					}
-					if (i == 3)
-					{
-						//sxd_client_super_town.sa_dragon_area();					// 无尽龙域sa_dragon_area
-					}
-					if (i == 4)
-					{
-						sxd_client_super_town.sa_trials();					// 圣域秘境sa_trials
+						common::log(" \n\t 1.圣域取经\n\t 2.圣域竞技场\n\t 3.无尽龙域 4.圣域秘境\n\t 请选择相应的功能：");
+						int i;
+						std::cin >> i;
+						if (i == 1)
+						{
+							sxd_client_saint_area.sa_take_bible();              // 圣域取经
+						}
+						if (i == 2)
+						{
+							sxd_client_saint_area.sa_super_sport();             // 圣域竞技场
+						}
+						if (i == 3)
+						{
+							//sxd_client_super_town.sa_dragon_area();					// 无尽龙域sa_dragon_area
+						}
+						if (i == 4)
+						{
+							sxd_client_super_town.sa_trials();					// 圣域秘境sa_trials
+						}
 					}
 				}
+				else if (fun == 4)
+				{
+					sxd_client_town.sa_trials();					// 圣域秘境sa_trials
+				}
+				else if (fun == 5)
+				{
+					sxd_client_town.MasterPractice();					// 宗师修行
+				}
+				else if (fun == 6)
+				{
+					sxd_client_town.DevilExpedition();					// 魔界远征
+				}
+				else if (fun == 7)
+				{
+					sxd_client_town.FiveElementsPalace();					// 五行天宫
+				}
+				else if (fun == 8)
+				{
+					sxd_client_town.Fairyland();					// 九霄云巅
+				}
+				else if (fun == 9)
+				{
+					sxd_client_town.RepressDemonTower();					// 锁妖塔
+				}
+				else if (fun == 10)
+				{
+					sxd_client_town.satrials();					// 圣域秘境
+				}
+				else if (fun == 11)
+				{
+					sxd_client_town.EndlessExpedition();		//诸法洞天
+				}
+				else if (fun == 12)
+				{
+					sxd_client_town.Endlesschallenge();	//诸法洞天 无尽模式
+				}
+				else if (fun == 0)
+				{
+					break;
+				}
 			}
-			else if (fun == 4)
+		}
+		else if (fun_id == 4)
+		{
+			for (;;)
 			{
-				sxd_client_town.sa_trials();					// 圣域秘境sa_trials
+				common::log("\n\n\t 1.强化降魔战魂至太初十\n\t 2.制作逍遥战魂\n\t 0.退出\n\t请选择相应的功能：");
+
+				int fun4;
+				std::cin >> fun4;
+
+				if (fun4 == 1)
+				{
+					sxd_client_town.upgrade();
+				}
+				else if (fun4 == 2)
+				{
+					sxd_client_town.equip_use_reel();
+				}
+				else
+				{
+					break;
+				}
 			}
-			else if (fun == 5)
-			{
-				sxd_client_town.MasterPractice();					// 宗师修行
-			}
-			else if (fun == 6)
-			{
-				sxd_client_town.DevilExpedition();					// 魔界远征
-			}
-			else if (fun == 7)
-			{
-				sxd_client_town.FiveElementsPalace();					// 五行天宫
-			}
-			else if (fun == 8)
-			{
-				sxd_client_town.Fairyland();					// 九霄云巅
-			}
-			else if (fun == 9)
-			{
-				sxd_client_town.RepressDemonTower();					// 锁妖塔
-			}
+		}
+		else if (fun_id == 5)
+		{
+		common::log("【测试1】开启");
+		sxd_client_town.spring_carnival();	//新春嘉年华
 		}
 		else if (fun_id == 0)
 		{
-			cir = 0;
+			break;
 		}
+
 	}
-
-
 	/*		
 		// equipment
 		if (!common::contain(function_names, "强化"))

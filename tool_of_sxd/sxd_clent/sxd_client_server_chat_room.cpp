@@ -10,13 +10,13 @@ public:
 	static const int UNDO = 4;
 	static const int DONE = 5;
 	static const int SUCCESS = 9;
-	static const int CAN_FEED = 34;
-	static const int CAN_ESCORT = 35;
-	static const int ESCORTING = 36;
-	static const int INGOT_ESCORTING = 37;
-	static const int ESCORT_DONE = 38;
-	static const int NORMAL = 41;           // Î¹Ñø£¬ÅÉÇ²
-	static const int INGOT = 42;            // Ò»¼üÎ¹Ñø£¬¸ß¼¶ÅÉÇ²
+	static const int CAN_FEED = 35;
+	static const int CAN_ESCORT = 36;
+	static const int ESCORTING = 37;
+	static const int INGOT_ESCORTING = 38;
+	static const int ESCORT_DONE = 39;
+	static const int NORMAL = 42;           // Î¹Ñø£¬ÅÉÇ²
+	static const int INGOT = 43;            // Ò»¼üÎ¹Ñø£¬¸ß¼¶ÅÉÇ²
 };
 
 int sxd_client::login_server_chat(sxd_client* sxd_client_town)
@@ -175,7 +175,7 @@ void sxd_client::pet_escort(sxd_client* sxd_client_town)
 	std::string servername = data[2].asString();
 
 	// try 10 times
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		data = this->Mod_ServerChatRoom_Base_get_player_pet_escort_info();
 		Json::Value pet_escort_info = data;
@@ -194,18 +194,35 @@ void sxd_client::pet_escort(sxd_client* sxd_client_town)
 				common::log("¡¾³èÎïÅÉÇ²¡¿Î¹ÑøÒ»´Î", iEdit);
 			}
 			std::this_thread::sleep_for(std::chrono::seconds(10));
-			data = this->Mod_ServerChatRoom_Base_chat_with_players(boost::str(boost::format("MSG7_%1%_%2%_%3%") % player_id % nickname % servername));
+			/*data = this->Mod_ServerChatRoom_Base_chat_with_players(boost::str(boost::format("MSG7_%1%_%2%_%3%") % player_id % nickname % servername));
 			if (data[1].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
 			{
 				common::log(boost::str(boost::format("¡¾³èÎïÅÉÇ²¡¿ÑûÇëÊ§°Ü£¬result[%1%]") % data[1]), iEdit);
 				return;
 			}
 			common::log(boost::str(boost::format("¡¾³èÎïÅÉÇ²¡¿ÑûÇë [%1%/10]") % (i + 1)), iEdit);
-			std::this_thread::sleep_for(std::chrono::seconds(10));
+			std::this_thread::sleep_for(std::chrono::seconds(10));*/
 			break;
 
 		case Mod_ServerChatRoom_Base::CAN_ESCORT:
-			data = sxd_client_town->Mod_ServerChatRoom_Base_escort_pet(Mod_ServerChatRoom_Base::NORMAL);
+		{
+			data = sxd_client_town->Mod_ServerChatRoom_Base_escort_pet_panel();
+			vector<int> town;
+			for (int i = 0; i <= 2; i++)
+			{
+				town.push_back(data[0][i][0].asInt());
+			}
+			int town_id;
+			for (int id : town)
+			{
+				//³õ¼¶ÅÉÇ²³ÇÕòid¡¾3, 13, 14, 29¡¿
+				if (id == 3 || id == 13 || id == 14 || id == 29)
+				{
+					town_id = id;
+					break;
+				}
+			}
+			data = sxd_client_town->Mod_ServerChatRoom_Base_escort_pet(town_id);
 			if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
 			{
 				common::log(boost::str(boost::format("¡¾³èÎïÅÉÇ²¡¿ÅÉÇ²Ê§°Ü£¬result[%1%]") % data[0]), iEdit);
@@ -213,10 +230,12 @@ void sxd_client::pet_escort(sxd_client* sxd_client_town)
 			}
 			common::log("¡¾³èÎïÅÉÇ²¡¿ÅÉÇ²", iEdit);
 			return;
-
+		}
 		case Mod_ServerChatRoom_Base::ESCORTING:
+			common::log("¡¾³èÎïÅÉÇ²¡¿ÅÉÇ²ÖÐ...", iEdit);
+			return;
 		case Mod_ServerChatRoom_Base::INGOT_ESCORTING:
-			common::log("¡¾³èÎïÅÉÇ²¡¿ÅÉÇ²ÖÐ...", 0);
+			common::log("¡¾³èÎïÅÉÇ²¡¿ÅÉÇ²ÖÐ...", iEdit);
 			return;
 
 		case Mod_ServerChatRoom_Base::ESCORT_DONE:
@@ -301,7 +320,8 @@ Json::Value sxd_client::Mod_ServerChatRoom_Base_feed_pet(int type)
 // {module:336, action:43,
 // request:[Utils.UByteUtil],
 // Example
-//     [ 41 ]
+//     ¾É[ 41 ]
+//	   ÐÂ[ 42 ]
 // response:[Utils.UByteUtil, Utils.UByteUtil, Utils.IntUtil, [Utils.IntUtil, Utils.IntUtil]]}
 // ServerChatRoomData.as 609:
 //     this.result = param1[0];
@@ -356,4 +376,28 @@ Json::Value sxd_client::Mod_ServerChatRoom_Base_get_pet_escort_award()
 {
 	Json::Value data;
 	return this->send_and_receive(data, 336, 44);
+}
+
+//============================================================================
+// R171
+// ÁìÈ¡(town)
+// {module:336, action:52, 
+// request:[], 
+// response:[[Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,[Utils.IntUtil,Utils.IntUtil],[Utils.IntUtil,Utils.IntUtil],[Utils.IntUtil,Utils.IntUtil]]]
+// petscortData.as 637:
+/* while(i < lists[0].length)
+{
+	list = lists[0][i];
+	data = new Object();
+	itemInfo = null;
+	oObject.list(list, data, ["town_id", "ingot", "escort_time", "award_list", "event_list", "quality_list"]);
+*/
+//		³õ¼¶ÅÉÇ²³ÇÕòid¡¾3,13,14,29¡¿
+// Example
+//     [ 9, 20, [ [ 2452, 12 ], [ 5359, 1 ], [ 5362, 3 ], [ 4063, 1 ] ] ]
+//============================================================================
+Json::Value sxd_client::Mod_ServerChatRoom_Base_escort_pet_panel()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 336, 52);
 }

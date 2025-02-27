@@ -23,6 +23,14 @@ public:
 	static const int SUCCESS = 2;
 };
 
+class Mod_StVoid_Base
+{
+public:
+	static const int SUCCESS = 0;
+	static const int FAILED = 1;
+	static const int IS_LIKED = 2;
+};
+
 int sxd_client::login_super_town(sxd_client* sxd_client_town)
 {
 
@@ -76,6 +84,39 @@ int sxd_client::login_super_town(sxd_client* sxd_client_town)
 
 	bLogin = 1;
 	return 0;
+}
+
+
+//ÏÉ½çĞé¿Õ
+void sxd_client::StVoid()
+{
+	Json::Value data = this->Mod_StVoid_Base_open_panel();
+
+	int result = data[0].asInt();
+	if (result != Mod_StVoid_Base::SUCCESS)
+	{
+		common::log(boost::str(boost::format("¡¾ÏÉ½çĞé¿Õ¡¿£º´ò¿ªÏÉ½çĞé¿ÕÊ§°Ü£¡£¡´úÂë£º%1%\n") % result));
+		return;
+	}
+
+	int st_uid = data[2].asInt();
+
+	data = this->Mod_StVoid_Base_like(st_uid);
+	
+	result = data[0].asInt();
+	if (result == Mod_StVoid_Base::SUCCESS)
+	{
+		common::log("¡¾ÏÉ½çĞé¿Õ¡¿£ºµãÔŞ³É¹¦£¡£¡");
+	}
+	else if (result == Mod_StVoid_Base::IS_LIKED)
+	{
+		common::log("¡¾ÏÉ½çĞé¿Õ¡¿£º±¾ÖÜÒÑµãÔŞ£¡£¡");
+	}
+	else
+	{
+		common::log(boost::str(boost::format("¡¾ÏÉ½çĞé¿Õ¡¿£ºÏÉ½çµãÔŞÊ§°ÜÊ§°Ü£¡£¡´úÂë£º%1%\n") % result));
+		return;
+	}
 }
 
 //============================================================================
@@ -213,4 +254,48 @@ Json::Value sxd_client::Mod_StTown_Base_move_to(int x1, int y1, int x2, int y2)
 	data.append(x2);
 	data.append(y2);
 	return this->send_and_receive(data, 95, 4, 95, 5, [this](const Json::Value& x) { return x[0].asInt() == this->player_id; });
+}
+
+//============================================================================
+// ÏÉ½çĞé¿Õ×´Ì¬
+// {module:652, action:1,
+// request:[],
+// response:[Utils.UByteUtil,Utils.StringUtil,Utils.IntUtil,[Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,[Utils.IntUtil,Utils.StringUtil,Utils.StringUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,[Utils.IntUtil]]],[Utils.IntUtil]]
+// StVoidData.as 
+//     this.result = param1[0];
+//		oObject.list(param1,this.panelInfo,["result","st_name","st_uid","st_info_list","like_list"]);
+/*	_loc2_ = this.panelInfo.st_info_list;
+	this.panelInfo.st_info_list = [];
+	for each (_loc4_ in _loc2_)
+	{
+		_loc3_ = {};
+		_loc3_.st_id = _loc4_[0];
+		_loc3_.st_uid = _loc4_[1];
+		_loc3_.is_mine = _loc4_[1] == this.panelInfo.st_uid;
+		_loc3_.st_match_rank = _loc4_[2];
+*/
+// Example
+//     [ 0, [ [ 1506736800, 1506765600, 4 ] ] ]
+//============================================================================
+Json::Value sxd_client::Mod_StVoid_Base_open_panel()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 652, 1);
+}
+
+//============================================================================
+// µãÔŞ
+// {module:652, action:2,
+// request:[Utils.IntUtil],
+// response:[Utils.UByteUtil,[Utils.IntUtil,Utils.IntUtil]]
+// StVoidData.as 
+//     this.result = param1[0];
+// Example
+//     [ 0, [ [ 1506736800, 1506765600, 4 ] ] ]
+//============================================================================
+Json::Value sxd_client::Mod_StVoid_Base_like(int id)
+{
+	Json::Value data;
+	data.append(id);
+	return this->send_and_receive(data, 652, 2);
 }

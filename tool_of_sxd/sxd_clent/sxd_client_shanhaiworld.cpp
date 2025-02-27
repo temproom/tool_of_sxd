@@ -82,19 +82,31 @@ int sxd_client::shanhaiworld_login(sxd_client* sxd_client_town)
 	return 0;
 }
 
-void sxd_client::tong_tian_tower_challenge(int heaven, int floor, Json::Value data)
+void sxd_client::tong_tian_tower_challenge(int heaven, int floor, Json::Value data_main, Json::Value data_soul)
 {
-	//std::cout << "\n111\n";
-	std::cout << boost::str(boost::format("【通天塔】：第[ %1% ]次挑战第[%2%]重[%3%]层\n") % k % heaven % floor);
-	Json::Value data_re = this->Mod_TongTianTower_Base_challenge(data);
-	if (data_re[0] == TongTianTower::NOT_ENOUGH_POWER)
+	//Json::Value data;
+
+	common::log(boost::str(boost::format("【通天塔】：第[ %1% ]次挑战第[%2%]重[%3%]层") % k % heaven % floor));
+	//std::cout << boost::str(boost::format("【通天塔】：第[ %1% ]次挑战第[%2%]重[%3%]层\n") % k % heaven % floor);
+	
+	Json::Value data_re = this->Mod_TongTianTower_Base_challenge(data_main);
+
+	int result = data_re[0].asInt();
+	if (result == TongTianTower::NOT_ENOUGH_POWER)
 	{
-		std::cout << "【通天塔】：体力不足！！\n";
+		//std::cout << "【通天塔】：体力不足！！\n";
+		common::log("【通天塔】：体力不足！！\n");
+		return;
 	}
-	//std::cout << "\n222\n";
+	if (result == TongTianTower::CD_TIME)
+	{
+		common::log("【通天塔】：CD时间！！\n");
+		Sleep(1000);
+	}
+
 	//通天塔信息
 	Json::Value info = this->Mod_TongTianTower_Base_panel_info();
-	//std::cout << "\n333\n";
+
 	//剩余挑战次数
 	int times = info[4].asInt();
 	int now_floor = info[1].asInt();	//层数
@@ -102,7 +114,8 @@ void sxd_client::tong_tian_tower_challenge(int heaven, int floor, Json::Value da
 	if (now_floor != floor)
 	{
 		//层数不相同，那就是挑战成功
-		std::cout << boost::str(boost::format("【通天塔】：第[%1%]重[%2%]层 挑战成功！！\n") % heaven % floor);
+		//std::cout << boost::str(boost::format("【通天塔】：第[%1%]重[%2%]层 挑战成功！！\n") % heaven % floor);
+		common::log(boost::str(boost::format("【通天塔】：第[%1%]重[%2%]层 挑战成功！！\n") % heaven % floor));
 		k = 1;
 		if (times != 0)
 		{
@@ -112,7 +125,7 @@ void sxd_client::tong_tian_tower_challenge(int heaven, int floor, Json::Value da
 	else
 	{
 		k++;
-		this->tong_tian_tower_challenge(heaven, floor, data);
+		this->tong_tian_tower_challenge(heaven, floor, data_soul, data_main);
 	}
 	/*if (data_re[0] == TongTianTower::SUCCESS)
 	{
@@ -150,30 +163,39 @@ void sxd_client::tong_tian_tower_challenge()
 	}
 
 	//vector<int> temp_data;
-	Json::Value temp_data;
+	Json::Value temp_data_main, temp_data_soul;
+	Json::Value temp_data1_main, temp_data2_main, temp_data1_soul, temp_data2_soul;
 	if (!m_type)
 	{
 		//如果是普通副本,只有一个team
-		Json::Value temp_data1;
 		int team_id = stoi(via_info["monster_team_id"]);
-		temp_data1.append(TongTianTower::MAIN_TEAM);
-		temp_data1.append(team_id);
-		temp_data.append(temp_data1);
+		temp_data1_main.append(TongTianTower::MAIN_TEAM);
+		temp_data1_main.append(team_id);
+		temp_data_main.append(temp_data1_main);
 	}
 	else
 	{
 		//如果是灵结副本,有两个team
 		int team_id1 = stoi(via_info["monster_team_id"]);
 		int team_id2 = stoi(via_info["soul_monster_team_id"]);
-		Json::Value temp_data1, temp_data2;
-		temp_data1.append(TongTianTower::MAIN_TEAM);
-		temp_data1.append(team_id1);
-		temp_data2.append(TongTianTower::SOUL_TEAM);
-		temp_data2.append(team_id2);
-		temp_data.append(temp_data1);
-		temp_data.append(temp_data2);
+		
+		//主队打一队，灵结打二队
+		temp_data1_main.append(TongTianTower::MAIN_TEAM);
+		temp_data1_main.append(team_id1);
+		temp_data2_main.append(TongTianTower::SOUL_TEAM);
+		temp_data2_main.append(team_id2);
+		temp_data_main.append(temp_data1_main);
+		temp_data_main.append(temp_data2_main);
+
+		//主队打二队，灵结打一对
+		temp_data1_soul.append(TongTianTower::MAIN_TEAM);
+		temp_data1_soul.append(team_id2);
+		temp_data2_soul.append(TongTianTower::SOUL_TEAM);
+		temp_data2_soul.append(team_id1);
+		temp_data_soul.append(temp_data1_soul);
+		temp_data_soul.append(temp_data2_soul);
 	}
-	this->tong_tian_tower_challenge(heaven, floor, temp_data);
+	this->tong_tian_tower_challenge(heaven, floor, temp_data_main,temp_data_soul);
 }
 
 void sxd_client::tong_tian_tower_practice()

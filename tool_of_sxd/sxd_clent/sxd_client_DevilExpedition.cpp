@@ -14,12 +14,12 @@ class DevilExpeditionType
 public:
 	static const int SUCCESS = 2;
 	static const int FAILED = 3;
-	static const int M5_FIGHT_MONSTER = 46;
-	static const int M6_FIGHT_MONSTER = 47;
-	static const int M7_FIGHT_MONSTER = 48;
-	static const int MISSION_MONSTER_GOD = 64;
-	static const int MISSION_YINYANG_HALL = 65;
-	static const int MISSION_HERMIT_HOME = 66;
+	static const int M5_FIGHT_MONSTER = 49;
+	static const int M6_FIGHT_MONSTER = 50;
+	static const int M7_FIGHT_MONSTER = 51;
+	static const int MISSION_MONSTER_GOD = 67;
+	static const int MISSION_YINYANG_HALL = 68;
+	static const int MISSION_HERMIT_HOME = 69;
 };
 
 void sxd_client::DevilExpedition()
@@ -59,6 +59,27 @@ void sxd_client::DevilExpedition()
 		result = data[0].asInt();
 		if (result == DevilExpeditionType::SUCCESS)
 		{
+			//成功
+			common::log("【魔界远征】：进入副本成功！");
+			//获取副本信息
+			//data = this->Mod_DevilExpedition_Base_get_mission_data_m6();
+			//common::log(boost::str(boost::format("\n\t【魔界远征】：副本信息：[%1%]\n") % data));
+			bool term = true;
+			int type = 1;
+			common::log("【魔界远征】： \n\t 1.帝俊\n\t 2.羲和\n\t 3.六耳\n\t 请选择相应的功能：");
+			std::cin >> type;
+			while (term)
+			{
+				data = this->Mod_DevilExpedition_Base_fight_monster_m5(type);
+				//common::log(boost::str(boost::format("\n\t【魔界远征】：副本信息：[%1%]\n") % data));
+				int via = data[0].asInt();
+				if (via != DevilExpeditionType::SUCCESS)
+				{
+					term = false;
+					data = this->Mod_DevilExpedition_Base_quit();
+					common::log("【魔界远征】：完成所有挑战！");
+				}
+			}
 		}
 		else
 		{
@@ -85,6 +106,7 @@ void sxd_client::DevilExpedition()
 				if (via != DevilExpeditionType::SUCCESS)
 				{
 					term = false;
+					data = this->Mod_DevilExpedition_Base_quit();
 					common::log("【魔界远征】：完成所有挑战！");
 				}
 			}
@@ -114,6 +136,7 @@ void sxd_client::DevilExpedition()
 				if (via != DevilExpeditionType::SUCCESS)
 				{
 					term = false;
+					data = this->Mod_DevilExpedition_Base_quit();
 					common::log("【魔界远征】：完成所有挑战！");
 				}
 			}
@@ -128,12 +151,12 @@ void sxd_client::DevilExpedition()
 
 void sxd_client::Single_DevilExpedition()
 {
-	common::log("【魔界远征】：选择单人挑战第几关\n\t\t1:隐仙\n\t\t2:阴阳\n\t\t3:魔神（不可用）\t\t请选择进入第几关：");
+	common::log("【魔界远征】：选择单人挑战第几关\n\t1:隐仙\n\t2:阴阳\n\t3:魔神\n\t请选择进入第几关：");
 	int floor;
 	int via;
 	std::cin >> via;
 	Json::Value data;
-
+	int type = 1;		//魔神挑战，选择魔灵类型，默认帝俊
 	floor = DevilExpeditionType::MISSION_HERMIT_HOME;			//默认挑战隐仙
 	int mission_id = 154;
 
@@ -148,6 +171,8 @@ void sxd_client::Single_DevilExpedition()
 		//魔神
 		floor = DevilExpeditionType::MISSION_MONSTER_GOD;
 		mission_id = 91;;
+		common::log(" 【魔界远征】：选择挑战魔神\n\t 1.帝俊\n\t 2.羲和\n\t 3.六耳\n\t 请选择相应的功能：");
+		std::cin >> type;
 	}
 
 	data = this->Mod_DevilExpedition_Base_start_expedition_single(floor);
@@ -186,12 +211,18 @@ void sxd_client::Single_DevilExpedition()
 				//阴阳
 				data = this->Mod_DevilExpedition_Base_fight_monster_m6(1);
 			}
+			else if (via == 3)
+			{
+				//魔神
+				data = this->Mod_DevilExpedition_Base_fight_monster_m5(type);
+			}
 			//data = this->Mod_DevilExpedition_Base_fight_monster_m6(1);
 			//common::log(boost::str(boost::format("\n\t【魔界远征】：副本信息：[%1%]\n") % data));
 			int end = data[0].asInt();
 			if (end != DevilExpeditionType::SUCCESS)
 			{
 				term = false;
+				data = this->Mod_DevilExpedition_Base_quit();
 				common::log("【魔界远征】：完成所有挑战！");
 			}
 		}
@@ -222,6 +253,40 @@ Json::Value sxd_client::Mod_DevilExpedition_Base_enter_town(int town_id)
 	Json::Value data;
 	data.append(town_id);
 	return this->send_and_receive(data, 429, 13);
+}
+
+//============================================================================
+//  离开魔界远征城镇
+// {module:429, action:15,
+// request:[],
+// Example		
+//     [  ]
+// response:[Utils.UByteUtil,Utils.IntUtil]
+// 
+// Example
+// DevilExpeditionData.as
+//============================================================================
+Json::Value sxd_client::Mod_DevilExpedition_Base_leave_town()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 429, 15);
+}
+
+//============================================================================
+//  退出魔界远征
+// {module:429, action:29,
+// request:[],
+// Example		
+//     [  ]
+// response:[Utils.UByteUtil,Utils.IntUtil]
+// 
+// Example
+// DevilExpeditionData.as
+//============================================================================
+Json::Value sxd_client::Mod_DevilExpedition_Base_quit()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 429, 29);
 }
 
 //============================================================================
@@ -350,7 +415,24 @@ Json::Value sxd_client::Mod_DevilExpedition_Base_fight_monster_m6(int mission_id
 	return this->send_and_receive(data, 429, 69);
 }
 
-
+//============================================================================
+//  战斗 魔神
+// {module:429, action:58,
+// request:[Utils.IntUtil],
+// Example		
+//     [ monster_id ]
+// response:[]
+// Example
+// DevilExpeditionData.as
+// this.stageUIInfo.warResult = param1[_loc2_++];
+//     [ ]
+//============================================================================
+Json::Value sxd_client::Mod_DevilExpedition_Base_fight_monster_m5(int mission_id)
+{
+	Json::Value data;
+	data.append(mission_id);
+	return this->send_and_receive(data, 429, 58);
+}
 //============================================================================
 //  单人快速挑战，
 // {module:429, action:63,
