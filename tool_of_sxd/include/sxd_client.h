@@ -3,10 +3,10 @@
 #define SXD_CLIENT_H_
 
 #include <string>
-#include <asio/io_service.hpp>
-#include <asio/ip/tcp.hpp>
-#include <iostreams/filtering_stream.hpp>
-#include <iostreams/filter/zlib.hpp>
+#include <boost\asio/io_service.hpp>
+#include <boost\asio/ip/tcp.hpp>
+#include <boost\iostreams/filtering_stream.hpp>
+#include <boost\iostreams/filter/zlib.hpp>
 
 #include "json/json.h"
 //#include "jsoncpp.cpp"
@@ -1164,7 +1164,31 @@ public:
 	Json::Value Mod_HeroesBattleScoreRace_Base_get_award(int type, int id);
 	Json::Value Mod_HeroesBattleScoreRace_Base_find_opponent();
 	Json::Value Mod_HeroesBattleScoreRace_Base_fight();
+	
+	//============================================================================
+	// - sxd_client_CollectionBooklets.cpp   Íò²ØÂ¼
+	//============================================================================
+	void CollectionBooklets();
+	Json::Value Mod_CollectionBooklets_Base_sect_info();
+	Json::Value Mod_CollectionBooklets_Base_my_friend();
+	Json::Value Mod_CollectionBooklets_Base_approve_player(int player_id, const std::string& server_name);
 
+	//============================================================================
+	// - sxd_client_AncientRealm.cpp   ÐþÌì¹Å¾µ
+	//============================================================================
+	void AncientRealm();
+	Json::Value Mod_AncientRealm_Base_get_state();
+	Json::Value Mod_AncientRealm_Base_get_map_panel_info();
+	Json::Value Mod_AncientRealm_Base_experience_panel(int id);
+	Json::Value Mod_AncientRealm_Base_get_experience_award(int type, int id);
+	Json::Value Mod_AncientRealm_Base_open_grid(int floor, int id);
+	Json::Value Mod_AncientRealm_Base_fight_monster(int floor, int id);
+	Json::Value Mod_AncientRealm_Base_spoil_panel();
+	Json::Value Mod_AncientRealm_Base_choose_spoil(int id1, int id2, int id3);
+	Json::Value Mod_AncientRealm_Base_fight_boss();
+	Json::Value Mod_AncientRealm_Base_click_pass();
+	Json::Value Mod_AncientRealm_Base_get_monster_team_info(int id);
+	Json::Value Mod_AncientRealm_Base_open_award_grid_box(int floor, int id);
 };
 
 #endif /* SXD_CLIENT_H_ */

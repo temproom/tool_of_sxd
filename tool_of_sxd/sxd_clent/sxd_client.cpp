@@ -54,7 +54,8 @@ void sxd_client::send_frame(const Json::Value& data, short module, short action)
 	std::string frame = oss.str();
 	// write frame size
 	int frame_size = frame.size() + 4;
-	if ((module != 0 || action != 0) && (module != 94 || action != 0) && (module != 293 || action != 0) && (module != 336 || action != 12))
+	//（0,0）主界面登录；（94,0）仙界；(293,0)圣域；(336,12)server_chat_room；(575,2)宗门；(645,2)山海界
+	if ((module != 0 || action != 0) && (module != 94 || action != 0) && (module != 293 || action != 0) && (module != 336 || action != 12) && (module != 575 || action != 2) && (module != 645 || action != 2))
 	{
 		frame_size += 4;
 	}
@@ -65,7 +66,7 @@ void sxd_client::send_frame(const Json::Value& data, short module, short action)
 	// write frame
 	request_stream.write(frame.c_str(), frame.size());
 	// write previous module and action
-	if ((module != 0 || action != 0) && (module != 94 || action != 0) && (module != 293 || action != 0) && (module != 336 || action != 12))
+	if ((module != 0 || action != 0) && (module != 94 || action != 0) && (module != 293 || action != 0) && (module != 336 || action != 12) && (module != 575 || action != 2) && (module != 645 || action != 2))
 	{
 		common::write_int16(request_stream, pre_module);
 		common::write_int16(request_stream, pre_action);

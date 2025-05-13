@@ -26,7 +26,9 @@ void sxd_client::GlazePavilion()
 
 	//GlazePavilionTypeData.as
 	//第一季(1,2,3,4,5)，第二季(6,7,8,9,10)，每季前三个为活跃度奖励
-	vector<vector<int>> daily_task = { {1,2,3,4,5},{6,7,8,9,10} };
+	//202503225更新，第三季、第四季
+	//vector<vector<int>> daily_task = { {1,2,3,4,5},{6,7,8,9,10}};
+	vector<vector<int>> daily_task = { {1,2,3,4,5},{6,7,8,9,10},{11,12,13,14,15},{16,17,18,19,20} };
 	
 	//获取详细信息
 	data = this->Mod_GlazePavilion_Base_main_panel_info();
@@ -54,9 +56,13 @@ void sxd_client::GlazePavilion()
 	//一季三轮，每轮7个
 	//第一季（1-7）,(8-14),(15-21)	
 	//第二季(22-28),(29-35),(36-42)
-	int m = 2, n = 3, p = 7;
+	//202503225更新，第三季、第四季
+	//第三季（43-49）（50-56）（57-63）
+	//第四季（64-70）（71-77）（78-84）
+	//int s = 2, r = 3, p = 7;
+	int s = 4, r = 3, p = 7;
 	int via = 1;
-	vector<vector<vector<int>>> score_task(m, vector<vector<int>>(n, vector<int>(p, 1)));
+	vector<vector<vector<int>>> score_task(s, vector<vector<int>>(r, vector<int>(p, 1)));
 	for (int i = 0; i < score_task.size(); i++)
 	{
 		for (int j = 0; j < score_task[0].size(); j++)
@@ -95,7 +101,11 @@ void sxd_client::GlazePavilion()
 	//领取免费礼包
 	//第一季：id=1
 	//第二季：id=9
-	vector<int> limited = { 1,9 };
+	//202503225更新，第三季、第四季
+	//第三季：id=17
+	//第四季：id=25
+	//vector<int> limited = { 1,9 };
+	vector<int> limited = { 1,9,17,25 };
 	data = this->Mod_GlazePavilion_Base_get_limited_buy(limited[season - 1]);
 	int result = data[0].asInt();
 	if (result == GlazePaviliontype::SUCCESS)

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include "database.h"
-#include <lexical_cast.hpp>
+#include <boost\lexical_cast.hpp>
 #include "common.h"
 #include "sqlite3.h"
 #include <my_log\log.h>

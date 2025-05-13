@@ -4,9 +4,9 @@
 #include "sxd_client.h"
 #include "vector"
 #include <windows.h>
-#include <regex.hpp>
-#include <algorithm/string.hpp>
-#include <algorithm/string/regex.hpp>
+#include <boost\regex.hpp>
+#include <boost\algorithm/string.hpp>
+#include <boost\algorithm/string/regex.hpp>
 
 class QuestType
 {

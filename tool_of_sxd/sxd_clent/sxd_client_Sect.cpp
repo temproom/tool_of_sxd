@@ -57,6 +57,7 @@ int sxd_client::login_Sect_area(sxd_client* sxd_client_town)
 	this->user_id = sxd_client_town->user_id;
 
 	// 2. get login information: [ appId, playerId, serverName, node, time, passCode]
+	//["result", "host", "port", "appId", "node", "serverName", "time", "passCode", "group"] );
 	data = sxd_client_town->Mod_SectLogin_Base_get_login_info(group);
 
 	std::string host = data[1].asString();
@@ -78,18 +79,19 @@ int sxd_client::login_Sect_area(sxd_client* sxd_client_town)
 	common::log(boost::str(boost::format("【宗门仙境】连接服务器 [%1%:%2%] 成功") % host % port), iEdit);
 
 	// 4. login
+	this->Mod_SectLogin_Base_login(appid, sxd_client_town->player_id, server_name, node, time, pass_code);
+	/*
 	data = this->Mod_SectLogin_Base_login(appid, sxd_client_town->player_id, server_name, node, time, pass_code);
-
 	if (data[0].asInt() != SectLoginType::SUCCESS)
 	{
 		common::log(boost::str(boost::format("【宗门仙境】登录失败，result[%1%]") % data[0]), iEdit);
 		return 3;
 	}
-
+	*/
 	common::log("【宗门仙境】登录宗门仙境成功！！", iEdit);
 
 	// 5. enter town
-	data = this->Mod_SectLogin_Base_enter_town(148, sect_id);
+	data = this->Mod_SectLogin_Base_enter_town(146, sect_id);
 	if (data[0].asInt() != SectLoginType::SUCCESS)
 	{
 		common::log(boost::str(boost::format("【宗门仙境】玩家进入 [宗门仙境] 失败，result[%1%]") % data[0]), iEdit);
@@ -134,6 +136,7 @@ void sxd_client::Sect()
 
 void sxd_client::SectBonus(int sect_id)
 {
+
 	//获取赏金堂信息
 	Json::Value data = this->Mod_SectBonus_Base_open_panel(sect_id);
 	
@@ -234,7 +237,11 @@ void sxd_client::SectMonster(int sect_id)
 	data = this->Mod_SectMonster_Base_feed(1, 1);
 
 	int result = data[0].asInt();
-	if (result != SectMonsterType::SUCCESS)
+	if (result == SectMonsterType::FEED_NUM_LIMIT)
+	{
+		common::log("【宗门灵兽】：喂养次数不足！！");
+	}
+	else if (result != SectMonsterType::SUCCESS)
 	{
 		common::log(boost::str(boost::format("【宗门灵兽】：喂养失败！！代码：%1%\n") % result));
 		return;
@@ -259,10 +266,13 @@ void sxd_client::SectMonster(int sect_id)
 //     [  ]
 // 
 // "response":[Utils.UByteUtil,Utils.StringUtil,Utils.StringUtil,Utils.IntUtil,Utils.StringUtil,Utils.StringUtil,Utils.IntUtil,Utils.StringUtil,Utils.IntUtil]
-// Example
-// 
-// SectLoginData.as L43
+//	SectLoginData.as L43
 //		oObject.list(param1,_loc2_,["result","host","port","appId","node","serverName","time","passCode","group"]);
+// 
+// Example
+//			[ 0, "9x378.sxdweb.xd.com", "8252", 325, "360_s313@9x211.sxdweb.xd.com", "360_s313", 1747129989, "51c60cd66c4542cb62166a77decb8236", 4 ] 
+// 
+
 //============================================================================
 Json::Value sxd_client::Mod_SectLogin_Base_get_login_info(int group)
 {
@@ -296,11 +306,11 @@ Json::Value sxd_client::Mod_SectLogin_Base_get_login_info(int group)
 // SectLoginData.as L43
 //		this._result = param1[0];
 //============================================================================
-Json::Value sxd_client::Mod_SectLogin_Base_login(int appId, int playerId, const std::string& serverName, const std::string& node, int time, const std::string& passCode)
+Json::Value sxd_client::Mod_SectLogin_Base_login(int appId, int player_id_town, const std::string& serverName, const std::string& node, int time, const std::string& passCode)
 {
 	Json::Value data;
 	data.append(appId);
-	data.append(playerId);
+	data.append(player_id_town);
 	data.append(serverName);
 	data.append(node);
 	data.append(time);
@@ -344,11 +354,14 @@ Json::Value sxd_client::Mod_SectLogin_Base_get_player_sect_info()
 // 
 // "response":[Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,[Utils.IntUtil,Utils.IntUtil,Utils.StringUtil,Utils.StringUtil,Utils.IntUtil,[Utils.IntUtil,Utils.StringUtil,Utils.StringUtil,Utils.StringUtil,Utils.IntUtil],Utils.IntUtil,Utils.IntUtil],Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.StringUtil]
 // Example
-//			[ 12, 1, 1, 1, 0, 2, 44732, 2, 0 ] 
+// [ 1748707200, 1748880000, 1748880000, 1748966400, [ [ 19, 29, "\u54c1\u5473\u4eba\u751f", "\u5357\u5bab\u4e91\u98ce.s3", 0, null, 1, 10 ], [ 5, 25, "\u516b\u6210\u5df2\u5931\u8054", "\u9f99\u955c\u521d.s37", 0, null, 2, 10 ], [ 20, 7, "\u725b\u725b\u4e0d\u6015\u56f0\u96be", "\u963f\u4e09.s40", 0, null, 4, 10 ], [ 26, 13, "\u98de\u5347\u5b97", "\u845b\u6734\u5ffb", 0, null, 3, 10 ], [ 8, 21, "\u534e\u96c0\u4e08\u9f99\u5dc5", "\u6768\u5c0f\u4e8c.s60", 0, null, 2, 10 ], [ 3, 3, "\u5251  \u5b97", "\u62d4\u5251\u65a9\uff06\u7ea2\u5c18", 0, null, 3, 10 ], [ 4, 27, "\u98ce\u82b1\u96ea\u6708", "\u7fca\u00b7\u4e0d\u6557\u9f8d", 0, null, 3, 10 ], [ 7, 2, "\u53cc\u500d\u798f\u5229", "\u9694\u58c1\u306e\u5c55\u9e4f", 0, null, 3, 10 ], [ 30, 4, "\u68a6\u00b7\u4e16\u5916\u6843\u6e90", "\u542b\u4e36\u70df", 0, null, 4, 10 ], [ 12, 22, "\u5168\u804c\u8363\u8000", "\u848b\u8bed\u5a49.s13", 0, null, 2, 10 ], [ 21, 30, "\u6d88\u5931\u306e\u5e7b\u60f3\u4e61", "\u66e6\u5c18", 0, null, 1, 10 ], [ 17, 6, "\u6e38\u620f\u4eba\u95f4", "\u77f3\u5934", 0, null, 4, 10 ], [ 1, 11, "\u96f2\u5dc5\u4ed9\u7a79", "\u842c\u7269\u98a8\u6708", 0, null, 3, 10 ], [ 29, 28, "\u7a7a\u58f3\u95e8", "\u6084\u6084", 0, null, 1, 10 ], [ 24, 16, "\u5929\u4e4b\u9601", "\u5929\u90aa\u541b\u4e0a", 0, null, 2, 10 ], [ 11, 24, "\u73b2\u73d1\u5fc3", "\u5723\u00b7\u5931\u843d\u7684\u540d", 0, null, 4, 10 ], [ 25, 12, "\u82e5\u9b54\u3001\u4f5b\u5948\u4f55", "\u5c0f\u9b54\u7075\u82e5\u542c", 0, null, 1, 10 ], [ 13, 1, "\u9053\u7081", "\u7eaa\u5a06\u59b1.s62", 0, null, 4, 10 ], [ 28, 14, "\u9752\u6751\u5c81\u6708", "\u98ce\u6e05\u626c.s89", 0, null, 2, 10 ], [ 23, 9, "\u4e59\u6728\u9752\u5bab", "\u571f\u309e\u6ce1\u6ce1", 0, null, 1, 10 ], [ 16, 10, "\u5fc3\u52a8\u7279\u9080\u5609\u5bbe", "\u885f\u53cb\u00b7\u591c", 0, null, 2, 10 ], [ 10, 17, "\u7b56\u5212\u51af\u5934\u8e66\u8fea", "\u8352\u5929\u65e0\u9053", 0, null, 4, 10 ], [ 9, 19, "\u5fa1\u96ea\u4ed9\u5b97", "\u8d99\u5b50\u9f8d.s12", 0, null, 2, 10 ], [ 14, 20, "\u9752\u4e91\u95e8", "\u9752\u4e91\u5fd7\u00b7\u8f89\u8f89", 0, null, 4, 10 ], [ 18, 5, "\u65b0\u4e16\u754c", "\u4fdd\u6e23\u6d3e\u3044\u4e0d\u67d3", 0, null, 1, 10 ], [ 2, 15, "\u516b\u95e8", "\u53cc\u96c4\u00b7\u6587\u4e11", 0, null, 4, 10 ], [ 22, 18, "\u5f69\u4e91\u5f52", "\u64b7\u83ca\u3006\u7ed3\u751f\u7f18.s156", 0, null, 2, 10 ], [ 15, 23, "\u7834\u5c71\u5b87", "\u6c5f\u758f\u5f71\u4e36.s458", 0, null, 4, 10 ], [ 27, 8, "\u98d8\u6e3a\u5cf0", "\u98de\u4e0a\u4e5d\u91cd\u5929.s237", 0, null, 3, 10 ], [ 6, 26, "\u561f\u95e8", "\u4eca\u5915\u662f\u4f55\u5e74.s66", 0, null, 4, 10 ] ], 325, 1, 0, 4053220, 4, 10, "\u9053\u7081" ] 
+// [ 1748707200, 1748880000, 1748880000, 1748966400, [[]], 325, 1, 0, 4053220, 4, 10, "\u9053\u7081" ] 
+//			[ 13, 1, "\u9053\u7081", "\u7eaa\u5a06\u59b1.s62", 0, null, 4, 10 ]
 // 
 // SectData.as L41
 //		["begin_create_time","end_create_time","begin_vote_time","end_vote_time","sect_location_list","my_appid","my_sect_id","god_rank_job","salary","my_sect_group","my_sect_lv","my_sect_name"]);
-//		 _loc2_ = this.parseObject(_loc3_,["sect_location_id","sect_id","sect_name","leader_name","vote_appid","apply_list","group","sect_lv"]);
+//				 for each(_loc3_ in this._sectFairyLandObject.sect_location_list)
+//						_loc2_ = this.parseObject(_loc3_,["sect_location_id","sect_id","sect_name","leader_name","vote_appid","apply_list","group","sect_lv"]);
 //============================================================================
 Json::Value sxd_client::Mod_Sect_Base_panel_info()
 {

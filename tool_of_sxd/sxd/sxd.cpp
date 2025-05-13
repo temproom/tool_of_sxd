@@ -4,12 +4,12 @@
 #include <string>
 #include <thread>
 
-#include <regex.hpp>
-#include <algorithm/string.hpp>
-#include <algorithm/string/regex.hpp>
-#include <lexical_cast.hpp>
+#include <boost\regex.hpp>
+#include <boost\algorithm/string.hpp>
+#include <boost\algorithm/string/regex.hpp>
+#include <boost\lexical_cast.hpp>
 
-#include <format.hpp>
+#include <boost\format.hpp>
 
 #include "sxd_web.h"
 #include "database.h"
@@ -452,7 +452,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 				sxd_client_town.RaceOrder();			// 赛事战令
 				sxd_client_town.SeekImmortalRoad();		// 寻仙之路
 				sxd_client_town.StVoid();				// 仙界虚空点赞
-				sxd_client_town.Sect();					// 宗门任务	
+				//sxd_client_town.Sect();					// 宗门任务	
 				sxd_client_town.release_welfare();		// 更新福利
 				sxd_client_town.LinlangPavilion();		//琳琅阁
 				sxd_client_town.black_shop();			//秘宝商铺奇珍异宝
@@ -460,12 +460,13 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 				//sxd_client_town.Monopoly();			// 山河游历，骰子
 				//sxd_client_town.sa_take_bible();      // 圣域取经
 				sxd_client_town.TombArtifacts();		// 诸法器冢
-				//sxd_client_town.GlazePavilion();		// 琉璃宝阁
+				sxd_client_town.GlazePavilion();		// 琉璃宝阁
 				sxd_client_town.SoulHuntBlessGif();		//灵域猎妖-灵域福赠
 				sxd_client_town.HeroesBattleScoreRace();//群英战积分赛
 				sxd_client_town.CosmosFight();			//寰宇乱斗			
 				sxd_client_town.hide_treasure_map();	// hide treasure map，藏宝图
-				sxd_client_town.spring_big_run();		//新春大放送
+				sxd_client_town.CollectionBooklets();	//万藏录
+				//sxd_client_town.spring_big_run();		//新春大放送
 
 				if (!sxd_client_super_town.login_super_town(&sxd_client_town))
 				{
@@ -497,13 +498,18 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 					sxd_client_saint_area.sa_super_sport();             // 圣域竞技场
 				}
 
-				/*{
-					if (!sxd_client_sect_area.login_Sect_area(&sxd_client_town))
-					{
-						sxd_client_sect_area.Sect();
-					}
+				
+				if (!sxd_client_sect_area.login_Sect_area(&sxd_client_town))
+				{
+					Json::Value data = sxd_client_town.Mod_Sect_Base_panel_info();
+					int sect_id = data[6].asInt();
 
-				}*/
+					sxd_client_sect_area.SectBonus(sect_id);
+					sxd_client_town.NewSectShop();
+					sxd_client_sect_area.SectMonster(sect_id);
+				}
+
+				
 			}
 			else if (fen_dui == 2)
 			{
@@ -1131,8 +1137,12 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 		}
 		else if (fun_id == 5)
 		{
-		common::log("【测试1】开启");
-		sxd_client_town.spring_carnival();	//新春嘉年华
+		common::log("【测试】开启");
+		if (!sxd_client_sect_area.login_Sect_area(&sxd_client_town))
+		{
+			common::log("【玄天古境】开启");
+			sxd_client_sect_area.AncientRealm();	//玄天古境
+		}
 		}
 		else if (fun_id == 0)
 		{

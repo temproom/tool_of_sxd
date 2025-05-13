@@ -74,7 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\boost_1_78_0\boost_1_78_0;D:\随心\tool_of_sxd\tool_of_sxd\include;D:\随心\tool_of_sxd\tool_of_sxd;$(IncludePath)</IncludePath>
+    <IncludePath>D:\vs2022_file\tool_of_sxd\tool_of_sxd\include;D:\boost_1_78_0\boost_1_78_0;D:\随心\tool_of_sxd\tool_of_sxd\include;D:\随心\tool_of_sxd\tool_of_sxd;$(IncludePath)</IncludePath>
     <LibraryPath>D:\boost_1_78_0\boost_1_78_0\stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -214,6 +214,7 @@
     <ClCompile Include="sxd_clent\sxd_client_chat.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_ClearClouds.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_coin_mission.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_CollectionBooklets.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_CosmosFight.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_courtyard_pet.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_dance.cpp" />
@@ -298,6 +299,7 @@
     <ClCompile Include="sxd_clent\sxd_client_master_practice.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_WuFaField.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_XiuZhenRealm.cpp" />
+    <ClCompile Include="sxd_clent\sxd_clien_AncientRealm.cpp" />
     <ClCompile Include="sxd_client_Fairyland.cpp" />
     <ClCompile Include="sxd_client_FiveElementsPalace.cpp" />
     <ClCompile Include="sxd_web\sxd_web.cpp" />
