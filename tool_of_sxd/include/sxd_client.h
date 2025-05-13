@@ -1177,18 +1177,32 @@ public:
 	// - sxd_client_AncientRealm.cpp   ÐþÌì¹Å¾µ
 	//============================================================================
 	void AncientRealm();
+	void move(int x, int y);
 	Json::Value Mod_AncientRealm_Base_get_state();
 	Json::Value Mod_AncientRealm_Base_get_map_panel_info();
 	Json::Value Mod_AncientRealm_Base_experience_panel(int id);
 	Json::Value Mod_AncientRealm_Base_get_experience_award(int type, int id);
-	Json::Value Mod_AncientRealm_Base_open_grid(int floor, int id);
-	Json::Value Mod_AncientRealm_Base_fight_monster(int floor, int id);
+	Json::Value Mod_AncientRealm_Base_open_grid(int x, int y);
+	Json::Value Mod_AncientRealm_Base_fight_monster(int x, int y);
 	Json::Value Mod_AncientRealm_Base_spoil_panel();
 	Json::Value Mod_AncientRealm_Base_choose_spoil(int id1, int id2, int id3);
+	Json::Value Mod_AncientRealm_Base_movement(int x, int y);
 	Json::Value Mod_AncientRealm_Base_fight_boss();
 	Json::Value Mod_AncientRealm_Base_click_pass();
 	Json::Value Mod_AncientRealm_Base_get_monster_team_info(int id);
-	Json::Value Mod_AncientRealm_Base_open_award_grid_box(int floor, int id);
+	Json::Value Mod_AncientRealm_Base_open_award_grid_box(int x, int y);
+
+	//============================================================================
+	// - sxd_client_WorldPkRanking.cpp   ½×Î»Èü
+	//============================================================================
+	void WorldPkRanking();
+	Json::Value Mod_WorldPkRanking_Base_get_status();
+	Json::Value Mod_WorldPkRanking_Base_open_panel();
+	Json::Value Mod_WorldPkRanking_Base_award_panel();
+	Json::Value Mod_WorldPkRanking_Base_open_task_panel();
+	Json::Value Mod_WorldPkRanking_Base_get_task_award(int id); 
+	Json::Value Mod_WorldPkRanking_Base_get_level_free_award(int id);
+	
 };
 
 #endif /* SXD_CLIENT_H_ */

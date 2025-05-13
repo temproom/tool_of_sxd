@@ -297,6 +297,7 @@
     <ClCompile Include="sxd_clent\sxd_client_wish_pool.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_wish_tower.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_master_practice.cpp" />
+    <ClCompile Include="sxd_clent\sxd_client_WorldPkRanking.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_WuFaField.cpp" />
     <ClCompile Include="sxd_clent\sxd_client_XiuZhenRealm.cpp" />
     <ClCompile Include="sxd_clent\sxd_clien_AncientRealm.cpp" />

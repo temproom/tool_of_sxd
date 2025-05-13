@@ -413,6 +413,9 @@
     <ClCompile Include="sxd_clent\sxd_clien_AncientRealm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_WorldPkRanking.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="tool_of_sxd.rc">

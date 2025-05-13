@@ -467,6 +467,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 				sxd_client_town.hide_treasure_map();	// hide treasure map，藏宝图
 				sxd_client_town.CollectionBooklets();	//万藏录
 				//sxd_client_town.spring_big_run();		//新春大放送
+				sxd_client_town.WorldPkRanking();		//阶位赛
 
 				if (!sxd_client_super_town.login_super_town(&sxd_client_town))
 				{
@@ -1116,7 +1117,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 		{
 			for (;;)
 			{
-				common::log("\n\n\t 1.强化降魔战魂至太初十\n\t 2.制作逍遥战魂\n\t 0.退出\n\t请选择相应的功能：");
+				common::log("\n\n\t 1.强化降魔战魂至太初十\n\t 2.制作逍遥战魂\n\t 3.玄天古境\n\t 0.退出\n\t请选择相应的功能：");
 
 				int fun4;
 				std::cin >> fun4;
@@ -1129,6 +1130,14 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 				{
 					sxd_client_town.equip_use_reel();
 				}
+				else if (fun4 == 3)
+				{
+					if (!sxd_client_sect_area.login_Sect_area(&sxd_client_town))
+					{
+						common::log("【玄天古境】开启");
+						sxd_client_sect_area.AncientRealm();	//玄天古境
+					}
+				}
 				else
 				{
 					break;
@@ -1138,10 +1147,11 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 		else if (fun_id == 5)
 		{
 		common::log("【测试】开启");
-		if (!sxd_client_sect_area.login_Sect_area(&sxd_client_town))
+		if (!sxd_client_super_town.login_super_town(&sxd_client_town))
 		{
-			common::log("【玄天古境】开启");
-			sxd_client_sect_area.AncientRealm();	//玄天古境
+			sxd_client_super_town.WorldPkRanking();		//阶位赛
+			common::log("【测试】隔断");
+			sxd_client_town.WorldPkRanking();//阶位赛
 		}
 		}
 		else if (fun_id == 0)
