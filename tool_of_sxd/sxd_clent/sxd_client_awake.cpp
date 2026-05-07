@@ -30,6 +30,18 @@ void sxd_client::awake()
 			else
 				common::log(boost::str(boost::format("¡¾¾õÐÑ¡¿Ì½Ë÷ [%1%] ½ûµØÖ®ÊéÊ§°Ü£¬result[%2%]") % forbidden_map[item[0].asInt()] % data[0]), iEdit);
 		}
+		else if (item[1].asInt() == Mod_Awake_Base::ONCE && item[2].asInt() == 500000 && item[3].asInt() == 0)
+		{
+			int cur_number = item[4].asInt();
+			for (int i = cur_number; i < 10; i++)
+			{
+				data = this->Mod_Awake_Base_explore_forbidden_book(item[0].asInt(), Mod_Awake_Base::ONCE);
+				if (data[0].asInt() == Mod_Awake_Base::SUCCESS)
+					common::log(boost::str(boost::format("¡¾¾õÐÑ¡¿Ì½Ë÷ [%1%] ½ûµØÖ®Êé") % forbidden_map[item[0].asInt()]), iEdit);
+				else
+					common::log(boost::str(boost::format("¡¾¾õÐÑ¡¿Ì½Ë÷ [%1%] ½ûµØÖ®ÊéÊ§°Ü£¬result[%2%]") % forbidden_map[item[0].asInt()] % data[0]), iEdit);
+			}
+		}
 	}
 }
 
@@ -47,12 +59,21 @@ void sxd_client::awake()
 //         [ 18, 19, 0, 30,  0, 20, 1523030400 ],
 //         [ 18, 20, 0, 300, 0, 20, 0 ],
 //         [ 17, 20, 0, 200, 0, 20, 0 ] ], 0 ]
-//     [ [ [ 17, 19, 0, 0,   0, 21, 1523116800 ],
-//         [ 16, 19, 0, 0,   0, 21, 1523116800 ],
-//         [ 16, 20, 0, 100, 0, 20, 0 ],
-//         [ 18, 19, 0, 0,   0, 21, 1523203200 ],
-//         [ 18, 20, 0, 300, 0, 20, 0 ],
-//         [ 17, 20, 0, 200, 0, 20, 0 ] ], 0 ]
+//20260317
+ /*	   [ [ [ 20, 21, 0, 30, 0, 20, 1773763200 ], 
+		   [ 19, 21, 0, 20, 0, 20, 1773763200 ],
+		   [ 19, 22, 0, 200, 0, 20, 0 ],
+		   [ 18, 21, 500000, 0, 0, 20, 1773741600 ],
+		   [ 18, 22, 0, 100, 0, 20, 0 ],
+		   [ 20, 22, 0, 300, 0, 20, 0 ] ], 0 ] 
+	   [ [ [ 20, 21, 0, 30, 0, 20, 1773763200 ],
+		   [ 19, 21, 0, 20, 0, 20, 1773763200 ], 
+		   [ 19, 22, 0, 200, 0, 20, 0 ], 
+		   [ 18, 21, 500000, 0, 1, 20, 1773741600 ], 
+		   [ 18, 22, 0, 100, 0, 20, 0 ], 
+		   [ 20, 22, 0, 300, 0, 20, 0 ] ], 0 ]
+
+*/
 //============================================================================
 Json::Value sxd_client::Mod_Awake_Base_player_forbidden_book_info()
 {

@@ -36,7 +36,7 @@ int sxd_client::get_award(int race_id)
 	}
 	else
 	{
-		common::log(boost::str(boost::format("【赛事战令】：领取赛事战令【%1%】成功！！\n") % race_id));
+		common::log(boost::str(boost::format("【赛事战令】：领取赛事战令【%1%】成功！！") % race_id));
 	}
 	return 1;
 }

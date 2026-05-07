@@ -35,6 +35,11 @@ void sxd_client::HeroesBattleScoreRace()
 		{
 			common::log("【群英战积分赛】：挑战失败！");
 		}
+		else if (data[0].asInt() == HeroesBattleScoreRaceType::NOT_SCORE_RACE_STEP)
+		{
+			common::log("【群英战积分赛】：未到挑战时间！");
+			break;
+		}
 		data = this->Mod_HeroesBattleScoreRace_Base_score_race_panel();
 		fight_num = data[13].asInt();
 	}

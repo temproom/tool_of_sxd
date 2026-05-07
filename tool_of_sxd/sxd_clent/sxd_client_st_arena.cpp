@@ -145,7 +145,7 @@ Json::Value sxd_client::Mod_StArena_Base_refresh_player_list()
 
 void sxd_client::exploit_shop()
 {
-	try
+	/*try
 	{
 		Json::Value data = this->Mod_StArena_Base_exploit_shop_item_list();
 		Json::Value shop_item_list = data[0];
@@ -170,7 +170,41 @@ void sxd_client::exploit_shop()
 	catch (const std::exception& ex)
 	{
 		common::log(boost::str(boost::format("发现错误(exploit shop)：%1%") % ex.what()));
-	}
+	}*/
+
+	vector<int> good_list = { 1,2,3,4,7,10,11,12,13 };
+	std::unordered_map<int, string> type_list({ {1,"境界点" },{2,"内丹"},{3,"器魂" },{4,"魔石碎片" },{7,"黄玉牌"},{10,"女娲石碎片"},{11,"元气结晶"},{12,"素净元气"},{13,"精修点"} });
+	//1：境界点，2：内丹，3：器魂，4：魔石碎片，5：血脉精华，6：铜钱，7：黄玉牌，8：驯养令，9：灵珠，10：女娲石碎片，11：元气结晶，12：素净元气，13:精修点，
+	//{1,"境界点" },{2,"内丹"},{3,"器魂" },{4,"魔石碎片" },{7,"黄玉牌"},{10,"女娲石碎片"},{11,"元气结晶"},{12,"素净元气"},{13,"精修点"}
+	Json::Value data = this->Mod_StArena_Base_exploit_shop_item_list();
+	Json::Value shop_item_list = data[0];
+	for (int good_id : good_list)
+	{
+		auto good = std::find_if(shop_item_list.begin(), shop_item_list.end(), [good_id](const Json::Value& x) { return x[0].asInt() == good_id; });
+		if (good == shop_item_list.end())
+		{
+			common::log("【荣誉商店】商品不存在", 0);
+			return;
+		}
+		if ((*good)[1].asInt())
+		{
+			data = this->Mod_StArena_Base_buy_exploit_shop_item(good_id, (*good)[1].asInt());
+			if (data[0].asInt() == Mod_StArena_Base::NOT_ENOUGH_EXPLOIT)
+			{
+				common::log(boost::str(boost::format("【荣誉商店】购买 [%1%] 失败，荣誉不足") % type_list[good_id]));
+				
+			}
+			else if (data[0].asInt() != Mod_StArena_Base::SUCCESS)
+			{
+				common::log(boost::str(boost::format("【荣誉商店】购买 [%1%] 失败，代码【%2%】！！") % type_list[good_id] % data[0].asInt()));
+			}
+			else
+			{
+				//common::log(boost::str(boost::format("【荣誉商店】购买 [内丹×%1%]") % (*good)[1]), iEdit);
+				common::log(boost::str(boost::format("【荣誉商店】购买 [%1%×%2%]！！") % type_list[good_id] % (*good)[1]));
+			}	
+		}
+	}	
 }
 
 //============================================================================
@@ -181,6 +215,10 @@ void sxd_client::exploit_shop()
 //     oObject.list(_loc_3, _loc_2, ["good_id", "good_count"]);
 // Example
 //     [ [ [ 4, 50 ], [ 6, 10 ], [ 5, 10 ], [ 2, 10 ], [ 1, 10 ], [ 3, 10 ], [ 7, 50 ] ] ]
+// [ [ [ 6, 250 ], [ 2, 0 ], [ 9, 50 ], [ 10, 5 ], [ 13, 100 ], [ 11, 100 ], [ 1, 0 ], [ 12, 50 ], [ 7, 0 ], [ 4, 0 ], [ 3, 0 ], [ 8, 400 ], [ 5, 250 ] ] ] 
+// [ [ [ 6, 250 ], [ 2, 0 ], [ 9, 49 ], [ 10, 5 ], [ 13, 98 ], [ 11, 99 ], [ 1, 0 ], [ 12, 50 ], [ 7, 0 ], [ 4, 0 ], [ 3, 0 ], [ 8, 400 ], [ 5, 249 ] ] ] 
+//		
+//		1：境界点，2：内丹，3：器魂，4：魔石碎片，5：血脉精华，6：铜钱，7：黄玉牌，8：驯养令，9：灵珠，10：女娲石碎片，11：元气结晶，12：素净元气，13:精修点，
 //============================================================================
 Json::Value sxd_client::Mod_StArena_Base_exploit_shop_item_list()
 {

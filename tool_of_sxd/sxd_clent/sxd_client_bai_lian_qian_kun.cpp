@@ -12,6 +12,14 @@ public:
 	static const int LOSE = 7;
 };
 
+class Mod_BaiLianQianKunTwo_Base
+{
+public:
+	static const int SUCCESS = 6;
+	static const int WIN = 8;
+	static const int LOSE = 9;
+};
+
 void sxd_client::bai_lian_qian_kun()
 {
 	Json::Value data = this->Mod_BaiLianQianKun_Base_one_key_challenge();
@@ -75,7 +83,10 @@ Json::Value sxd_client::Mod_BaiLianQianKun_Base_get_info()
 
 //============================================================================
 // R172 一键闯关
-// {module:272, action:2, request:[], response:[Utils.UByteUtil, Utils.ByteUtil, Utils.UByteUtil, Utils.UByteUtil, Utils.UByteUtil, Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil, [Utils.ByteUtil, [Utils.IntUtil, Utils.IntUtil]]]};
+// {module:272, action:2, 
+// request:[], 
+// response:[Utils.UByteUtil, Utils.ByteUtil, Utils.UByteUtil, Utils.UByteUtil, Utils.UByteUtil, Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil, [Utils.ByteUtil, [Utils.IntUtil, Utils.IntUtil]]]};
+//
 // BaiLianQianKunData.as 94:
 //     this.result = param1[_loc_2++];
 //     _loc_4 = param1[_loc_2++];    // 7 times
@@ -118,3 +129,65 @@ Json::Value sxd_client::Mod_BaiLianQianKun_Base_challenge()
 	return this->send_and_receive(data, 272, 1);
 }
 
+void sxd_client::bai_lian_qian_kun2()
+{
+	Json::Value data = this->Mod_BaiLianQianKunTwo_Base_one_key_challenge();
+	if (data[0].asInt() == Mod_BaiLianQianKunTwo_Base::SUCCESS)
+	{
+		std::vector<Json::Value> awards;
+		std::copy(data[8].begin(), data[8].end(), std::back_inserter(awards));
+		std::sort(awards.begin(), awards.end(), [](const Json::Value& x, const Json::Value& y) { return x[0].asInt() < y[0].asInt(); });
+		for (const auto& award : awards)
+		{
+			std::vector<std::string> items;
+			std::transform(award[1].begin(), award[1].end(), std::back_inserter(items), [this](const Json::Value& x)
+				{
+					return boost::str(boost::format("[%1%×%2%]") % db.get_code(version, "Item", x[0].asInt())["text"] % x[1]);
+				});
+			common::log(boost::str(boost::format("【百炼乾坤】扫荡第%1%关，获得：%2%") % award[0] % boost::algorithm::join(items, "，")), iEdit);
+		}
+	}
+}
+
+//============================================================================
+//  百炼乾坤2
+// {module:320, action:0, 
+// request:[], 
+// response:[Utils.UByteUtil,Utils.ByteUtil,Utils.UByteUtil,Utils.UByteUtil,Utils.UByteUtil,Utils.IntUtil,Utils.ShortUtil,Utils.ShortUtil]
+// 
+// BaiLianQianKunDataTwo.as 40:
+//     oObject.list(param1,this.baiLianQianKunInfo,["level","first_award_flag","status","one_key_status","completed_player_count","decrement_percent","history_max_level"]);
+// Example
+//     [ 32, 1, 3, 5, 14565, 500, 31 ]
+//============================================================================
+Json::Value sxd_client::Mod_BaiLianQianKunTwo_Base_one_key_challenge()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 320, 2);
+}
+
+//============================================================================
+// 百炼乾坤2 一键闯关
+// {module:320, action:2, 
+// request:[], 
+// response:[Utils.UByteUtil,Utils.ByteUtil,Utils.UByteUtil,Utils.UByteUtil,Utils.UByteUtil,Utils.IntUtil,Utils.ShortUtil,Utils.ShortUtil,[Utils.ByteUtil,[Utils.IntUtil,Utils.IntUtil]]]
+// 
+// BaiLianQianKunDataTwo.as 94:
+//     this.result = param1[_loc_2++];
+//     _loc_4 = param1[_loc_2++];    // 7 times
+//     this.oneKeyAwardList = param1[_loc_2++];
+// BaiLianQianKunTwoController.as 77:
+//     for each (_loc_2 in _data.baiLianQianKunTwo.oneKeyAwardList)
+//         _loc_3["level"] = _loc_2[0];
+//         for each (_loc_4 in _loc_2[1])
+//             _loc_5["item_id"] = _loc_4[0];
+//             _loc_5["item_count"] = _loc_4[1];
+// Example
+//     [ 10, 31, 1, 3, 5, 14517, 500, 30, [ [ 30, [ [ 4648, 5 ], [ 2403, 20 ], [ 1747, 100000 ] ] ], [ 29, [ [ 1747, 80000 ], [ 4648, 4 ], [ 2403, 10 ] ] ], [ 28, [ [ 2403, 10 ], [ 1747, 80000 ], [ 4648, 4 ] ] ], [ 27, [ [ 2403, 10 ], [ 4648, 4 ], [ 1747, 80000 ] ] ], [ 26, [ [ 4649, 2 ], [ 1747, 80000 ], [ 2403, 10 ], [ 4648, 4 ] ] ], [ 25, [ [ 4648, 5 ], [ 1747, 100000 ], [ 2403, 15 ] ] ], [ 24, [ [ 4649, 2 ], [ 4648, 4 ], [ 1747, 80000 ], [ 2403, 10 ] ] ], [ 23, [ [ 1747, 80000 ], [ 2403, 10 ], [ 4648, 4 ] ] ], [ 22, [ [ 2403, 10 ], [ 4648, 4 ], [ 1747, 80000 ] ] ], [ 21, [ [ 2403, 10 ], [ 4648, 4 ], [ 1747, 80000 ] ] ], [ 20, [ [ 4648, 4 ], [ 1747, 80000 ], [ 2403, 20 ] ] ], [ 19, [ [ 4649, 1 ], [ 2403, 10 ], [ 1747, 50000 ], [ 4648, 3 ] ] ], [ 18, [ [ 4648, 3 ], [ 2403, 10 ], [ 1747, 50000 ] ] ], [ 17, [ [ 2403, 10 ], [ 1747, 50000 ], [ 4648, 3 ] ] ], [ 16, [ [ 1747, 50000 ], [ 2403, 10 ], [ 4648, 3 ] ] ], [ 15, [ [ 4648, 4 ], [ 1747, 80000 ], [ 2403, 15 ] ] ], [ 14, [ [ 1747, 50000 ], [ 4648, 3 ], [ 2403, 10 ] ] ], [ 13, [ [ 4649, 2 ], [ 1747, 50000 ], [ 4648, 3 ], [ 2403, 10 ] ] ], [ 12, [ [ 1747, 50000 ], [ 2403, 10 ], [ 4648, 3 ] ] ], [ 11, [ [ 4648, 3 ], [ 2403, 10 ], [ 1747, 50000 ] ] ], [ 10, [ [ 2403, 20 ], [ 1747, 80000 ], [ 4648, 3 ] ] ], [ 9, [ [ 2403, 10 ], [ 1747, 50000 ], [ 4648, 2 ] ] ], [ 8, [ [ 1747, 50000 ], [ 2403, 10 ], [ 4648, 2 ] ] ], [ 7, [ [ 4649, 1 ], [ 2403, 10 ], [ 4648, 2 ], [ 1747, 50000 ] ] ], [ 6, [ [ 1747, 50000 ], [ 4648, 2 ], [ 2403, 10 ] ] ], [ 5, [ [ 4648, 3 ], [ 2403, 15 ], [ 1747, 80000 ] ] ], [ 4, [ [ 2403, 10 ], [ 4648, 2 ], [ 1747, 50000 ] ] ], [ 3, [ [ 4649, 2 ], [ 2403, 10 ], [ 4648, 2 ], [ 1747, 50000 ] ] ], [ 2, [ [ 4649, 1 ], [ 2403, 10 ], [ 4648, 2 ], [ 1747, 50000 ] ] ], [ 1, [ [ 4648, 2 ], [ 2403, 10 ], [ 1747, 50000 ] ] ] ] ]
+//     [ 9, 0, 0, 0, 0, 0, 0, 0, null ]
+//============================================================================
+Json::Value sxd_client::Mod_BaiLianQianKunTwo_Base_get_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 320, 0);
+}

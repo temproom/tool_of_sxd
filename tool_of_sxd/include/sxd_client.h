@@ -142,6 +142,7 @@ public:
 	Json::Value Mod_GiftItemPack_Base_put_item_to_package(int box_id);
 	Json::Value Mod_Item_Base_move_pack_grid_item_to_supergift_warehouse(int box_id);
 
+
 	//============================================================================
 	// - sxd_client_release_welfare.cpp			更新福利
 	//============================================================================
@@ -164,6 +165,14 @@ public:
 	Json::Value Mod_Item_Base_player_equip_use_reel(int eqPlayerItemId, int reelItemId);
 	Json::Value Mod_Item_Base_equip_player_role_item(int WearGridId, int PlayerRoleId);
 	Json::Value Mod_Item_Base_remove_player_role_equipment(int eqPlayerItemId, int reelItemId,int house);
+
+	void buy_item();
+	void sell_item();
+	//Json::Value Mod_Item_Base_player_sell_item(int ItemId);
+	Json::Value Mod_Item_Base_player_buy_npc_item(int npcid, int eqPlayerItemId, int reelItemId);
+	Json::Value Mod_Item_Base_get_npc_item_list(int shopNpcId);
+	void one_key_upgrade();
+	Json::Value Mod_Equipment_Base_all_equip_upgrade_type_2(int playerRoleId);
 
 	//============================================================================
 	// - sxd_client_library.cpp			藏经阁
@@ -195,6 +204,8 @@ public:
 	Json::Value Mod_GetPeach_Base_peach_info();
 	Json::Value Mod_GetPeach_Base_batch_get_peach();
 	Json::Value Mod_GetPeach_Base_get_peach();
+	Json::Value Mod_GetPeach_Base_player_info();
+	Json::Value Mod_GetPeach_Base_call_peach();
 
 	//============================================================================
 	// - sxd_client_farm.cpp		药园
@@ -352,12 +363,13 @@ public:
 	Json::Value Mod_ChaosEquipment_Base_resolve_player_chaos_monster(int id);
 
 	//============================================================================
-	// - sxd_client_email.cpp		邮件
+	// - sxd_client_email.cpp		邮件one_key_get_award
 	//============================================================================
 	void email();
 	Json::Value Mod_Email_Base_get_email_info();
 	Json::Value Mod_Email_Base_get_attachment_award(int id);
 	Json::Value Mod_Email_Base_delete_email(int type, int id);
+	Json::Value Mod_Email_Base_one_key_get_award();
 
 	//============================================================================
 	// - sxd_client_super_sport.cpp			竞技场
@@ -436,6 +448,10 @@ public:
 	Json::Value Mod_BaiLianQianKun_Base_one_key_challenge();
 	Json::Value Mod_BaiLianQianKun_Base_get_info();
 	Json::Value Mod_BaiLianQianKun_Base_challenge();
+	void bai_lian_qian_kun2();
+	Json::Value Mod_BaiLianQianKunTwo_Base_one_key_challenge();
+	Json::Value Mod_BaiLianQianKunTwo_Base_get_info();
+	//Json::Value Mod_BaiLianQianKunTwo_Base_challenge();
 
 	//============================================================================
 	// - sxd_client_five_elements_laba.cpp		五行天仪
@@ -790,6 +806,13 @@ public:
 	void exploit_shop();
 	Json::Value Mod_StArena_Base_exploit_shop_item_list();
 	Json::Value Mod_StArena_Base_buy_exploit_shop_item(int id, int count);
+
+	//============================================================================
+	// - sxd_client_ExpeditionTask.cpp		仙界			远征任务
+	//============================================================================
+	void ExpeditionTask();
+	Json::Value Mod_ExpeditionTask_Base_get_info();
+	Json::Value Mod_ExpeditionTask_Base_start_task(int id);
 
 	//============================================================================
 	// - sxd_client_saint_area.cpp		圣域
@@ -1177,7 +1200,7 @@ public:
 	// - sxd_client_AncientRealm.cpp   玄天古镜
 	//============================================================================
 	void AncientRealm();
-	void move(int x, int y);
+	int move(int x, int y);
 	Json::Value Mod_AncientRealm_Base_get_state();
 	Json::Value Mod_AncientRealm_Base_get_map_panel_info();
 	Json::Value Mod_AncientRealm_Base_experience_panel(int id);
@@ -1202,7 +1225,240 @@ public:
 	Json::Value Mod_WorldPkRanking_Base_open_task_panel();
 	Json::Value Mod_WorldPkRanking_Base_get_task_award(int id); 
 	Json::Value Mod_WorldPkRanking_Base_get_level_free_award(int id);
-	
-};
 
+	
+	//============================================================================
+	// - sxd_client_AnniversaryTower.cpp   登仙楼
+	//============================================================================
+	void AnniversaryTower();
+	Json::Value Mod_AnniversaryTower_Base_open_panel();
+	Json::Value Mod_AnniversaryTower_Base_get_award(int id);
+	Json::Value Mod_AnniversaryTower_Base_buy_gift(int id);
+
+	//============================================================================
+	// - sxd_client_NewShuiYuZhengFeng.cpp   谁与争锋
+	//============================================================================
+	void NewShuiYuZhengFeng();
+	Json::Value Mod_NewShuiYuZhengFeng_Base_get_player_shui_lu();
+	Json::Value Mod_NewShuiYuZhengFeng_Base_get_race_info();
+	Json::Value Mod_NewShuiYuZhengFeng_Base_fight(int id);
+	Json::Value Mod_NewShuiYuZhengFeng_Base_get_score_award_info();
+	Json::Value Mod_NewShuiYuZhengFeng_Base_refresh_enemy();
+	Json::Value Mod_NewShuiYuZhengFeng_Base_get_score_award(int id);
+	Json::Value Mod_NewShuiYuZhengFeng_Base_get_box();
+
+	//============================================================================
+	// - sxd_client_IslandSummer.cpp   海岛盛夏，海岛垂钓
+	//============================================================================
+	void IslandSummer();
+	void IslandFishing();				//海岛垂钓
+	Json::Value Mod_IslandFishing_Base_panel_info();
+	Json::Value Mod_IslandFishing_Base_fishing(int id);
+	Json::Value Mod_IslandFishing_Base_get_fishing_info(int id);
+	Json::Value Mod_IslandFishing_Base_finish_fishing(int type, int id);
+	Json::Value Mod_IslandFishing_Base_task_info();
+	Json::Value Mod_IslandFishing_Base_get_task_award(int id);
+	Json::Value Mod_IslandFishing_Base_collect_info();
+	Json::Value Mod_IslandFishing_Base_get_collect_award(int id);
+
+	void IslandSummerOrder();			//海岛战令
+	Json::Value Mod_IslandSummerOrder_Base_panel_info();
+	Json::Value Mod_IslandSummerOrder_Base_one_click_get_award();
+
+	void IslandSummerStore();			//海岛商店
+	Json::Value Mod_IslandSummerStore_Base_panel_info();
+	Json::Value Mod_IslandSummerStore_Base_exchange_award(int type, int id);
+
+	//============================================================================
+	// - sxd_client_AbyssClash.cpp   界渊之战
+	//============================================================================
+	void AbyssClash(int step);
+	Json::Value Mod_AbyssClash_Base_is_func_open();
+	Json::Value Mod_AbyssClash_Base_step1_panel_info();
+	Json::Value Mod_AbyssClash_Base_step2_panel_info();
+	Json::Value Mod_AbyssClash_Base_get_monster_team_info(int id);
+	Json::Value Mod_AbyssClash_Base_start_fight(int id);
+	Json::Value Mod_AbyssClash_Base_score_store_info();
+	Json::Value Mod_AbyssClash_Base_score_exchange(int id,int num);
+
+	//============================================================================
+	// - sxd_client_PartnerPresent.cpp   好礼馈赠
+	//============================================================================
+	void PartnerPresent();
+	Json::Value Mod_PartnerPresent_Base_open_panel();
+	Json::Value Mod_PartnerPresent_Base_get_free_gift(int id);
+
+	
+	//============================================================================
+	// - sxd_client_SaDragonArea.cpp   无尽龙域
+	//============================================================================
+	void SaDragonArea();
+	Json::Value Mod_SaDragonArea_Base_get_dragon_area();
+	Json::Value Mod_SaDragonArea_Base_fight();
+	Json::Value Mod_SaDragonArea_Base_quick_fight();
+
+	//============================================================================
+	// - sxd_client_PartnerPractice.cpp   幻境修炼
+	//============================================================================
+	void PartnerPractice();
+	Json::Value Mod_PartnerPractice_Base_get_partner_practice_info();
+	Json::Value Mod_PartnerPractice_Base_select_partner(int id);
+	Json::Value Mod_PartnerPractice_Base_start_practice();
+	Json::Value Mod_PartnerPractice_Base_enter_fight();	//打怪
+	Json::Value Mod_PartnerPractice_Base_fight();		//打幻象
+
+	//============================================================================
+	// - sxd_client_guaji.cpp			挂机任务：点金石，坐骑试炼，淬炼池，法力星图，星辰手信, 圣盟祭祀, 兵法, 通天道场
+	//============================================================================
+	
+	//点金石
+	void GoldenTouchStone();
+	Json::Value Mod_GoldenTouchStone_Base_get_status();
+	Json::Value Mod_GoldenTouchStone_Base_touch_stone();
+	
+	//坐骑试炼
+	void DemonInvasion();
+	Json::Value Mod_DemonInvasion_Base_get_state();
+	Json::Value Mod_DemonInvasion_Base_open_panel();
+	Json::Value Mod_DemonInvasion_Base_start_challenge();
+
+	//淬炼池
+	void RefinePool();
+	Json::Value Mod_RefinePool_Base_open_panel();
+	Json::Value Mod_RefinePool_Base_refine(int type,int refine_quality, int refine_type);
+
+	//法力星图
+	void StarPicture();
+	Json::Value Mod_StarPicture_Base_get_info();
+	Json::Value Mod_StarPicture_Base_divination();
+	Json::Value Mod_StarPicture_Base_gain_award();
+
+	//星辰手信
+	void StarLetter();
+	Json::Value Mod_StarLetter_Base_star_letter_info();
+	Json::Value Mod_StarLetter_Base_choose_star(int id);
+	Json::Value Mod_StarLetter_Base_active();
+	Json::Value Mod_StarLetter_Base_receive_letter();
+
+	//圣盟祭祀
+	void SaUnionWorship();
+	Json::Value Mod_SaUnionWorship_Base_open_panel();
+	Json::Value Mod_SaUnionWorship_Base_worship(int id);
+
+	//兵法
+	void Tactics();
+	Json::Value Mod_Tactics_Base_get_tactics_info();
+	Json::Value Mod_Tactics_Base_buy_item(int type);
+
+	//通天道场
+	void SkyPalace();
+	Json::Value Mod_SkyPalace_Base_main_panel_info();
+	Json::Value Mod_SkyPalace_Base_break_through();
+	Json::Value Mod_SkyPalace_Base_use_medicine(int id);
+
+	//============================================================================
+	// - sxd_client_Nationalday.cpp			国庆
+	//============================================================================
+	void Nationalday();
+	//礼赠诸君
+	void NationaldayCheckin();
+	Json::Value Mod_NationaldayCheckin2024_Base_main_panel();
+	Json::Value Mod_NationaldayCheckin2024_Base_sign_in(int id);
+	Json::Value Mod_NationaldayCheckin2024_Base_get_extra(int id);
+	//乾坤一掷
+	void DiceRewards();
+	Json::Value Mod_DiceRewards_Base_main_panel();
+	Json::Value Mod_DiceRewards_Base_roll_dice(int id);
+
+	//============================================================================
+	// - sxd_client_EternalGamesPresent.cpp			万古神墟
+	//============================================================================
+	void EternalGamesPresent();
+	Json::Value Mod_EternalGamesPresent_Base_main_info();
+	Json::Value Mod_EternalGamesPresent_Base_worship(int id);
+	Json::Value Mod_EternalGamesPresent_Base_get_award();
+
+	//============================================================================
+	// - sxd_client_SeasonRanking.cpp			仙迹天榜
+	//============================================================================
+	void SeasonRanking();
+	Json::Value Mod_SeasonRanking_Base_get_self_info();
+	Json::Value Mod_SeasonRanking_Base_get_blessing_info();
+	Json::Value Mod_SeasonRanking_Base_get_blessing_award(int id);
+
+	//============================================================================
+	// - sxd_client_MidAutuGame.cpp			中秋博饼/秋季嘉年华
+	//============================================================================
+	void MidAutuGame();
+	Json::Value Mod_MidAutuGame_Base_get_midautu_game_info();
+	Json::Value Mod_MidAutuGame_Base_play_games();
+
+	//============================================================================
+	// - sxd_client_Era.cpp			纪元
+	//============================================================================
+	void Era();
+	void EraInfiniteMission();	//无量劫海挑战
+	Json::Value Mod_EraInfiniteMission_Base_get_now_season();
+	Json::Value Mod_EraInfiniteMission_Base_get_panel_info();
+	Json::Value Mod_EraInfiniteMission_Base_get_chapter_panel(int id);
+	Json::Value Mod_EraInfiniteMission_Base_get_monster_team_info(int id,int type);
+	Json::Value Mod_EraInfiniteMission_Base_fight(int id);
+
+	void EraRebirthLandAuto();	//轮回净地挂机
+	Json::Value Mod_EraRebirthLandAuto_Base_get_panel_info();
+	Json::Value Mod_EraRebirthLandAuto_Base_start_auto();
+	Json::Value Mod_EraRebirthLandAuto_Base_get_level_gift();
+	Json::Value Mod_EraRebirthLandAuto_Base_quick_auto_back_panel();
+	Json::Value Mod_EraRebirthLandAuto_Base_one_click_quick_free_back();
+	Json::Value Mod_EraRebirthLandAuto_Base_quick_auto();
+	Json::Value Mod_EraRebirthLandAuto_Base_get_auto_profit();
+
+	void EraRebirthLandAttr(); //轮回净地属性
+	Json::Value Mod_EraRebirthLandAttr_Base_level_up();
+
+
+	void EraTreasureOrder();	//纪元战令
+	Json::Value Mod_EraTreasureOrder_Base_get_panel_info();
+	Json::Value Mod_EraTreasureOrder_Base_one_click_get_award();
+	Json::Value Mod_EraTreasureOrder_Base_task_info();
+	Json::Value Mod_EraTreasureOrder_Base_get_task(int id);
+
+	//============================================================================
+	// - sxd_client_itemconvert.cpp			物品转换
+	//============================================================================
+	void itemconvert();
+	Json::Value Mod_ItemConvert_Base_panel_info(int id);
+	Json::Value Mod_ItemConvert_Base_convert(int type, int id, int num);
+
+	//============================================================================
+	// - sxd_client_FortuneRun.cpp			新春活动--福行万里
+	//============================================================================
+	void FortuneRun();
+	Json::Value Mod_FortuneRun_Base_get_panel_info();
+	Json::Value Mod_FortuneRun_Base_use_item(int id, int num);
+	Json::Value Mod_FortuneRun_Base_get_and_send_all();
+	Json::Value Mod_FortuneRun_Base_get_daily_task(int id);
+	Json::Value Mod_FortuneRun_Base_one_click_get_award();
+
+	//============================================================================
+	// - sxd_client_FiveFu.cpp			新春活动--集五福
+	//============================================================================
+	void FiveFu();
+	Json::Value Mod_FiveFu_Base_get_info();
+	Json::Value Mod_FiveFu_Base_open_pack();
+
+	//============================================================================
+	// - sxd_client_CultivationCardGame.cpp			神仙收藏册
+	//============================================================================
+	void CultivationCardGame();
+	Json::Value Mod_CultivationCardGame_Base_panel_info();
+	Json::Value Mod_CultivationCardGame_Base_task_info(int id);
+	Json::Value Mod_CultivationCardGame_Base_get_task_award(int id);
+	Json::Value Mod_CultivationCardGame_Base_shop_info();
+	Json::Value Mod_CultivationCardGame_Base_buy_shop(int id);
+
+	//============================================================================
+	// - sxd_client_CultivationCardGame.cpp			新副本
+	//============================================================================
+};
 #endif /* SXD_CLIENT_H_ */

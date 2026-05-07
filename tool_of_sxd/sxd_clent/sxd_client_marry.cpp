@@ -19,7 +19,7 @@ void sxd_client::marry()
 	
 	auto data = this->Mod_Marry_Base_get_marry_box();
 	if (data[0].asInt() == Mod_Marry_Base::SUCCESS)
-		common::log("【结婚】领取夫妻宝箱", iEdit);
+		common::log("【结婚】：领取夫妻宝箱", iEdit);
 }
 
 void sxd_client::marry_gift()
@@ -31,11 +31,11 @@ void sxd_client::marry_gift()
 	int count = data_gift1[1].asInt();
 	if (count >= 30000)
 	{
-		common::log("【结婚】亲密度已满，无需赠送礼物！", iEdit);
+		common::log("【结婚】：亲密度已满，无需赠送礼物！", iEdit);
 		return;
 	}
 
-	common::log("【结婚】赠送铜钱礼物", iEdit);
+	common::log("【结婚】：赠送铜钱礼物", iEdit);
 
 	//获取亲密度信息
 	auto data_gift = this->Mod_Marry_Base_get_player_engagement_info();
@@ -50,7 +50,7 @@ void sxd_client::marry_gift()
 			while (times < 5)
 			{
 				auto data = this->Mod_Marry_Base_give_gift(1);
-				common::log("【结婚】赠送铜钱礼物【芍药】成功", iEdit);
+				common::log("【结婚】：赠送铜钱礼物【芍药】成功", iEdit);
 				times++;
 			}
 		}
@@ -61,7 +61,7 @@ void sxd_client::marry_gift()
 			while (times < 5)
 			{
 				auto data = this->Mod_Marry_Base_give_gift(6);
-				common::log("【结婚】赠送铜钱礼物【芍药】成功", iEdit);
+				common::log("【结婚】：赠送铜钱礼物【芍药】成功", iEdit);
 				times++;
 			}
 		}
@@ -72,7 +72,7 @@ void sxd_client::marry_gift()
 			while (times < 5)
 			{
 				auto data = this->Mod_Marry_Base_give_gift(2);
-				common::log("【结婚】赠送铜钱礼物【同心结】成功", iEdit);
+				common::log("【结婚】：赠送铜钱礼物【同心结】成功", iEdit);
 				times++;
 			}
 		}
@@ -82,12 +82,12 @@ void sxd_client::marry_gift()
 			while (times < 5)
 			{
 				auto data = this->Mod_Marry_Base_give_gift(7);
-				common::log("【结婚】赠送铜钱礼物【同心结】成功", iEdit);
+				common::log("【结婚】：赠送铜钱礼物【同心结】成功", iEdit);
 				times++;
 			}
 		}
 	}
-	common::log("【结婚】今日赠送铜钱礼物完毕", iEdit);
+	common::log("【结婚】：今日赠送铜钱礼物完毕", iEdit);
 }
 
 

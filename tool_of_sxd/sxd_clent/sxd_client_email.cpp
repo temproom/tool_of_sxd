@@ -14,7 +14,16 @@ public:
 
 void sxd_client::email()
 {
-	//try {
+	Json::Value data = this->Mod_Email_Base_one_key_get_award();
+	if (data[0].asInt() == Mod_Email_Base::SUCCESS)
+	{
+		common::log("【邮箱】一键领取邮件成功！！");
+	}
+	else
+	{
+		common::log(boost::str(boost::format("【邮箱】收取附件失败，result[%1%]") % data[0].asInt()), iEdit);
+	}
+	/*
 	Json::Value data = this->Mod_Email_Base_get_email_info();
 	Json::Value email_info = data;
 	for (const auto& email : email_info[0])
@@ -43,21 +52,24 @@ void sxd_client::email()
 		}
 		common::log(boost::str(boost::format("【邮箱】删除邮件 [%1%]") % common::utf2gbk(email[1].asString())), iEdit);
 	}
-	//} catch (const std::exception& ex) {
-	//    common::log(boost::str(boost::format("发现错误(email)：%1%") % ex.what()));
-	//}
+	*/
 }
 
 //============================================================================
 // R171
 // 邮件
 // {module:345, action:0,
-// request:[], response:[[Utils.IntUtil, Utils.StringUtil, Utils.StringUtil, Utils.StringUtil, Utils.IntUtil, Utils.UByteUtil, Utils.UByteUtil, [Utils.IntUtil, Utils.IntUtil], Utils.UByteUtil, Utils.LongUtil, Utils.UByteUtil, Utils.ByteUtil]]}
+// request:[], 
+// response:[[Utils.IntUtil, Utils.StringUtil, Utils.StringUtil, Utils.StringUtil, Utils.IntUtil, Utils.UByteUtil, Utils.UByteUtil, [Utils.IntUtil, Utils.IntUtil], Utils.UByteUtil, Utils.LongUtil, Utils.UByteUtil, Utils.ByteUtil]]}
+// 20260320
+// response:[[Utils.IntUtil, Utils.StringUtil, Utils.StringUtil, Utils.StringUtil, Utils.IntUtil, Utils.UByteUtil, Utils.UByteUtil, [Utils.IntUtil, Utils.LongUtil], Utils.UByteUtil, Utils.LongUtil, Utils.UByteUtil, Utils.ByteUtil, Utils.IntUtil]]
+//
 // EmailData.as 36:
-//     oObject.list(_loc_2, _loc_3, ["id", "name", "subject", "content", "receipt_time",
-//         "status", "type", "attachment_award_list", "attachment_status", "valid_time", "delete_flag", "send_type"]);
-//     for each (_loc_5 in _loc_3.attachment_award_list)
+//      oObject.list(_loc_2, _loc_3, ["id", "name", "subject", "content", "receipt_time", "status", "type", "attachment_award_list", "attachment_status", "valid_time", "delete_flag", "send_type"]);
+//      for each (_loc_5 in _loc_3.attachment_award_list)
 //         oObject.list(_loc_5, _loc_6, ["item_id", "item_num"]);
+// 20260320
+//		oObject.list(_loc2_, _loc3_, ["id", "name", "subject", "content", "receipt_time", "status", "type", "attachment_award_list", "attachment_status", "valid_time", "delete_flag", "send_type", "copy_flag"]);
 // Example
 // 未收取(attachment_status[8]=5)
 //     [ [ [ 55340, "\u8bb8\u613f\u6c60\u5956\u52b1", "\u8bb8\u613f\u6c60\u6bcf\u65e5\u793c\u5305", "\u60a8\u5728\u8bb8\u613f\u6c60\u6d3b\u52a8\u83b7\u5f97\u4e86\u6bcf\u65e5\u793c\u5305\u5956\u52b1\uff0c\u8bf7\u53ca\u65f6\u67e5\u6536\u3002", 1519488016,
@@ -107,4 +119,10 @@ Json::Value sxd_client::Mod_Email_Base_delete_email(int type, int id)
 	data.append(type);
 	data.append(id);
 	return this->send_and_receive(data, 345, 3);
+}
+
+Json::Value sxd_client::Mod_Email_Base_one_key_get_award()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 345, 6);
 }

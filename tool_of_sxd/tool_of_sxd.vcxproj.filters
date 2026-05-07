@@ -410,10 +410,58 @@
     <ClCompile Include="sxd_clent\sxd_client_CollectionBooklets.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="sxd_clent\sxd_clien_AncientRealm.cpp">
+    <ClCompile Include="sxd_clent\sxd_client_AncientRealm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="sxd_clent\sxd_client_WorldPkRanking.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_AnniversaryTower.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_NewShuiYuZhengFeng.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_IslandSummer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_AbyssClash.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_ExpeditionTask.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_PartnerPresent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_guaji.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_Nationalday.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_EternalGamesPresent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_SeasonRanking.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_MidAutuGame.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_Era.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_cllient_itemconvert.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_FortuneRun.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_FiveFu.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sxd_clent\sxd_client_CultivationCardGame.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

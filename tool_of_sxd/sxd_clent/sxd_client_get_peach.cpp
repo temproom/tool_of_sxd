@@ -33,6 +33,21 @@ void sxd_client::get_peach()
 				common::log(boost::str(boost::format("¡¾ÕªÏÉÌÒ¡¿ÕªÌÒÕ½°Ü")), iEdit);
 		}
 	}
+
+	data = this->Mod_GetPeach_Base_player_info();
+	int call_coin_times = data[3].asInt();
+	while (call_coin_times > 0)
+	{
+		data = this->Mod_GetPeach_Base_call_peach();
+		if (data[0].asInt() == Mod_GetPeach_Base::SUCCESS)
+		{
+			call_coin_times--;
+			common::log("¡¾ÕªÏÉÌÒ¡¿ÕÙ»½ÏÉÌÒ³É¹¦£¡£¡");
+			data = this->Mod_GetPeach_Base_batch_get_peach();
+			if (data[0].asInt() == Mod_GetPeach_Base::SUCCESS)
+				common::log(boost::str(boost::format("¡¾ÕªÏÉÌÒ¡¿Ò»¼üÕªÌÒ³É¹¦£¬»ñµÃ¾­ÑéÖµ[%1%]") % data[1]), iEdit);
+		}
+	}
 }
 
 //============================================================================
@@ -46,9 +61,12 @@ void sxd_client::get_peach()
 //     _loc_2.peachNum = _loc_1[1];
 //     _loc_2.bAllGet = _loc_1[2] == 1;
 //     _loc_2.bCallPeach = _loc_1[3] == 1;
+// 
+// oObject.list(_loc1_,_loc2_,["peachLv","peachNum","is_can_batch","is_can_call_peach"]);
+
 //============================================================================
 // Example
-//     [ 21, 5, 1, 0 ]
+//     [ 47, 0, 1, 1 ] 
 Json::Value sxd_client::Mod_GetPeach_Base_peach_info()
 {
 	Json::Value data;
@@ -84,4 +102,30 @@ Json::Value sxd_client::Mod_GetPeach_Base_get_peach()
 {
 	Json::Value data;
 	return this->send_and_receive(data, 40, 1);
+}
+
+//============================================================================
+// ½ÇÉ«ĞÅÏ¢-ÕÙ»½ÏÉÌÒ´ÎÊı
+// "module":40,"action":4,
+// 
+// oObject.list(_loc1_,_loc2_,["playerCount","haveMonkeyNum","canBuyCount","call_coin_times","call_ingot_times","call_need_coin","call_need_ingot"]);
+// Example
+//     [ 0(Mod_GetPeach_Base::SUCCESS), 750000(warExp), [ ... ], 0 ]
+//============================================================================
+Json::Value sxd_client::Mod_GetPeach_Base_player_info()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 40, 4);
+}
+
+//============================================================================
+// ÕÙ»½ÏÉÌÒ
+// "module":40,"action":6,
+// Example
+//     [ 0(Mod_GetPeach_Base::SUCCESS), 750000(warExp), [ ... ], 0 ]
+//============================================================================
+Json::Value sxd_client::Mod_GetPeach_Base_call_peach()
+{
+	Json::Value data;
+	return this->send_and_receive(data, 40, 6);
 }

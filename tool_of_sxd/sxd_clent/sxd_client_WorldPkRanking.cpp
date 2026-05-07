@@ -19,7 +19,7 @@ public:
 
 void sxd_client::WorldPkRanking()
 {
-	common::log("【阶位赛】任务面板！！");
+	//common::log("【阶位赛】任务面板！！");
 	Json::Value data = this->Mod_WorldPkRanking_Base_open_task_panel();
 
 	Json::Value week_task_list = data[1];

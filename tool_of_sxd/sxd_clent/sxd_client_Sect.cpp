@@ -217,8 +217,20 @@ void sxd_client::NewSectShop()
 
 void sxd_client::SectMonster(int sect_id)
 {
+
+	//灌注灵气
+	Json::Value data = this->Mod_SectMonster_Base_push_soul();
+
+	if (data[0].asInt() == SectMonsterType::SUCCESS)
+	{
+		common::log("【宗门灵兽】：灌注灵气成功！！");
+	}
+	else if (data[0].asInt() == SectMonsterType::HAS_PUSHED)
+	{
+		common::log("【宗门灵兽】：已灌注灵气！！");
+	}
 	//获取灵兽信息
-	Json::Value data = this->Mod_SectMonster_Base_get_monster_list(sect_id);
+	data = this->Mod_SectMonster_Base_get_monster_list(sect_id);
 
 	/*int result = data[0].asInt();
 	if (result != SectMonsterType::SUCCESS)
@@ -233,8 +245,9 @@ void sxd_client::SectMonster(int sect_id)
 		common::log("【宗门灵兽】：免费喂养次数已用完！！");
 		return;
 	}
-	
-	data = this->Mod_SectMonster_Base_feed(1, 1);
+
+
+	data = this->Mod_SectMonster_Base_feed(3, 0);
 
 	int result = data[0].asInt();
 	if (result == SectMonsterType::FEED_NUM_LIMIT)
@@ -486,11 +499,14 @@ Json::Value sxd_client::Mod_SectMonster_Base_egg_panel_info(int sect_id)
 //     [  ]
 // 
 // "response":[[Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil],Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,[Utils.IntUtil,Utils.IntUtil,Utils.IntUtil]]
-// Example
 // 
 // SectMonsterData L140
 //		["monster_list","free_feed_num","high_feed_num","job_id","week_add_monster_exp","common_monster_list"]);
 //		monster_list:["monster_type","level","quality","grow_value"]);
+// 
+// Example
+//			[ [ [ 3, 68, 8, 636 ], [ 2, 68, 10, 634 ], [ 1, 98, 10, 859 ] ], 0, 0, 7, 30, [ [ 3, 100, 9 ], [ 1, 100, 10 ], [ 2, 100, 10 ] ] ] 
+//			[ [ [ 3, 68, 8, 636 ], [ 2, 68, 10, 634 ], [ 1, 98, 10, 869 ] ], 0, 1, 7, 35, [ [ 3, 100, 9 ], [ 1, 100, 10 ], [ 2, 100, 10 ] ] ] 
 //============================================================================
 Json::Value sxd_client::Mod_SectMonster_Base_get_monster_list(int sect_id)
 {
@@ -508,10 +524,10 @@ Json::Value sxd_client::Mod_SectMonster_Base_get_monster_list(int sect_id)
 //     [  ]
 // 
 // "response":[Utils.UByteUtil]
-// Example
-// 
+//
 // SectMonsterData 
 //		this.result = param1[0]
+// 
 //============================================================================
 Json::Value sxd_client::Mod_SectMonster_Base_push_soul()
 {
@@ -528,10 +544,11 @@ Json::Value sxd_client::Mod_SectMonster_Base_push_soul()
 //     [  ]
 // 
 // "response":[Utils.UByteUtil,[Utils.IntUtil,Utils.IntUtil]]
-// Example
 // 
 // SectMonsterData 
 //		this.result = param1[0]
+// Example
+//			[ 0, [ [ 1787, 3 ] ] ] 
 //============================================================================
 Json::Value sxd_client::Mod_SectMonster_Base_feed(int monster_id, int type)
 {

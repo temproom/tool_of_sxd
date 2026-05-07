@@ -432,7 +432,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 	//common::log(boost::str(boost::format("1.日常任务") % data[0].size()), 0);
 	for (;;)
 	{
-		common::log("\n\n\t 1.日常任务\n\t 2.城镇任务\n\t 3.副本挑战\n\t 4.挂机任务\n\t 5.测试\n\t 0.退出\n\t请选择相应的功能：");
+		common::log("\n\n\t 1.日常任务\n\t 2.城镇任务\n\t 3.副本挑战\n\t 4.挂机任务\n\t 5.活动任务\n\t 6.测试\n\t 0.退出\n\t请选择相应的功能：");
 		int fun_id;
 		std::cin >> fun_id;
 		if (fun_id == 1)
@@ -468,12 +468,49 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 				sxd_client_town.CollectionBooklets();	//万藏录
 				//sxd_client_town.spring_big_run();		//新春大放送
 				sxd_client_town.WorldPkRanking();		//阶位赛
+				sxd_client_town.AnniversaryTower();			//登仙楼
+				sxd_client_town.exploit_shop();			// 仙界荣誉商店
+				//sxd_client_town.IslandSummer();			//海岛盛夏
+				sxd_client_town.PartnerPresent();		//好礼馈赠
+				sxd_client_town.GoldenTouchStone();		//点金石
+				sxd_client_town.DemonInvasion();		//坐骑试炼
+				sxd_client_town.StarPicture();			//法力星图
+				sxd_client_town.RefinePool();			//淬炼池
+				sxd_client_town.Nationalday();			//国庆任务
+				sxd_client_town.EternalGamesPresent();	//万古神墟
+				sxd_client_town.SeasonRanking();		//仙迹天榜
+				sxd_client_town.MidAutuGame();			//中秋博饼
+				sxd_client_town.Era();					//纪元任务
+				//sxd_client_town.spring_big_run();		//新春大放送
+				sxd_client_town.itemconvert();			//资源包转换
+				//sxd_client_town.FiveFu();				//新春集五福
+				//sxd_client_town.FortuneRun();			//福行万里
+				sxd_client_town.CultivationCardGame();	//神仙收藏册
+				sxd_client_town.StarLetter();			//星辰手信
+				sxd_client_town.awake();				//觉醒
+				sxd_client_town.assistant();			//活跃度-小助手
+				//sxd_client_town.Tactics();				//兵法
+				//sxd_client_town.gift();               //各种礼包
+				sxd_client_town.email();				//邮件
+				sxd_client_town.SkyPalace();			//通天道场
 
 				if (!sxd_client_super_town.login_super_town(&sxd_client_town))
 				{
 					sxd_client_super_town.st_union_task();              // 魔神挑战
 					//sxd_client_super_town.st_arena();					// 仙界竞技场
+					
 
+					Json::Value AbyssClash_data = sxd_client_town.Mod_AbyssClash_Base_is_func_open();
+					if (AbyssClash_data[0].asInt() == 1)
+					{
+						common::log("【界渊之战】开启！！");
+						int step = AbyssClash_data[1].asInt();
+						sxd_client_super_town.AbyssClash(step);			//界渊之战
+					}
+					else
+					{
+						common::log("【界渊之战】未开启！！");
+					}
 				}
 
 				// 宠物派遣
@@ -492,24 +529,23 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 						common::log(boost::str(boost::format("发现错误(server chat room)：%1%") % ex.what()));
 					}
 				}
-
-				if (!sxd_client_saint_area.login_saint_area(&sxd_client_town))
-				{
-					sxd_client_saint_area.sa_take_bible();              // 圣域取经
-					sxd_client_saint_area.sa_super_sport();             // 圣域竞技场
-				}
-
 				
 				if (!sxd_client_sect_area.login_Sect_area(&sxd_client_town))
 				{
 					Json::Value data = sxd_client_town.Mod_Sect_Base_panel_info();
 					int sect_id = data[6].asInt();
 
-					sxd_client_sect_area.SectBonus(sect_id);
-					sxd_client_town.NewSectShop();
-					sxd_client_sect_area.SectMonster(sect_id);
+					sxd_client_sect_area.SectBonus(sect_id);			//宗门赏金堂
+					sxd_client_town.NewSectShop();						//宗门商店
+					sxd_client_sect_area.SectMonster(sect_id);			//宗门灵兽
 				}
 
+				if (!sxd_client_saint_area.login_saint_area(&sxd_client_town))
+				{
+					sxd_client_saint_area.sa_take_bible();              // 圣域取经
+					sxd_client_saint_area.sa_super_sport();             // 圣域竞技场
+					sxd_client_saint_area.SaUnionWorship();				//圣盟祭祀
+				}
 				
 			}
 			else if (fen_dui == 2)
@@ -532,6 +568,13 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 					//sxd_client_town.black_shop();                           // 珍奇异宝
 				}
 
+				//挂机任务
+				{
+					sxd_client_town.GoldenTouchStone();							//点金石
+					sxd_client_town.DemonInvasion();							//坐骑试炼
+					sxd_client_town.StarPicture();								//法力星图
+					sxd_client_town.RefinePool();								//淬炼池
+				}
 				// release welfare，更新福利
 				{
 					sxd_client_town.release_welfare();
@@ -612,7 +655,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 						common::log("【壶中界】未开启", 0);
 					else
 					{
-						sxd_client_town.pot_world();
+						//sxd_client_town.pot_world();
 					}
 				}
 
@@ -663,6 +706,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 					else
 					{
 						sxd_client_town.bai_lian_qian_kun();
+						sxd_client_town.bai_lian_qian_kun2();
 					}
 				}
 
@@ -733,7 +777,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 						common::log("【英雄扫荡】未开启", 0);
 					else
 					{
-						sxd_client_town.hero_mission();
+						//sxd_client_town.hero_mission();
 					}
 				}
 
@@ -785,7 +829,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 						{
 							sxd_client_town.faction_god();              // 帮派祭神
 							sxd_client_town.seal_satan();               // 七星封魔
-							//sxd_client_town.faction_roll_cake();      // 帮派吉星高照
+							sxd_client_town.faction_roll_cake();      // 帮派吉星高照
 							sxd_client_town.faction_lucky_wheel();      // 帮派转盘
 							sxd_client_town.faction_join_feast();       // 吃仙宴
 							sxd_client_town.faction_approve();          // 审核
@@ -814,6 +858,16 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 					}
 				}
 
+				{
+					// ExpeditionTask
+					if (!common::contain(function_names, "远征任务"))
+						common::log("【ExpeditionTask】未开启", 0);
+					else
+					{
+						sxd_client_town.ExpeditionTask();
+					}
+				}
+
 				// super town 仙界
 				{
 					try
@@ -837,8 +891,8 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 									sxd_client_super_town.st_union_god_incense();       // 仙盟上香
 									sxd_client_super_town.st_union_activity();          // 仙盟之树
 									sxd_client_super_town.st_union_task();              // 魔神挑战
-									sxd_client_super_town.st_union_approve();           // 仙盟审核
-									sxd_client_super_town.st_union_nimal();             // 仙盟神兽
+									//sxd_client_super_town.st_union_approve();           // 仙盟审核
+									//sxd_client_super_town.st_union_nimal();             // 仙盟神兽
 								}
 							}
 
@@ -863,7 +917,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 								common::log("【仙界商店】未开启", 0);
 							else
 							{
-								sxd_client_super_town.st_daoyuan_shop();
+								//sxd_client_super_town.st_daoyuan_shop();
 							}
 
 							// st big turntable
@@ -903,13 +957,15 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 								}
 							}
 
+							
+
 							// st arena
 							if (!common::contain(function_ids, "132"))
 								common::log("【仙界竞技场】未开启", 0);
 							else
 							{
-								sxd_client_super_town.st_arena();           // 挑战
-								//sxd_client_town.exploit_shop();             // 荣誉商店买内丹
+								//sxd_client_super_town.st_arena();           // 挑战
+								sxd_client_town.exploit_shop();             // 荣誉商店买内丹
 							}
 
 							// st take bible
@@ -957,6 +1013,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 							common::log("【圣域】未开启", 0);
 						else if (!sxd_client_saint_area.login_saint_area(&sxd_client_town))
 						{
+							sxd_client_saint_area.SaUnionWorship();					//圣盟祭祀
 							sxd_client_saint_area.sa_take_bible();                  // 圣域取经
 							sxd_client_saint_area.sa_super_sport();                 // 圣域竞技场
 						}
@@ -1013,7 +1070,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 		{
 			for (;;)
 			{
-				common::log(" \n\t 1.通天塔\n\t 2.仙界挑战\n\t 3.圣域挑战\n\t 4,圣域秘境\n\t 5,宗师修行\n\t 6,魔界远征\n\t 7,五行天宫\n\t 8,九霄云巅\n\t 9,锁妖塔\n\t 10,圣域秘境塔\n\t 11,诸法洞天\n\t 12,诸法洞天：无尽模式\n\t 0,退出\n\t 请选择相应的功能：");
+				common::log(" \n\t 1.通天塔\n\t 2.仙界挑战\n\t 3.圣域挑战\n\t 4,圣域秘境\n\t 5,宗师修行\n\t 6,魔界远征\n\t 7,五行天宫\n\t 8,九霄云巅\n\t 9,锁妖塔\n\t 10,圣域秘境塔\n\t 11,诸法洞天\n\t 12,诸法洞天：无尽模式\n\t 13.纪元：无量劫海\n\t 0,退出\n\t 请选择相应的功能：");
 				int fun;
 				std::cin >> fun;
 				if (fun == 1)
@@ -1107,6 +1164,10 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 				{
 					sxd_client_town.Endlesschallenge();	//诸法洞天 无尽模式
 				}
+				else if (fun == 13)
+				{
+					sxd_client_town.EraInfiniteMission();	//纪元 无量劫海
+				}
 				else if (fun == 0)
 				{
 					break;
@@ -1117,7 +1178,7 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 		{
 			for (;;)
 			{
-				common::log("\n\n\t 1.强化降魔战魂至太初十\n\t 2.制作逍遥战魂\n\t 3.玄天古境\n\t 0.退出\n\t请选择相应的功能：");
+				common::log("\n\n\t 1.强化降魔战魂至太初十\n\t 2.制作逍遥战魂\n\t 3.购买降魔战魂\n\t 4.出售逍遥战魂\n\t 5.一键战魂刷钱\n\t 6.玄天古境\n\t 7.山河游历\n\t 0.退出\n\t请选择相应的功能：");
 
 				int fun4;
 				std::cin >> fun4;
@@ -1132,11 +1193,36 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 				}
 				else if (fun4 == 3)
 				{
+					sxd_client_town.buy_item();
+				}
+				else if (fun4 == 4)
+				{
+					sxd_client_town.sell_item();
+				}
+				else if (fun4 == 5)
+				{
+					common::log("\n\n\t请输入循环次数：");
+					int k;
+					cin >> k;
+					for (int i = 1; i <= k; i++)
+					{
+						sxd_client_town.buy_item();
+						sxd_client_town.upgrade();
+						sxd_client_town.equip_use_reel();
+						sxd_client_town.sell_item();
+					}
+				}
+				else if (fun4 == 6)
+				{
 					if (!sxd_client_sect_area.login_Sect_area(&sxd_client_town))
 					{
 						common::log("【玄天古境】开启");
 						sxd_client_sect_area.AncientRealm();	//玄天古境
 					}
+				}
+				else if (fun4 == 7)
+				{
+					sxd_client_town.Monopoly();			// 山河游历，骰子
 				}
 				else
 				{
@@ -1146,13 +1232,23 @@ void sxd::auto_play(const std::string& version, const std::string& user_id, cons
 		}
 		else if (fun_id == 5)
 		{
-		common::log("【测试】开启");
-		if (!sxd_client_super_town.login_super_town(&sxd_client_town))
-		{
-			sxd_client_super_town.WorldPkRanking();		//阶位赛
-			common::log("【测试】隔断");
-			sxd_client_town.WorldPkRanking();//阶位赛
+			common::log("\n\n\t 1.谁与争锋\n\t 0.退出\n\t请选择相应的功能：");
+			int activity_id;
+			std::cin >> activity_id;
+			if (activity_id == 1)
+			{
+				sxd_client_town.NewShuiYuZhengFeng();			// 谁与争锋
+			}
+			else if(activity_id == 0)
+			{
+				break;
+			}
+			
 		}
+		else if (fun_id == 6)
+		{	
+			common::log("【通天道场】开启！！");
+			sxd_client_town.SkyPalace();		//通天道场
 		}
 		else if (fun_id == 0)
 		{

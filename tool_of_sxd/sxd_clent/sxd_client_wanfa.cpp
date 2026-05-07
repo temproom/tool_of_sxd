@@ -63,7 +63,7 @@ void sxd_client::TombArtifacts()
 	int free_times = data[1].asInt();
 	if (free_times == 0)
 	{
-		common::log("【诸法器冢】今日免费次数已用完！");
+		common::log("【诸法器冢】：今日免费次数已用完！");
 	}
 	else
 	{
@@ -71,12 +71,12 @@ void sxd_client::TombArtifacts()
 		int result = data[0].asInt();
 		if (result == TombArtifactstype::SUCCESS)
 		{
-			common::log(boost::str(boost::format("【诸法器冢】今日[ %1% ]成功！") % cur), iEdit);
+			common::log(boost::str(boost::format("【诸法器冢】：今日[ %1% ]成功！") % cur), iEdit);
 			return;
 		}
 		else
 		{
-			common::log(boost::str(boost::format("【诸法器冢】今日[ %1% ]失败！代码：[%2%]") % cur % result), iEdit);
+			common::log(boost::str(boost::format("【诸法器冢】：今日[ %1% ]失败！代码：[%2%]") % cur % result), iEdit);
 			return;
 		}
 	}
@@ -95,7 +95,7 @@ void sxd_client::EndlessExpedition()
 		data = this->Mod_EndlessExpedition_Base_enter_next_mission();
 		if (data[0].asInt() != EndlessExpeditiontype::SUCCESS)
 		{
-			common::log(boost::str(boost::format("【诸法洞天】进入下一个副本失败，代码[ %1% ]") % data[0].asInt()), iEdit);
+			common::log(boost::str(boost::format("【诸法洞天】：进入下一个副本失败，代码[ %1% ]") % data[0].asInt()), iEdit);
 			return;
 		}
 		data = this->Mod_EndlessExpedition_Base_mission_panel();
@@ -114,14 +114,14 @@ void sxd_client::EndlessExpedition()
 
 		if (result == EndlessExpeditiontype::SUCCESS && pass)
 		{
-			common::log(boost::str(boost::format("【诸法洞天】第[ %1% ]次挑战第[ %2% ]层，成功！") % k % mission_id), iEdit);
+			common::log(boost::str(boost::format("【诸法洞天】：第[ %1% ]次挑战第[ %2% ]层，成功！") % k % mission_id), iEdit);
 			k = 1;
 
 			//进入下一个副本
 			data = this->Mod_EndlessExpedition_Base_enter_next_mission();
 			if (data[0].asInt() != EndlessExpeditiontype::SUCCESS)
 			{
-				common::log(boost::str(boost::format("【诸法洞天】进入下一个副本失败，代码[ %1% ]") % data[0].asInt()), iEdit);
+				common::log(boost::str(boost::format("【诸法洞天】：进入下一个副本失败，代码[ %1% ]") % data[0].asInt()), iEdit);
 				return;
 			}
 			EndlessExpedition();
@@ -129,7 +129,7 @@ void sxd_client::EndlessExpedition()
 		}
 		else
 		{
-			common::log(boost::str(boost::format("【诸法洞天】第[ %1% ]次挑战第[ %2% ]层，失败！") % k % mission_id), iEdit);
+			common::log(boost::str(boost::format("【诸法洞天】：第[ %1% ]次挑战第[ %2% ]层，失败！") % k % mission_id), iEdit);
 			k++;
 		}
 	}
@@ -165,7 +165,7 @@ void sxd_client::Endlesschallenge()
 		int result = data_fight[0].asInt();
 		if (result != EndlessExpeditiontype::SUCCESS)
 		{
-			common::log(boost::str(boost::format("【诸法洞天：无尽模式】挑战失败，代码[ %1% ]") % result), iEdit);
+			common::log(boost::str(boost::format("【诸法洞天：无尽模式】：挑战失败，代码[ %1% ]") % result), iEdit);
 			return;
 		}
 		else if (result == EndlessExpeditiontype::SUCCESS)
@@ -174,7 +174,7 @@ void sxd_client::Endlesschallenge()
 
 			if (data[3].asInt() == 1)
 			{
-				common::log(boost::str(boost::format("【诸法洞天：无尽模式】第[ %1% ]次挑战第[ %2% ]层，成功！") % k % layer_id), iEdit);
+				common::log(boost::str(boost::format("【诸法洞天：无尽模式】：第[ %1% ]次挑战第[ %2% ]层，成功！") % k % layer_id), iEdit);
 
 				//通关，前往下一层
 				data = this->Mod_EndlessExpedition_Base_endless_enter_next_layer();
@@ -188,7 +188,7 @@ void sxd_client::Endlesschallenge()
 			{
 				//未通关，继续挑战
 				//已挑战100次，退出。
-				common::log(boost::str(boost::format("【诸法洞天：无尽模式】第[ %1% ]次挑战第[ %2% ]层，失败！") % k % layer_id), iEdit);
+				common::log(boost::str(boost::format("【诸法洞天：无尽模式】：第[ %1% ]次挑战第[ %2% ]层，失败！") % k % layer_id), iEdit);
 
 				//挑战次数+1
 				k++;

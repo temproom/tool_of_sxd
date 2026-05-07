@@ -34,7 +34,7 @@ void sxd_client::LinlangPavilion()
 
 	while (free_refresh_count)
 	{
-		common::log(boost::str(boost::format("【琳琅阁】当前剩余免费刷新次数：[%1%] ") % free_refresh_count), 0);
+		common::log(boost::str(boost::format("【琳琅阁】：当前剩余免费刷新次数：[%1%] ") % free_refresh_count), 0);
 		data = this->Mod_LinlangPavilion_Base_refresh_item();
 		if (data[0].asInt() == LinlangPavilionType::SUCCESS)
 		{

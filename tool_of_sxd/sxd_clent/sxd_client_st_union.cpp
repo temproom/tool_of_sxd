@@ -265,7 +265,7 @@ void sxd_client::st_union_task()
 			Json::Value datat = this->Mod_StUnionTask_Base_buy_ticket();
 			if (datat[0].asInt() == Mod_StUnionTask_Base::SUCCESS)
 			{
-				common::log("【魔神挑战】购买挑战券成功", iEdit);
+				common::log("【魔神挑战】：购买挑战券成功", iEdit);
 			}
 		}
 	}
@@ -276,23 +276,23 @@ void sxd_client::st_union_task()
 		Json::Value datak = this->Mod_StUnionTask_Base_fight();
 		if (datak[0].asInt() == Mod_StUnionTask_Base::NOT_ENOUGH_TICKET)
 		{
-			common::log("【魔神挑战】挑战券不足", iEdit);
+			common::log("【魔神挑战】：挑战券不足", iEdit);
 			return;
 		}
 		else if (datak[0].asInt() == Mod_StUnionTask_Base::NOT_IN_UNION)
 		{
-			common::log("【魔神挑战】未加仙盟", iEdit);
+			common::log("【魔神挑战】：未加仙盟", iEdit);
 			return;
 		}
 		else if (datak[0].asInt() != Mod_StUnionTask_Base::SUCCESS)
 		{
-			common::log(boost::str(boost::format("【魔神挑战】挑战失败，result[%1%]") % datak[0]), iEdit);
+			common::log(boost::str(boost::format("【魔神挑战】：挑战失败，result[%1%]") % datak[0]), iEdit);
 		}
 		else
-			common::log("【魔神挑战】挑战成功", iEdit);
+			common::log("【魔神挑战】：挑战成功", iEdit);
 		data = this->Mod_StUnionTask_Base_get_challenge_info();
 	}
-	common::log("【魔神挑战】本周全部挑战完毕", iEdit);
+	common::log("【魔神挑战】：本周全部挑战完毕", iEdit);
 }
 
 //============================================================================

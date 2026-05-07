@@ -7,6 +7,7 @@ class Mod_Assistant_Base
 {
 public:
 	static const int SUCCESS = 0;
+	static const int HAVE_DONE = 4;
 };
 
 //============================================================================
@@ -16,15 +17,18 @@ void sxd_client::assistant()
 {
 	auto data = this->Mod_Assistant_Base_info();
 	auto info = data;
-	for (unsigned sn = 1; sn < info.size(); sn++)
+	for (unsigned sn = 1; sn <= 12; sn++)
 	{
-		if (info[sn].asInt())
-			continue;
 		data = this->Mod_Assistant_Base_get_award(sn);
 		if (data[0].asInt() == Mod_Assistant_Base::SUCCESS)
+		{
 			common::log(boost::str(boost::format("【活跃度】领取第 [%1%] 个活跃度奖励") % sn), iEdit);
-		else
-			break;
+
+		}
+		else if (data[0].asInt() == Mod_Assistant_Base::HAVE_DONE)
+		{
+			continue;
+		}
 	}
 }
 
@@ -39,6 +43,10 @@ void sxd_client::assistant()
 //     [ 172, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] // 172*5=860(活跃度)
 // Mod_Assistant_Base.get_award(1)后
 //     [ 172, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+// 未领取每日1200活跃度奖励
+// [ 131072, 0, 1, 0, 0, 4, -55, 0, 5, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 1 ] 
+// 已领取1200
+// [ 131072, 0, 1, 0, 0, 4, -85, 0, 5, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 1 ] 
 //============================================================================
 Json::Value sxd_client::Mod_Assistant_Base_info()
 {

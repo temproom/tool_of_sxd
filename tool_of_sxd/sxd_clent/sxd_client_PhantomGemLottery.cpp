@@ -21,7 +21,7 @@ public:
 
 void sxd_client::PhantomGemLottery()
 {
-	common::log("【多宝山】：开始普通求宝！\n");
+	common::log("【多宝山】：开始普通求宝！");
 	//获取多宝山信息
 	Json::Value data = this->Mod_PhantomGemLottery_Base_panel_info();
 	int k = 0;

@@ -9,6 +9,8 @@ class Monopolytype
 public:
 	static const int SUCCESS = 0;
 	static const int FAILED = 1;
+	static const int BUILDING_LIMIT = 4;	
+	static const int INVALID_GRID = 5;
 	static const int TOP_GRADE = 6;
 	static const int IS_GET = 13;
 };
@@ -156,11 +158,17 @@ void sxd_client::Monopoly()
 			{
 				if (building_num[i] != 0)
 				{
-					Json::Value data_build = this->Mod_Monoploy_Base_build(building1[0].asInt(), i);
+					Json::Value data_build = this->Mod_Monoploy_Base_build(grid_id1, i);
 					if (data_build[0].asInt() == Monopolytype::SUCCESS)
 					{
 						common::log("【山河游历】建造成功！");
 						building_num[i]--;
+						break;
+					}
+					else if (data_build[0].asInt() == Monopolytype::BUILDING_LIMIT)
+					{
+						common::log("【山河游历】建筑物数量不足！", 1);
+						break;
 					}
 					else
 					{
@@ -177,11 +185,17 @@ void sxd_client::Monopoly()
 			{
 				if (building_num[i] != 0)
 				{
-					Json::Value data_build = this->Mod_Monoploy_Base_build(building2[0].asInt(), i);
+					Json::Value data_build = this->Mod_Monoploy_Base_build(grid_id2, i);
 					if (data_build[0].asInt() == Monopolytype::SUCCESS)
 					{
 						common::log("【山河游历】建造成功！");
 						building_num[i]--;
+						break;
+					}
+					else if (data_build[0].asInt() == Monopolytype::BUILDING_LIMIT)
+					{
+						common::log("【山河游历】建筑物数量不足！", 1);
+						break;
 					}
 					else
 					{
@@ -191,10 +205,12 @@ void sxd_client::Monopoly()
 				}
 			}
 		}
-
-		//都不是空的
-		//升级建筑
-		upgrade_building(building1, building2);
+		else
+		{
+			//都不是空的
+			//升级建筑
+			upgrade_building(building1, building2);
+		}	
 	}
 
 	while (dice_num > 0)
@@ -210,6 +226,7 @@ void sxd_client::Monopoly()
 		Json::Value data_panel = this->Mod_Monoploy_Base_main_panel();
 
 		{
+			buildings = data_panel[1];
 			now_grid_id = data_panel[5].asInt();
 			//可操作的格子id
 			int grid_id1 = building_grid[now_grid_id - 1][0];
@@ -220,6 +237,14 @@ void sxd_client::Monopoly()
 			//查找格子的建筑
 			for (Json::Value building : buildings)
 			{
+				//记录建筑物数量
+				//每有一个，剩余可建数量减一,若小于0，重置为0
+				building_num[building[1].asInt()]--;
+				if (building_num[building[1].asInt()] < 0)
+				{
+					building_num[building[1].asInt()] = 0;
+				}
+
 				if (building[0].asInt() == grid_id1)
 				{
 					building1 = building;
@@ -238,11 +263,17 @@ void sxd_client::Monopoly()
 				{
 					if (building_num[i] != 0)
 					{
-						Json::Value data_build = this->Mod_Monoploy_Base_build(building1[0].asInt(), i);
+						Json::Value data_build = this->Mod_Monoploy_Base_build(grid_id1, i);
 						if (data_build[0].asInt() == Monopolytype::SUCCESS)
 						{
 							common::log("【山河游历】建造成功！");
 							building_num[i]--;
+							break;
+						}
+						else if (data_build[0].asInt() == Monopolytype::BUILDING_LIMIT)
+						{
+							common::log("【山河游历】建筑物数量不足！", 1);
+							break;
 						}
 						else
 						{
@@ -259,11 +290,17 @@ void sxd_client::Monopoly()
 				{
 					if (building_num[i] != 0)
 					{
-						Json::Value data_build = this->Mod_Monoploy_Base_build(building2[0].asInt(), i);
+						Json::Value data_build = this->Mod_Monoploy_Base_build(grid_id2, i);
 						if (data_build[0].asInt() == Monopolytype::SUCCESS)
 						{
 							common::log("【山河游历】建造成功！");
 							building_num[i]--;
+							break;
+						}
+						else if (data_build[0].asInt() == Monopolytype::BUILDING_LIMIT)
+						{
+							common::log("【山河游历】建筑物数量不足！", 1);
+							break;
 						}
 						else
 						{
@@ -273,10 +310,12 @@ void sxd_client::Monopoly()
 					}
 				}
 			}
-
-			//都不是空的
-			//升级建筑
-			upgrade_building(building1, building2);
+			else
+			{
+				//都不是空的
+				//升级建筑
+				upgrade_building(building1, building2);
+			}
 			dice_num--;
 		}
 	}
@@ -365,11 +404,12 @@ void sxd_client::upgrade_building(Json::Value building1, Json::Value building2)
 // "request":[]
 // 
 // "response":[Utils.UByteUtil,[Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil],[[Utils.IntUtil,Utils.LongUtil,Utils.LongUtil],Utils.IntUtil],Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil]
-//oObject.list(param1,_loc2_,["result","buildings","products","dice_num","next_get_time","now_grid_id","operation_flag","first_flag","max_dice_num","privilege_flag","extra_dice_num"])      };
+//
+//		oObject.list(param1,_loc2_,["result","buildings","products","dice_num","next_get_time","now_grid_id","operation_flag","first_flag","max_dice_num","privilege_flag","extra_dice_num"])      };
 // 
-// buildings:["grid_id","building_id","grade","cd_time"]
+//		buildings:["grid_id","building_id","grade","cd_time"]
 // Example
-//     
+//     [ 0, null, [ [ [ [ 7926, 0, 0 ], [ 9417, 0, 0 ], [ 8362, 0, 0 ], [ 1747, 0, 0 ], [ 9242, 0, 0 ], [ 7924, 0, 0 ] ], 0 ] ], 13, 0, 1, 1, 0, 10, 0, 3 ] 
 /*
 1:[101,127,128],
 2: [101, 102] ,

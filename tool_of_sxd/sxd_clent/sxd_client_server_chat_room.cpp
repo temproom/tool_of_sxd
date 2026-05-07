@@ -188,10 +188,10 @@ void sxd_client::pet_escort(sxd_client* sxd_client_town)
 				data = sxd_client_town->Mod_ServerChatRoom_Base_feed_pet(Mod_ServerChatRoom_Base::NORMAL);
 				if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
 				{
-					common::log(boost::str(boost::format("【宠物派遣】喂养失败，result[%1%]") % data[0]), iEdit);
+					common::log(boost::str(boost::format("【宠物派遣】：喂养失败，result[%1%]") % data[0]), iEdit);
 					return;
 				}
-				common::log("【宠物派遣】喂养一次", iEdit);
+				common::log("【宠物派遣】：喂养一次", iEdit);
 			}
 			std::this_thread::sleep_for(std::chrono::seconds(10));
 			/*data = this->Mod_ServerChatRoom_Base_chat_with_players(boost::str(boost::format("MSG7_%1%_%2%_%3%") % player_id % nickname % servername));
@@ -225,17 +225,17 @@ void sxd_client::pet_escort(sxd_client* sxd_client_town)
 			data = sxd_client_town->Mod_ServerChatRoom_Base_escort_pet(town_id);
 			if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
 			{
-				common::log(boost::str(boost::format("【宠物派遣】派遣失败，result[%1%]") % data[0]), iEdit);
+				common::log(boost::str(boost::format("【宠物派遣】：派遣失败，result[%1%]") % data[0]), iEdit);
 				return;
 			}
-			common::log("【宠物派遣】派遣", iEdit);
+			common::log("【宠物派遣】：派遣", iEdit);
 			return;
 		}
 		case Mod_ServerChatRoom_Base::ESCORTING:
-			common::log("【宠物派遣】派遣中...", iEdit);
+			common::log("【宠物派遣】：派遣中...", iEdit);
 			return;
 		case Mod_ServerChatRoom_Base::INGOT_ESCORTING:
-			common::log("【宠物派遣】派遣中...", iEdit);
+			common::log("【宠物派遣】：派遣中...", iEdit);
 			return;
 
 		case Mod_ServerChatRoom_Base::ESCORT_DONE:
@@ -244,19 +244,19 @@ void sxd_client::pet_escort(sxd_client* sxd_client_town)
 				data = sxd_client_town->Mod_ServerChatRoom_Base_get_pet_escort_award();
 				if (data[0].asInt() != Mod_ServerChatRoom_Base::SUCCESS)
 				{
-					common::log(boost::str(boost::format("【宠物派遣】领取失败，result[%1%]") % data[0]), iEdit);
+					common::log(boost::str(boost::format("【宠物派遣】：领取失败，result[%1%]") % data[0]), iEdit);
 					return;
 				}
-				common::log("【宠物派遣】领取", iEdit);
+				common::log("【宠物派遣】：领取", iEdit);
 			}
 			else
 			{
-				common::log("【宠物派遣】今日派遣任务已完成", 0);
+				common::log("【宠物派遣】：今日派遣任务已完成", 0);
 			}
 			return;
 
 		default:
-			common::log(boost::str(boost::format("【宠物派遣】未知状态，status[%1%]") % pet_escort_info[2]), iEdit);
+			common::log(boost::str(boost::format("【宠物派遣】：未知状态，status[%1%]") % pet_escort_info[2]), iEdit);
 			return;
 		}
 	}

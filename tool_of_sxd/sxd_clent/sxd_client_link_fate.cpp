@@ -24,6 +24,32 @@ void sxd_client::link_fate()
 		if (items[i][1].asInt())
 		{
 			int id = items[i][0].asInt();
+			if (id != 3937)
+			{
+				//普通结缘宝箱
+				break;
+			}
+			data = this->Mod_LinkFate_Base_one_key_open_box(id);
+			if (data[0].asInt() != Mod_LinkFate_Base::SUCCESS)
+			{
+				common::log(boost::str(boost::format("【结缘】十连开失败，result[%1%]") % data[0]), iEdit);
+				break;
+			}
+			common::log(boost::str(boost::format("【结缘】十连开 [%1%]") % db.get_code(version, "Item", id)["text"]), iEdit);
+
+			// update items
+			data = this->Mod_LinkFate_Base_get_link_fate_box();
+			items = data[0];
+			if (items[i][1].asInt())
+				i--;
+		}
+	}
+	/*
+	for (unsigned i = 0; i < items.size(); i++)
+	{
+		if (items[i][1].asInt())
+		{
+			int id = items[i][0].asInt();
 			data = this->Mod_LinkFate_Base_one_key_open_box(id);
 			if (data[0].asInt() != Mod_LinkFate_Base::SUCCESS)
 			{
@@ -44,7 +70,7 @@ void sxd_client::link_fate()
 			if (items[i][1].asInt())
 				i--;
 		}
-	}
+	}*/
 }
 
 //============================================================================
@@ -103,9 +129,16 @@ Json::Value sxd_client::Mod_LinkFate_Base_get_player_link_fate_stone_pack()
 // 十连开
 // {module:232, action:34,
 // request:[Utils.IntUtil],
+// 20250818
+//		request:[Utils.IntUtil,Utils.IntUtil],
+// 
+//	_data.call(Mod_LinkFate_Base.one_key_open_box,this.one_key_open_box_callback,[param1,this.autoMergeQuality]);
+// 
 // Example
 //     [ 3937 ]
-// response:[Utils.UByteUtil, [Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil]]}
+//			response:[Utils.UByteUtil, [Utils.IntUtil, Utils.ShortUtil, Utils.ShortUtil]]}
+// 20250818 response:[Utils.UByteUtil,[Utils.IntUtil,[Utils.ShortUtil,Utils.ShortUtil]]]
+// 
 // LinkFateData.as 290:
 //     this.linkFateTenOpenInfo.result = param1[0];
 // Example
@@ -115,6 +148,7 @@ Json::Value sxd_client::Mod_LinkFate_Base_one_key_open_box(int id)
 {
 	Json::Value data;
 	data.append(id);
+	data.append(1);
 	return this->send_and_receive(data, 232, 34);
 }
 

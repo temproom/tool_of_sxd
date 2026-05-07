@@ -41,15 +41,15 @@ void sxd_client::GlazePavilion()
 		int result = data[0].asInt();
 		if (result == GlazePaviliontype::SUCCESS)
 		{
-			common::log("【琉璃宝阁】领取活跃度奖励成功！！");
+			common::log("【琉璃宝阁】：领取活跃度奖励成功！！");
 		}
 		else if (result == GlazePaviliontype::FAILED)
 		{
-			common::log("【琉璃宝阁】领取活跃度奖励失败！！");
+			common::log("【琉璃宝阁】：领取活跃度奖励失败！！");
 		}
 		else if (result == GlazePaviliontype::IS_GET)
 		{
-			common::log("【琉璃宝阁】活跃度奖励已领取！！");
+			common::log("【琉璃宝阁】：活跃度奖励已领取！！");
 		}
 	}	
 
@@ -82,19 +82,19 @@ void sxd_client::GlazePavilion()
 		int result = data[0].asInt();
 		if (result == GlazePaviliontype::SUCCESS)
 		{
-			common::log("【琉璃宝阁】领取积分奖励成功！！");
+			common::log("【琉璃宝阁】：领取积分奖励成功！！");
 		}
 		else if (result == GlazePaviliontype::FAILED)
 		{
-			common::log("【琉璃宝阁】领取活跃度奖励失败！！");
+			common::log("【琉璃宝阁】：领取活跃度奖励失败！！");
 		}
 		else if (result == GlazePaviliontype::IS_GET)
 		{
-			common::log("【琉璃宝阁】积分奖励已领取！！");
+			common::log("【琉璃宝阁】：积分奖励已领取！！");
 		}
 		else if (result == GlazePaviliontype::not_ENOUGH_SCORE)
 		{
-			common::log("【琉璃宝阁】积分不足！！");
+			common::log("【琉璃宝阁】：积分不足！！");
 		}
 	}
 	
@@ -110,15 +110,15 @@ void sxd_client::GlazePavilion()
 	int result = data[0].asInt();
 	if (result == GlazePaviliontype::SUCCESS)
 	{
-		common::log("【琉璃宝阁】领取免费礼包成功！！");
+		common::log("【琉璃宝阁】：领取免费礼包成功！！");
 	}
 	else if (result == GlazePaviliontype::FAILED)
 	{
-		common::log("【琉璃宝阁】领取免费礼包失败！！");
+		common::log("【琉璃宝阁】：领取免费礼包失败！！");
 	}
 	else if (result == GlazePaviliontype::IS_GET)
 	{
-		common::log("【琉璃宝阁】免费礼包已领取！！");
+		common::log("【琉璃宝阁】：免费礼包已领取！！");
 	}
 }
 

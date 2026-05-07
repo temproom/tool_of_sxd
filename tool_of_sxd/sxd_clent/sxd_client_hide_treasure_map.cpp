@@ -21,8 +21,17 @@ void sxd_client::hide_treasure_map()
 	for (;;)
 	{
 		Json::Value data = this->Mod_HideTreasureMap_Base_buy_item_info();
-		int coin_limit = data[2].asInt();
-		int coin_count = data[3].asInt();
+		Json::Value data1;
+		for (Json::Value temp : data[0])
+		{
+			if (temp[0].asInt() == 1)
+			{
+				data1 = temp;
+				break;
+			}
+		}
+		int coin_limit = data1[3].asInt();
+		int coin_count = data1[2].asInt();
 		if (coin_count == coin_limit)
 			return;
 		data = this->Mod_HideTreasureMap_Base_buy_item();
@@ -91,8 +100,12 @@ void sxd_client::hide_treasure_map_search()
 // "module":287, "action":3, "request":[], "response":[Utils.IntUtil,Utils.IntUtil,Utils.IntUtil,Utils.IntUtil]
 // HideTreasureMapData.as 135:
 //     oObject.list(param1,this.buyInfo,["ingot_limit","ingot_count","coin_limit","coin_count"]);
+// 20260218
+//	   oObject.list(_loc2_[_loc3_],_loc4_,["type","item_id","has_buy_num","limit_num","need_item_id","need_item_count"]);
 // Example
 //     [ 5, 0, 5, 0 ]
+//	   [ [ [ 1, 4872, 5, 5, 1747, 500000 ], [ 3, 8133, 0, 5, 3345, 300 ] ] ] 
+//		
 //============================================================================
 Json::Value sxd_client::Mod_HideTreasureMap_Base_buy_item_info()
 {
